@@ -12,3 +12,6 @@ db.query(`
     name VARCHAR(255) NOT NULL
   )
 `, err => callback(err, "Created table 'users'"));
+
+// Closing connection
+db.end();
