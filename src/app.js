@@ -5,9 +5,9 @@ const path = require("path");
 require("dotenv").config();
 
 // Import routes
-const usersRoutes = require("./routes/api/users");
-const dashboardRoutes = require("./routes/dashboard");
-const trackerRoutes = require("./routes/tracker");
+const UserRouter = require("./routes/api/users");
+const DashboardRouter = require("./routes/dashboard");
+const TrackerRouter = require("./routes/tracker");
 
 // Constants
 const PORT = process.env.NODE_ENV === "development" ? 3000 : 80;
@@ -23,9 +23,9 @@ app.set("views", path.join(__dirname, "views/pages"));
 app.use(express.json());
 
 // Set routes
-app.use("/api/users", usersRoutes);
-app.use("/dashboard", dashboardRoutes);
-app.use("/", trackerRoutes);
+app.use("/api/users", UserRouter);
+app.use("/dashboard", DashboardRouter);
+app.use("/", TrackerRouter);
 
 // Start server
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));

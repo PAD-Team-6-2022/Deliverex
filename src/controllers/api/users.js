@@ -1,30 +1,20 @@
-const User = require("../../models/user");
+const UsersService = require("../../services/users");
 
 const UsersController = {
-  create: (req, res) => {
-    User.create(req.body, (err, rows) => {
-      res.json(rows);
-    });
+  create: async (req, res) => {
+    res.json(await UsersService.create(req.body));
   },
-  getAll: (req, res) => {
-    User.getAll((err, rows) => {
-      res.json(rows);
-    });
+  getAll: async (req, res) => {
+    res.json(await UsersService.getAll());
   },
-  getById: (req, res) => {
-    User.getById(req.params.id, (err, rows) => {
-      res.json(rows);
-    });
+  getById: async (req, res) => {
+    res.json(await UsersService.getById(req.params.id));
   },
-  update: (req, res) => {
-    User.update(req.params.id, req.body, (err, rows) => {
-      res.json(rows);
-    });
+  update: async (req, res) => {
+    res.json(await UsersService.update(req.params.id, req.body));
   },
-  delete: (req, res) => {
-    User.delete(req.params.id, (err, rows) => {
-      res.json(rows);
-    });
+  remove: async (req, res) => {
+    res.json(await UsersService.remove(req.params.id));
   }
 }
 

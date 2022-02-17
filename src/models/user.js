@@ -13,7 +13,7 @@ const User = {
   update: (id, data, callback) => {
     db.query(`UPDATE users SET name = '${data.name}' WHERE id = '${id}'`, callback);
   },
-  delete: (id, callback) => {
+  remove: (id, callback) => {
     db.query(`DELETE FROM users WHERE id = '${id}'`, callback);
   } 
 }
