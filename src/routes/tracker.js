@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const trackerController = require("../controllers/tracker");
+const TrackerController = require("../controllers/tracker");
 
-router.get("/", trackerController.index);
+router.get("/", TrackerController.index);
 
 module.exports = router;

@@ -8,7 +8,7 @@ const User = {
     db.query("SELECT * FROM users", callback);
   },
   getById: (id, callback) => {
-    db.query("SELECT * FROM users", callback);
+    db.query(`SELECT * FROM users WHERE id = '${id}'`, callback);
   },
   update: (id, data, callback) => {
     db.query(`UPDATE users SET name = '${data.name}' WHERE id = '${id}'`, callback);

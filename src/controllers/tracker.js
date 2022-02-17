@@ -1,7 +1,7 @@
-const index = (req, res) => {
-  res.render("tracker");
+const TrackerController = {
+  index: (req, res) => {
+    res.render("tracker");
+  }
 }
 
-module.exports = {
-  index
-}
+module.exports = TrackerController;

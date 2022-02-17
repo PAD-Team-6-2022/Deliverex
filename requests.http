@@ -1,0 +1,33 @@
+# VSCode Extension: humao.rest-client
+
+# Users
+POST http://localhost:3000/api/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Test"
+}
+
+###
+
+GET http://localhost:3000/api/users HTTP/1.1
+Content-Type: application/json
+
+###
+
+GET http://localhost:3000/api/users/1 HTTP/1.1
+Content-Type: application/json
+
+###
+
+PATCH http://localhost:3000/api/users/2 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Changed"
+}
+
+###
+
+DELETE http://localhost:3000/api/users/1 HTTP/1.1
+Content-Type: application/json
