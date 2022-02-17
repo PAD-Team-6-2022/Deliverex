@@ -1,6 +1,9 @@
 const app = require("express")();
 const path = require("path");
 
+// Load environment variables
+require("dotenv").config();
+
 // Import routes
 const usersRoutes = require("./routes/api/users");
 const dashboardRoutes = require("./routes/dashboard");

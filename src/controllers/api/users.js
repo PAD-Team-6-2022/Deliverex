@@ -1,9 +1,9 @@
+const User = require("../../models/user");
+
 const get = (req, res) => {
-  res.json([{
-    id: 69,
-    firstName: "John",
-    lastName: "Doe"
-  }]);
+  User.getAll((err, rows) => {
+    res.json(rows);
+  });
 }
 
 module.exports = {
