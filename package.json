@@ -1,7 +1,9 @@
 {
+  "private": "true",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "dev": "nodemon src/app.js",
+    "deploy": "node scripts/deploy.js"
   },
   "dependencies": {
     "dotenv": "^16.0.0",
