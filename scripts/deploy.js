@@ -3,7 +3,9 @@ require("dotenv").config();
 
 const db = require("../src/db/connection");
 
-const callback = (err, message) => err ? console.log(err.sqlMessage) : console.log(message);
+const callback = (err, message) => err ?
+  console.log(err.sqlMessage) :
+  console.log(message);
 
 // Make tables
 db.query(`
