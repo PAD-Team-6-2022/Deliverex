@@ -15,5 +15,20 @@ db.query(`
   )
 `, err => callback(err, "Created table 'users'"));
 
+db.query(`
+    CREATE TABLE orders (
+      id INT AUTO_INCREMENT PRIMARY KEY
+    )
+`, err => callback(err, "Created table 'orders'"));
+
+db.query(`
+    CREATE TABLE packages (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      order_id INT(11) UNIQUE KEY NOT NULL,
+      weight DECIMAL(8,2) NOT NULL,
+      CONSTRAINT fk_orders FOREIGN KEY (order_id) REFERENCES orders (id) ON UPDATE CASCADE ON DELETE CASCADE
+    )
+`, err => callback(err, "Created table 'packages'"));
+
 // Closing connection
 db.end();

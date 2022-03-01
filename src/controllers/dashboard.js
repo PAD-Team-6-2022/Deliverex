@@ -1,6 +1,6 @@
 const DashboardController = {
   index: (req, res) => {
-    res.render("dashboard");
+    res.render("dashboard", { title: "Dashboard" });
   }
 }
 

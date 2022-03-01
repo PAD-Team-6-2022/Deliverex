@@ -1,6 +1,6 @@
 const TrackerController = {
   index: (req, res) => {
-    res.render("tracker");
+    res.render("tracker", { title: "Track & Trace" });
   }
 }
 
