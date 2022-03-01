@@ -4,6 +4,12 @@ const db = require("../db/connection");
  * This model includes all CRUD functions
  * to interact with the database with.
  * 
+ * NOTICE:
+ * These modals might change as to how they work.
+ * Might be able to make an abstract implementation
+ * to interact with many tables without duplicating
+ * boilerplate code to all models.
+ * 
  * @author Team 6
  * @since 1.0
  */
