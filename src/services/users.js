@@ -11,7 +11,7 @@ const UsersService = {
   /**
    * Create a new user in the database.
    * 
-   * @param {string} body json body to pass on
+   * @param {object} body json body to pass on
    * @returns the newly created user entity.
    */
   create: body => new Promise((resolve, reject) => {
@@ -47,7 +47,7 @@ const UsersService = {
    * Update a user in the database by id.
    * 
    * @param {number} id the id of the user.
-   * @param {string} body the data you want to update.
+   * @param {object} body the data you want to update.
    * @returns the updated user entity.
    */
   update: (id, body) => new Promise((resolve, reject) => {
