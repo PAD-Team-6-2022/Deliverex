@@ -1,4 +1,4 @@
-### Environemnt
+### Environment (.env)
 
 NODE_ENV=development
 
