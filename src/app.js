@@ -26,5 +26,11 @@ app.use("/api/auth", require("./routes/api/auth"));
 app.use("/dashboard", require("./routes/dashboard"));
 app.use("/", require("./routes/tracker"));
 
+// Set fallback route
+app.get("*", (req, res) => {
+    res.status(404);
+    res.render("error", { title: "404 - Niet gevonden" });
+});
+
 // Start server
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));    

@@ -1,9 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="bg-slate-50">
 <head>
   <%- include("../../partials/head") %>
 </head>
 <body>
-  <h1>Dashboard</h1>
+  <div class="fixed bg-white left-0 right-0 h-16 shadow-sm border-slate-200">
+    Insert very cool navbar here
+  </div>
+  <div class="h-16"></div>
+  <div class="max-w-7xl mx-auto px-2 mt-16">
+    <div class="mb-10">
+      <h1 class="font-bold text-4xl text-slate-800">Overzicht</h1>
+      <p class="text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block">Een overzicht met statistieken van uw aangemaakte bestellingen</p>
+    </div>
+    <h2 class="font-medium text-2xl text-slate-800 mb-5">Statistieken</h2>
+    <div class="flex space-x-3">
+      <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
+        <h1 class="font-bold text-4xl text-slate-800">56</h1>
+        <p class="font-medium text-slate-500 text-xl mt-2">Bestellingen</p>
+      </div>
+      <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
+        <h1 class="font-bold text-4xl text-slate-800">62</h1>
+        <p class="font-medium text-slate-500 text-xl mt-2">Geleverd</p>
+      </div>
+      <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
+        <h1 class="font-bold text-4xl text-slate-800">€420.69</h1>
+        <p class="font-medium text-slate-500 text-xl mt-2">Ingezameld</p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

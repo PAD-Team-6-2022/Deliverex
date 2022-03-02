@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="overflow-hidden bg-slate-50">
 <head>
   <%- include("../../partials/head") %>
 </head>
-<body class="bg-slate-50 w-screen h-screen absolute top-0 left-0 right-0 bottom-0">
+<body class="w-screen h-screen absolute top-0 left-0 right-0 bottom-0">
     <div class="absolute translate-x-[-50%] translate-y-[-50%] left-[50%] top-[50%] w-full max-w-md">
         <div class="mb-10 text-center">
             <h1 class="font-bold text-4xl text-slate-800">Setup</h1>
             <p class="text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block">Voer de benodigde onderdelen in om te beginnen</p>
         </div>
-        <div class="mb-10 flex justify-center">
-            <div class="rounded-full p-3 bg-indigo-500 text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -2 24 24" width="24" fill="currentColor">
+        <div class="mb-10 flex justify-center items-center">
+            <div class="rounded-full p-4 bg-blue-500 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -2 24 24" width="32" fill="currentColor">
                     <path d="M3.534 10.07a1 1 0 1 1 .733 1.86A3.579 3.579 0 0 0 2 15.26V17a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1.647a3.658 3.658 0 0 0-2.356-3.419 1 1 0 1 1 .712-1.868A5.658 5.658 0 0 1 14 15.353V17a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3v-1.74a5.579 5.579 0 0 1 3.534-5.19zM7 0a4 4 0 0 1 4 4v2a4 4 0 1 1-8 0V4a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v2a2 2 0 1 0 4 0V4a2 2 0 0 0-2-2z"/>
                 </svg>
             </div>
@@ -20,26 +20,46 @@
                 <div class="h-1 w-1 bg-gray-400 rounded-full ml-1"></div>
                 <div class="h-1 w-1 bg-gray-400 rounded-full ml-1"></div>
             </div>
-            <div class="ml-6 rounded-full p-3 bg-indigo-200 text-indigo-400">
+            <div class="ml-6 rounded-full p-3 bg-blue-200 text-blue-400">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" fill="currentColor">
                     <path d="M3 12a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1H3zm0-2a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3 3 3 0 0 1 3 3v4a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3v-4a3 3 0 0 1 3-3zm0-8a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H3zm2 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm3 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 10a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-3 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                 </svg>
             </div>
+            <div class="ml-6 flex items-center">
+                <div class="h-1 w-1 bg-gray-400 rounded-full"></div>
+                <div class="h-1 w-1 bg-gray-400 rounded-full ml-1"></div>
+                <div class="h-1 w-1 bg-gray-400 rounded-full ml-1"></div>
+            </div>
+            <div class="ml-6 rounded-full p-3 bg-blue-200 text-blue-400">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -4 24 24" width="24" fill="currentColor">
+                    <path d="M2,13 L2,9 C2,9.55228475 1.55228475,10 1,10 C0.44771525,10 0,9.55228475 0,9 L0,7 C0,6.44771525 0.44771525,6 1,6 C1.55228475,6 2,6.44771525 2,7 L2,3 C2,3.55228475 1.55228475,4 1,4 C0.44771525,4 0,3.55228475 0,3 C0,1.34314575 1.34314575,0 3,0 C3.55228475,0 4,0.44771525 4,1 C4,1.55228475 3.55228475,2 3,2 L7,2 C6.44771525,2 6,1.55228475 6,1 C6,0.44771525 6.44771525,0 7,0 L10,0 C10.5522847,0 11,0.44771525 11,1 C11,1.55228475 10.5522847,2 10,2 L14,2 C13.4477153,2 13,1.55228475 13,1 C13,0.44771525 13.4477153,0 14,0 L17,0 C18.6568542,0 20,1.34314575 20,3 L20,13 C20,14.6568542 18.6568542,16 17,16 L3,16 C1.34314575,16 0,14.6568542 0,13 C0,12.4477153 0.44771525,12 1,12 C1.55228475,12 2,12.4477153 2,13 Z M18,8.5026802 L18,3 C18,2.44771525 17.5522847,2 17,2 L3,2 C2.44771525,2 2,2.44771525 2,3 L2,13 C2,13.5522847 2.44771525,14 3,14 L6.50438248,14 L10.8932397,6.67849374 C11.7451066,5.25740655 13.5877,4.79596234 15.0087872,5.64782923 C15.2178633,5.77315933 15.4108848,5.92350444 15.5835825,6.09553916 L18,8.5026802 Z M18,11.3256835 L14.1720913,7.51246986 C14.1145254,7.45512495 14.0501849,7.40500991 13.9804929,7.36323321 C13.5067971,7.07927758 12.8925994,7.23309232 12.6086437,7.70678805 L8.83619472,14 L17,14 C17.5522847,14 18,13.5522847 18,13 L18,11.3256835 Z M6,9 C4.34314575,9 3,7.65685425 3,6 C3,4.34314575 4.34314575,3 6,3 C7.65685425,3 9,4.34314575 9,6 C9,7.65685425 7.65685425,9 6,9 Z M6,7 C6.55228475,7 7,6.55228475 7,6 C7,5.44771525 6.55228475,5 6,5 C5.44771525,5 5,5.44771525 5,6 C5,6.55228475 5.44771525,7 6,7 Z"/>
+                </svg>
+            </div>
+            <div class="ml-6 flex items-center">
+                <div class="h-1 w-1 bg-gray-400 rounded-full"></div>
+                <div class="h-1 w-1 bg-gray-400 rounded-full ml-1"></div>
+                <div class="h-1 w-1 bg-gray-400 rounded-full ml-1"></div>
+            </div>
+            <div class="ml-6 rounded-full p-3 bg-blue-200 text-blue-400">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -7 24 24" width="24" fill="currentColor">
+                    <path d="M5.486 9.73a.997.997 0 0 1-.707-.292L.537 5.195A1 1 0 1 1 1.95 3.78l3.535 3.535L11.85.952a1 1 0 0 1 1.415 1.414L6.193 9.438a.997.997 0 0 1-.707.292z"/>
+                </svg>
+            </div>
         </div>
-        <form class="bg-white shadow-md rounded-md px-8 pt-6 pb-8 mb-4 border border-slate-200">
+        <form class="bg-white rounded-md px-8 pt-6 pb-8 mb-4 border border-slate-200">
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-medium mb-2" for="username">
                     Gebruikersnaam
                 </label>
-                <input class="bg-slate-50 appearance-none border border-slate-200 rounded-md w-full py-2 px-3 text-slate-800 focus:outline-indigo-600" id="username" type="text">
+                <input class="bg-slate-50 appearance-none border border-slate-200 rounded-md w-full py-2 px-3 text-slate-800 focus:outline-blue-600" id="username" type="text">
             </div>
             <div class="mb-6">
                 <label class="block text-gray-700 text-sm font-medium mb-2" for="username">
                     Wachtwoord
                 </label>
-                <input class="bg-slate-50 appearance-none border border-slate-200 rounded-md w-full py-2 px-3 text-slate-800 focus:outline-indigo-600" id="password" type="password">
+                <input class="bg-slate-50 appearance-none border border-slate-200 rounded-md w-full py-2 px-3 text-slate-800 focus:outline-blue-600" id="password" type="password">
             </div>
-            <button class="bg-indigo-600 shadow hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline ml-auto flex" type="button">
+            <button class="bg-blue-600 shadow hover:bg-blue-700 text-white font-bold py-3 px-5 rounded-md focus:outline-none focus:shadow-outline ml-auto flex" type="button">
                 Verder
                 <svg class="ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
                     <path d="M10.586 5.657l-3.95-3.95A1 1 0 0 1 8.05.293l5.657 5.657a.997.997 0 0 1 0 1.414L8.05 13.021a1 1 0 1 1-1.414-1.414l3.95-3.95H1a1 1 0 1 1 0-2h9.586z"/>
