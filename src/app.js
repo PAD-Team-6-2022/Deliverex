@@ -23,7 +23,6 @@ app.use(express.json());
 // Set routes
 app.use("/api/users", require("./routes/api/users"));
 app.use("/dashboard", require("./routes/dashboard"));
-app.use("/setup", require("./routes/setup"));
 app.use("/", require("./routes/tracker"));
 
 // Start server

@@ -15,7 +15,16 @@ const DashboardController = {
    * @param {Response} res the response object.
    */
   index: (req, res) => {
-    res.render("dashboard", { title: "Dashboard" });
+    res.render("dashboard/overview", { title: "Overzicht - Dashboard" });
+  },
+  /**
+   * Render the dashboard's setup page. (views/pages/dashboard/setup.ejs)
+   * 
+   * @param {Request} req  the request object.
+   * @param {Response} res the response object.
+   */
+  setup: (req, res) => {
+    res.render("dashboard/setup", { title: "Setup - Dashboard" })
   }
 }
 
