@@ -9,6 +9,21 @@ const connection = mysql.createConnection({
 });
 
 // Attempt to connect to the database
-connection.connect();
+const connect = () => {
+  connection.connect(err => {
+    if(err) console.log("There was an error trying to connect to the database:", err);
+    setTimeout(connect, 2000);
+  });
+  connection.on("error", err => {
+    console.log("There was an error with the database:", err);
+
+    if(err.code === "PROTOCOL_CONNECTION_LOST") {
+      connect();
+    } else {
+      throw err;
+    }
+  });
+}
+connect();
 
 module.exports = connection;
