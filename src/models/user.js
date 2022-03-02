@@ -1,7 +1,7 @@
 const db = require("../db/connection");
 
 /**
- * This model includes all CRUD functions
+ * This model includes all CRUD functiosns
  * to interact with the database with.
  * 
  * NOTICE:
