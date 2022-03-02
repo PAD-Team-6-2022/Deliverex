@@ -4,15 +4,15 @@ const router = require("express").Router();
 const {
   create,
   getAll,
-  getById,
   update,
+  getByUsername,
   remove
 } = require("../../controllers/api/users");
 
 // Map the controller functions to a specific route
 router.post("/", create);
 router.get("/", getAll);
-router.get("/:id", getById);
+router.get("/:username", getByUsername);
 router.patch("/:id", update);
 router.delete("/:id", remove);
 

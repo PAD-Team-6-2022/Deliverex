@@ -16,7 +16,7 @@ const UsersController = {
    * @param {Response} res the response object.
    */
   create: async (req, res) => {
-    res.json(await UsersService.create(req.body));
+    res.json(await UsersService.create(req.body.username, req.body.password));
   },
   /**
    * Render the result of getting all users.
@@ -28,13 +28,14 @@ const UsersController = {
     res.json(await UsersService.getAll());
   },
   /**
-   * Render the result of getting a user by id.
+   * Render the result of getting a user by username.
    * 
    * @param {Request} req the request object.
    * @param {Response} res the response object.
    */
-  getById: async (req, res) => {
-    res.json(await UsersService.getById(req.params.id));
+  getByUsername: async (req, res) => {
+    console.log("Test");
+    res.json(await UsersService.getByUsername(req.params.username));
   },
   /**
    * Render the result of updating a user.

@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const { hashSync } = require("bcrypt");
 
 /**
  * This is a CRUD-service that
@@ -14,8 +15,8 @@ const UsersService = {
    * @param {object} body json body to pass on
    * @returns the newly created user entity.
    */
-  create: body => new Promise((resolve, reject) => {
-    User.create(body, (err, rows) => {
+  create: (username, password) => new Promise((resolve, reject) => {
+    User.create(username, hashSync(password, 10), (err, rows) => {
       if(err) reject(err.sqlMessage);
       else resolve(rows);
     });
@@ -40,8 +41,14 @@ const UsersService = {
   getById: id => new Promise((resolve, reject) => {
     User.getById(id, (err, rows) => {
       if(err) reject(err.sqlMessage);
-      else resolve(rows);
+      else resolve(rows[0]);
     });
+  }),
+  getByUsername: username => new Promise((resolve, reject) => {
+    User.getByUsername(username, (err, rows) => {
+      if(err) reject(err.sqlMessage);
+      else resolve(rows[0]);
+    })
   }),
   /**
    * Update a user in the database by id.

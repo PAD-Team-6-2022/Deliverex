@@ -20,8 +20,8 @@ const User = {
    * @param {object} data the data you want to pass on.
    * @param {function} callback use this callback to handle the newly created entity and occuring errors.
    */
-  create: (data, callback) => {
-    db.query(`INSERT INTO users SET name = '${data.name}'`, callback);
+  create: (username, password, callback) => {
+    db.query(`INSERT INTO users SET username = '${username}', password = '${password}'`, callback);
   },
   /**
    * Get all users form the database.
@@ -40,6 +40,9 @@ const User = {
   getById: (id, callback) => {
     db.query(`SELECT * FROM users WHERE id = '${id}'`, callback);
   },
+  getByUsername: (username, callback) => {
+    db.query(`SELECT * FROM users WHERE username = '${username}'`, callback);
+  },
   /**
    * 
    * @param {number} id of the user you want to update.
@@ -47,7 +50,7 @@ const User = {
    * @param {function} callback use this callback to handle the updated entity and occuring errors.
    */
   update: (id, data, callback) => {
-    db.query(`UPDATE users SET name = '${data.name}' WHERE id = '${id}'`, callback);
+    db.query(`UPDATE users SET username = '${data.name}' WHERE id = '${id}'`, callback);
   },
   /**
    * Remove a user from the database by id.
