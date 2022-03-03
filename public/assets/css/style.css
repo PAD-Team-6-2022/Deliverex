@@ -452,6 +452,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-left: auto;
   margin-right: auto;
 }
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
 .mt-6 {
   margin-top: 1.5rem;
 }
@@ -469,6 +473,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .mt-2 {
   margin-top: 0.5rem;
+}
+.mt-10 {
+  margin-top: 2.5rem;
 }
 .ml-6 {
   margin-left: 1.5rem;
@@ -512,11 +519,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .w-screen {
   width: 100vw;
 }
-.w-full {
-  width: 100%;
-}
 .w-1 {
   width: 0.25rem;
+}
+.w-full {
+  width: 100%;
 }
 .max-w-7xl {
   max-width: 80rem;
