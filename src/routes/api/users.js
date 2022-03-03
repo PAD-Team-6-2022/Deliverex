@@ -3,17 +3,15 @@ const router = require("express").Router();
 // Destruct the controller functions
 const {
   create,
-  getAll,
-  update,
-  getByUsername,
-  remove
+  findOne,
+  findAll,
+  destroy
 } = require("../../controllers/api/users");
 
 // Map the controller functions to a specific route
 router.post("/", create);
-router.get("/", getAll);
-router.get("/:username", getByUsername);
-router.patch("/:id", update);
-router.delete("/:id", remove);
+router.get("/:id", findOne);
+router.get("/", findAll);
+router.delete("/:id", destroy);
 
 module.exports = router;

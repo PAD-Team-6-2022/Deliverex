@@ -1,5 +1,6 @@
 const { Response, Request } = require("express");
-const UsersService = require("../../services/users");
+const { restart } = require("nodemon");
+const User = require("../../models/user");
 
 /**
  * The controller used to handle
@@ -16,44 +17,47 @@ const UsersController = {
    * @param {Response} res the response object.
    */
   create: async (req, res) => {
-    res.json(await UsersService.create(req.body.username, req.body.password));
+    const { username, password } = req.body;
+
+    try {
+      const newUser = await User.create({
+        username,
+        password
+      });
+      delete newUser.dataValues.password; // remove password from result
+      res.status(200).json(newUser);
+    } catch (err) {
+      res.status(500).json(err);
+    }
   },
-  /**
-   * Render the result of getting all users.
-   * 
-   * @param {Request} req the request object.
-   * @param {Response} res the response object.
-   */
-  getAll: async (req, res) => {
-    res.json(await UsersService.getAll());
+  findOne: async (req, res) => {
+    try {
+      res.status(200).json(await User.findOne({ where: {
+        id: req.params.id
+      }, attributes: {
+        exclude: ["password"]
+      }}));
+    } catch (err) {
+      res.status(404).json(err);
+    }
   },
-  /**
-   * Render the result of getting a user by username.
-   * 
-   * @param {Request} req the request object.
-   * @param {Response} res the response object.
-   */
-  getByUsername: async (req, res) => {
-    console.log("Test");
-    res.json(await UsersService.getByUsername(req.params.username));
+  findAll: async (req, res) => {
+    try {
+      res.status(200).json(await User.findAll({ attributes: {
+        exclude: ["password"]
+      }}));
+    } catch (err) {
+      res.status(500).json(err);
+    }
   },
-  /**
-   * Render the result of updating a user.
-   * 
-   * @param {Request} req the request object.
-   * @param {Response} res the response object.
-   */
-  update: async (req, res) => {
-    res.json(await UsersService.update(req.params.id, req.body));
-  },
-  /**
-   * Render the result of removing a user.
-   * 
-   * @param {Request} req the request object.
-   * @param {Response} res the response object.
-   */
-  remove: async (req, res) => {
-    res.json(await UsersService.remove(req.params.id));
+  destroy: async (req, res) => {
+    try {
+      res.status(200).json(await User.destroy({ where: {
+        id: req.params.id
+      }}));
+    } catch (err) {
+      res.status(500).json(err);
+    }
   }
 }
 

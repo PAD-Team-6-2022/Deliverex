@@ -22,14 +22,12 @@ app.use(express.json());
 
 // Set routes
 app.use("/api/users", require("./routes/api/users"));
-app.use("/api/auth", require("./routes/api/auth"));
 app.use("/dashboard", require("./routes/dashboard"));
 app.use("/", require("./routes/tracker"));
 
 // Set fallback route
 app.get("*", (req, res) => {
-    res.status(404);
-    res.render("error", { title: "404 - Niet gevonden" });
+    res.status(404).render("error", { title: "404 - Niet gevonden" });
 });
 
 // Start server
