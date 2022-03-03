@@ -2,7 +2,7 @@
 
 NODE_ENV=development
 
-MYSQL_HOST=db.hbo-ict.cloud
-MYSQL_USER=pad_rit_6
-MYSQL_PASS=
-MYSQL_DB=pad_rit_6_dev
+DB_HOST=db.hbo-ict.cloud
+DB_USER=pad_rit_6
+DB_PASS=MUeruSFT9HCKSxhv
+DB_NAME=pad_rit_6_dev
