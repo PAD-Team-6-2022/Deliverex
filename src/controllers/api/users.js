@@ -1,5 +1,4 @@
 const { Response, Request } = require("express");
-const { restart } = require("nodemon");
 const User = require("../../models/user");
 
 /**
@@ -31,7 +30,7 @@ const UsersController = {
     }
   },
   findOne: async (req, res) => {
-    try {
+    try { 
       res.status(200).json(await User.findOne({ where: {
         id: req.params.id
       }, attributes: {

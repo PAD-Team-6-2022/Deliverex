@@ -427,34 +427,15 @@ Ensure the default browser behavior of the `hidden` attribute.
 .fixed {
   position: fixed;
 }
-.absolute {
-  position: absolute;
-}
-.top-0 {
-  top: 0px;
-}
 .left-0 {
   left: 0px;
 }
 .right-0 {
   right: 0px;
 }
-.bottom-0 {
-  bottom: 0px;
-}
-.left-\[50\%\] {
-  left: 50%;
-}
-.top-\[50\%\] {
-  top: 50%;
-}
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
-}
-.my-auto {
-  margin-top: auto;
-  margin-bottom: auto;
 }
 .mt-6 {
   margin-top: 1.5rem;
@@ -473,9 +454,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .mt-2 {
   margin-top: 0.5rem;
-}
-.mt-10 {
-  margin-top: 2.5rem;
 }
 .ml-6 {
   margin-left: 1.5rem;
@@ -537,14 +515,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .flex-1 {
   flex: 1 1 0%;
 }
-.translate-x-\[-50\%\] {
-  --tw-translate-x: -50%;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-.translate-y-\[-50\%\] {
-  --tw-translate-y: -50%;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
 .appearance-none {
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -603,6 +573,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bg-blue-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(37 99 235 / var(--tw-bg-opacity));
+}
+.p-20 {
+  padding: 5rem;
 }
 .p-4 {
   padding: 1rem;
