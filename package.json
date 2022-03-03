@@ -3,7 +3,6 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "deploy": "node scripts/deploy.js",
     "build": "npm run build:css",
     "build:css": "postcss public/assets/css/tailwind.css -o public/assets/css/style.css"
   },

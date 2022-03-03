@@ -15,41 +15,44 @@ const UsersService = {
    * @param {object} body json body to pass on
    * @returns the newly created user entity.
    */
-  create: (username, password) => new Promise((resolve, reject) => {
-    User.create(username, hashSync(password, 10), (err, rows) => {
-      if(err) reject(err.sqlMessage);
-      else resolve(rows);
+  create: async (username, password) => {
+    const newUser = await User.create({
+      username,
+      password
     });
-  }),
+
+    return newUser.toJSON();
+  },
   /**
    * Get all users form the database.
    * 
    * @returns all users entities from the database.
    */
-  getAll: () => new Promise((resolve, reject) => {
-    User.getAll((err, rows) => {
-      if(err) reject(err.sqlMessage);
-      else resolve(rows);
-    });
-  }),
+  getAll: async () => {
+    return await User.findAll();
+  },
   /**
    * Get a specific user from the database by id.
    * 
    * @param {number} id of the user you want to fetch.
    * @returns the fetched user entity.
    */
-  getById: id => new Promise((resolve, reject) => {
-    User.getById(id, (err, rows) => {
-      if(err) reject(err.sqlMessage);
-      else resolve(rows[0]);
+  getById: async id => {
+    return await User.findOne({
+      where: { id }
     });
-  }),
-  getByUsername: username => new Promise((resolve, reject) => {
-    User.getByUsername(username, (err, rows) => {
-      if(err) reject(err.sqlMessage);
-      else resolve(rows[0]);
-    })
-  }),
+  },
+  /**
+   * Get a specific user from the database by its username.
+   * 
+   * @param {string} username of the user you want to fetch.
+   * @returns the fetches user entity.
+   */
+  getByUsername: async username => {
+    return await User.findOne({
+      where: { username }
+    });
+  },
   /**
    * Update a user in the database by id.
    * 
@@ -57,24 +60,22 @@ const UsersService = {
    * @param {object} body the data you want to update.
    * @returns the updated user entity.
    */
-  update: (id, body) => new Promise((resolve, reject) => {
-    User.update(id, body, (err, rows) => {
-      if(err) reject(err.sqlMessage);
-      else resolve(rows);
+  update: async (id, body) => {
+    return await User.update(body, {
+      where: { id }
     });
-  }),
+  },
   /**
    * Remove a user from the database by id.
    * 
    * @param {number} id of the user you want to delete.
    * @returns the query result object.
    */
-  remove: id => new Promise((resolve, reject) => {
-    User.remove(id, (err, rows) => {
-      if(err) reject(err.sqlMessage);
-      else resolve(rows);
+  remove: async id => {
+    return await User.destroy({
+      where: { id }
     });
-  })
+  }
 }
 
 module.exports = UsersService;
