@@ -14,8 +14,8 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views/pages"));
 
-// Serve public files
-app.use(express.static(path.join(__dirname, "../public")));
+// Serve client files
+app.use(express.static(path.join(__dirname, "../client")));
 
 // Set middleware
 app.use(express.json());
@@ -27,8 +27,8 @@ app.use("/", require("./routes/tracker"));
 
 // Set fallback route
 app.get("*", (req, res) => {
-    res.status(404).render("error", { title: "404 - Niet gevonden" });
+  res.status(404).render("error", { title: "404 - Niet gevonden" });
 });
 
 // Start server
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));     
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
