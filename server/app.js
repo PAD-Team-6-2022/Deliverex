@@ -21,9 +21,10 @@ app.use(express.static(path.join(__dirname, "../client")));
 app.use(express.json());
 
 // Set routes
-app.use("/api/users", require("./routes/api/users")); // All API routes are SSR
-app.use("/dashboard", require("./routes/dashboard")); // Catch all routes for CSR
-app.use("/", require("./routes/tracker")); // Tracker page is a single page and SSR
+app.use("/setup", require("./routes/setup"));
+app.use("/api/users", require("./routes/api/users"));
+app.use("/dashboard", require("./routes/dashboard"));
+app.use("/", require("./routes/tracker"));
 
 // Set fallback route
 app.get("*", (req, res) => {
