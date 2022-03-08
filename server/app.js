@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 
 // Load environment variables
-require("dotenv").config();
+require("dotenv").config({ path: path.join(__dirname, "../.env") });
 
 // Constants
 const PORT = process.env.NODE_ENV === "development" ? 3000 : 80;
