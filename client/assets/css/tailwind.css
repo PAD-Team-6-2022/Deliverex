@@ -914,10 +914,13 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 2rem;
 }
 
+<<<<<<< HEAD:public/assets/css/style.css
 .p-3 {
   padding: 0.75rem;
 }
 
+=======
+>>>>>>> 07d2a11747df5346b6b014e7d6eb2096e6d4d2df:client/assets/css/tailwind.css
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
