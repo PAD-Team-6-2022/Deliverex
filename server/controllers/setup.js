@@ -9,13 +9,31 @@ const { Response, Request } = require("express");
  */
 const SetupController = {
   /**
+   * Redirect to the first stage (/admin)
+   *
+   * @param {Request} req
+   * @param {Response} res
+   */
+  index: (req, res) => {
+    res.redirect("/setup/admin");
+  },
+  /**
    * Render the dashboard's setup page. (views/pages/dashboard/setup.ejs)
    *
    * @param {Request} req  the request object.
    * @param {Response} res the response object.
    */
-  index: (req, res) => {
-    res.render("setup", { title: "Setup - Dashboard" });
+  admin: (req, res) => {
+    res.render("setup/admin", { title: "Administrator - Setup" });
+  },
+  database: (req, res) => {
+    res.render("setup/database", { title: "Database - Setup" });
+  },
+  personalisation: (req, res) => {
+    res.render("setup/personalisation", { title: "Personalisatie - Setup" });
+  },
+  completed: (req, res) => {
+    res.render("setup/completed", { title: "Compleet - Setup" });
   },
 };
 
