@@ -1,10 +1,10 @@
 {
   "private": "true",
   "scripts": {
-    "start": "node src/app.js",
+    "start": "node server/app.js",
     "dev": "npm-run-all --parallel dev:nodemon watch:tailwind",
-    "dev:nodemon": "nodemon src/app.js",
-    "watch:tailwind": "npx tailwindcss -i tailwind.css -o public/assets/css/tailwind.css --watch"
+    "dev:nodemon": "nodemon server/app.js",
+    "watch:tailwind": "npx tailwindcss -i tailwind.css -o client/assets/css/tailwind.css --watch"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
