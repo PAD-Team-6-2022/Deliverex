@@ -1,4 +1,5 @@
 const { Response, Request } = require("express");
+const Order = require("../models/order");
 
 /**
  * The controller used to handle
@@ -14,17 +15,9 @@ const DashboardController = {
    * @param {Request} req the request object.
    * @param {Response} res the response object.
    */
-  index: (req, res) => {
+  index: async (req, res) => {
+    const orders = await Order.findAll();
     res.render("dashboard/overview", { title: "Overzicht - Dashboard" });
-  },
-  /**
-   * Render the dashboard's setup page. (views/pages/dashboard/setup.ejs)
-   *
-   * @param {Request} req  the request object.
-   * @param {Response} res the response object.
-   */
-  setup: (req, res) => {
-    res.render("dashboard/setup", { title: "Setup - Dashboard" });
   },
   /**
    * Render the dashboard's create order page. (views/pages/dashboard/create_order.ejs)
