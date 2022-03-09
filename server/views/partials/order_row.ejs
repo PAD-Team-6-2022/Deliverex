@@ -12,13 +12,18 @@
         </div>
     </td>
     <td class="px-6 py-4 whitespace-nowrap">
-        <% if (status==="Geleverd" ) {%>
+        <% if (status==="Deliverd" ) {%>
             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                 <%= status %>
             </span>
-        <%} else if (status === "Onderweg") { %>
+        <%} else if (status === "Send") { %>
             <span
                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                <%= status %>
+            </span>
+        <%} else if (status === "Ready") { %>
+            <span
+                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">
                 <%= status %>
             </span>
         <%} else { %>
