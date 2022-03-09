@@ -1,6 +1,3 @@
-const { Response, Request } = require("express");
-const Order = require("../models/order");
-
 const router = require("express").Router();
 
 router.get("/", (req, res) => {
@@ -48,8 +45,6 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/orders/create", (req, res) => {
-  res.render("dashboard/orders/create", { title: "Create order" });
-});
+router.use("/orders", require("./orders"));
 
 module.exports = router;
