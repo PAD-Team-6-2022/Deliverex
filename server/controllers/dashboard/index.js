@@ -1,6 +1,10 @@
 const router = require("express").Router();
 
 router.get("/", (req, res) => {
+  res.redirect("/dashboard/overview");
+});
+
+router.get("/overview", (req, res) => {
   const orders = [
     {
       code: "1938031",
