@@ -1,7 +1,9 @@
 const router = require("express").Router();
+const Orders = require("../../models/order");
 
-router.get("/", (req, res) => {
-  const orders = [
+router.get("/", async (req, res)  => {
+  const orders = await Orders.findAll();
+  /*const orders1 = [
     {
       code: "1938031",
       email: "pete@mail.com",
@@ -38,10 +40,11 @@ router.get("/", (req, res) => {
       state: "Deliverd",
       date: "02-05-2022",
     },
-  ];
+  ];*/
+  console.log(orders)
   res.render("dashboard/overview", {
     title: "Overzicht - Dashboard",
-    orders: orders,
+    orders,
   });
 });
 
