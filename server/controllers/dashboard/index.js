@@ -11,7 +11,7 @@ router.get("/overview", async (req, res) => {
   limit = limit === 25 || limit === 50 || limit === 100 ? limit : 25;
 
   // Get the page and calculate the offset
-  const page = Number(req.query.page);
+  const page = Number(req.query.page) || 1;
   const offset = limit * (page - 1);
 
   // Get the orders with the calculated offset and limit for pagination
