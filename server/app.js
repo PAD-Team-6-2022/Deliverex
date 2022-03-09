@@ -1,24 +1,34 @@
-const express = require("express");
 const path = require("path");
 
 // Load environment variables
 require("dotenv").config({ path: path.join(__dirname, "../.env") });
 
-// Constants
-const PORT = process.env.NODE_ENV === "development" ? 3000 : 80;
-
-// Init express
+const express = require("express");
+const passport = require("./auth/passport");
 const app = express();
 
-// Set view engine
+// View engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views/pages"));
 
 // Serve client files
 app.use(express.static(path.join(__dirname, "../client")));
 
-// Set middleware
-app.use(express.json());
+// Body parsing
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// Session
+app.use(
+  require("express-session")({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.authenticate("session"));
 
 // Set controllers
 app.use("/dashboard", require("./controllers/dashboard"));
@@ -30,6 +40,8 @@ app.use("/api", require("./controllers/api"));
 app.get("*", (req, res) => {
   res.status(404).render("error", { title: "404 - Niet gevonden" });
 });
+
+const PORT = process.env.NODE_ENV === "development" ? 3000 : 80;
 
 // Start server
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
