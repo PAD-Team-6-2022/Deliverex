@@ -40,6 +40,7 @@ const User = sequelize.define(
         user.password = hashSync(user.password, 10);
       },
     },
+    underscored: true,
   }
 );
 

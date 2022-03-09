@@ -1,8 +1,21 @@
-### Environment (.env)
+# PAD Team 6
 
-NODE_ENV=development
+PAD Team 6 is an application that handles order delivery for local companies efficiently. It comes with a nice dashboard and a tracker page for clients to track their packages in real time.
 
-DB_HOST=db.hbo-ict.cloud
-DB_USER=pad_rit_6
-DB_PASS=MUeruSFT9HCKSxhv
-DB_NAME=pad_rit_6_dev
+## Installation
+
+Use the package manager [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) to install pad-team6.
+
+```bash
+npx create-pad-team6-app
+```
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
