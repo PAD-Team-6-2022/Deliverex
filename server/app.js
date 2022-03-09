@@ -24,8 +24,7 @@ app.use(express.json());
 app.use("/dashboard", require("./controllers/dashboard"));
 app.use("/setup", require("./controllers/setup"));
 app.use("/", require("./controllers/tracker"));
-app.use("/api/users", require("./controllers/api/users"));
-app.use("/api/orders", require("./controllers/api/orders"));
+app.use("/api", require("./controllers/api"));
 
 // Set fallback route
 app.get("*", (req, res) => {
