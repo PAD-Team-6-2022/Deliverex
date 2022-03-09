@@ -48,7 +48,7 @@
         <div class="border border-solid border-slate-300 border-l-0 rounded-r-lg px-3 py-2 items-stretch text-slate-700">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24" fill="currentColor"><path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zm6.32-1.094l3.58 3.58a1 1 0 1 1-1.415 1.413l-3.58-3.58a8 8 0 1 1 1.414-1.414z"></path></svg>
         </div>
-        <a href="dashboard/orders/create">
+        <a href="/dashboard/orders/create">
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg ml-4">
           <span class="hidden md:inline">
             New order
@@ -163,20 +163,25 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <% if (order.state==="Deliverd" ) {%>
+                        <% if (order.state==="DELIVERED" ) {%>
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                 <%= order.state %>
                             </span>
-                        <%} else if (order.state === "Send") { %>
+                        <%} else if (order.state === "TRANSIT") { %>
                             <span
                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                 <%= order.state %>
                             </span>
-                        <%} else if (order.state === "Ready") { %>
+                        <%} else if (order.state === "SORTING") { %>
                             <span
                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">
                                 <%= order.state %>
                             </span>
+                        <%} else if (order.state === "READY") { %>
+                          <span
+                              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">
+                              <%= order.state %>
+                          </span>
                         <%} else { %>
                             <span
                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">

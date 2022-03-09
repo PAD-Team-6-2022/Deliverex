@@ -608,8 +608,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 100vh;
 }
 
-.h-16 {
-  height: 4rem;
+.h-\[74px\] {
+  height: 74px;
 }
 
 .h-5 {
@@ -638,18 +638,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .h-6 {
   height: 1.5rem;
-}
-
-.h-\[66px\] {
-  height: 66px;
-}
-
-.h-\[74px\] {
-  height: 74px;
-}
-
-.h-\[64px\] {
-  height: 64px;
 }
 
 .w-screen {
@@ -1238,10 +1226,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   .md\:hidden {
     display: none;
-  }
-
-  .md\:h-\[74px\] {
-    height: 74px;
   }
 
   .md\:h-\[64px\] {
