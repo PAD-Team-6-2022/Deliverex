@@ -9,9 +9,9 @@ const Order = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    status: {
+    state: {
       type: DataTypes.ENUM,
-      values: ["DELIVERED", "ON_THE_WAY", "FAILED"],
+      values: ["SORTING", "READY", "TRANSIT", "DELIVERED", "FAILED"],
       allowNull: false,
     },
     weight: {

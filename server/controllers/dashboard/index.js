@@ -1,47 +1,26 @@
 const router = require("express").Router();
+const Order = require("../../models/order");
 
 router.get("/", (req, res) => {
-  const orders = [
-    {
-      code: "1938031",
-      email: "pete@mail.com",
-      state: "Deliverd",
-      date: "07-03-2022",
-    },
-    {
-      code: "18751012",
-      email: "dave@mail.com",
-      state: "Send",
-      date: "31-02-2022",
-    },
-    {
-      code: "41515105",
-      email: "mike@mail.com",
-      state: "Deliverd",
-      date: "07-03-2022",
-    },
-    {
-      code: "17571818",
-      email: "jim@mail.com",
-      state: "Failed",
-      date: "31-02-2022",
-    },
-    {
-      code: "15356167",
-      email: "erick@mail.com",
-      state: "Deliverd",
-      date: "15-05-2021",
-    },
-    {
-      code: "24627789",
-      email: "richard@mail.com",
-      state: "Deliverd",
-      date: "02-05-2022",
-    },
-  ];
+  res.redirect("/dashboard/overview");
+});
+
+router.get("/overview", async (req, res) => {
+  // Calculate limit. Cannot be anything other than 25, 50 or 100
+  let limit = Number(req.query.limit);
+  limit = limit === 25 || limit === 50 || limit === 100 ? limit : 25;
+
+  // Get the page and calculate the offset
+  const page = Number(req.query.page);
+  const offset = limit * (page - 1);
+
+  // Get the orders with the calculated offset and limit for pagination
+  const orders = await Order.findAll({ offset, limit });
+
+  // Render the page, pass on the order array
   res.render("dashboard/overview", {
     title: "Overzicht - Dashboard",
-    orders: orders,
+    orders,
   });
 });
 

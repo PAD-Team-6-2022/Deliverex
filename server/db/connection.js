@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { Sequelize } = require("sequelize");
 
 const sequelize = new Sequelize({
   dialect: "mysql",
@@ -20,7 +20,7 @@ const init = async () => {
       );
 
       await sequelize.sync({
-        force: process.env.NODE_ENV === "development" ? true : false,
+        alter: true,
       });
 
       console.log("All models were succesfully synced with the database");
