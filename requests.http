@@ -24,7 +24,7 @@ Content-Type: application/json
 {
   "email": "test@test.com",
   "username": "test",
-  "password": "test"
+  "password": "test" 
 }
 
 ### Get all users

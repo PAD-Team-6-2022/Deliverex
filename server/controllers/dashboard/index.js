@@ -2,22 +2,14 @@ const router = require("express").Router();
 const Order = require("../../models/order");
 const passport = require("../../auth/passport");
 const auth = require("../../middleware/auth");
+const pagination = require("../../middleware/pagination");
 
 router.get("/", auth, (req, res) => {
   res.redirect("/dashboard/overview");
 });
 
-router.get("/overview", auth, async (req, res) => {
-  // Calculate limit. Cannot be anything other than 25, 50 or 100
-  let limit = Number(req.query.limit);
-  limit = limit === 25 || limit === 50 || limit === 100 ? limit : 25;
-
-  // Get the page and calculate the offset
-  const page = Number(req.query.page) || 1;
-  const offset = limit * (page - 1);
-
-  // Get the orders with the calculated offset and limit for pagination
-  const orders = await Order.findAll({ offset, limit });
+router.get("/overview", auth, pagination([25, 50, 100]), async (req, res) => {
+  const orders = await Order.findAll({ offset: req.offset, limit: req.limit });
 
   // Render the page, pass on the order array
   res.render("dashboard/overview", {
