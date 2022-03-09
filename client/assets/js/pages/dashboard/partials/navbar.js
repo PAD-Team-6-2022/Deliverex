@@ -4,7 +4,6 @@
 const navToggle = () => {
     const menu = document.querySelector('#mobile-menu');
     const nav = document.querySelector('#nav');
-
     if(menu.classList.contains('hidden')) {
         menu.classList.remove('hidden');
         nav.classList.add('h-auto');

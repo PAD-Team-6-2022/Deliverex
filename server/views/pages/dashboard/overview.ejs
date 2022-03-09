@@ -53,7 +53,7 @@
                     <path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zm6.32-1.094l3.58 3.58a1 1 0 1 1-1.415 1.413l-3.58-3.58a8 8 0 1 1 1.414-1.414z"></path>
                 </svg>
             </div>
-            <a href="dashboard/orders/create">
+            <a href="/dashboard/orders/create">
                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg ml-4">
           <span class="hidden md:inline">
             New order
@@ -75,9 +75,9 @@
                         <tr>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
-                    <span class="flex">
+                    <span class="flex items-center">
                       Ordercode
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="24" fill="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
                         <path
                                 d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
                         </path>
@@ -88,7 +88,7 @@
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex">
                       Email adress
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="24" fill="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
                         <path
                                 d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
                         </path>
@@ -99,7 +99,7 @@
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex">
                       State
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="24" fill="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
                         <path
                                 d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
                         </path>
@@ -110,7 +110,7 @@
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex">
                       Date
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="24" fill="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
                         <path
                                 d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
                         </path>
@@ -171,24 +171,29 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm">
-                                        <%= order.email %>
+                                        <%= /*order.email*/ %>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <% if (order.state === "Deliverd" ) { %>
+                                    <% if (order.state === "DELIVERED" ) { %>
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                 <%= order.state %>
                             </span>
-                                    <% } else if (order.state === "Send") { %>
+                                    <% } else if (order.state === "TRANSIT") { %>
                                         <span
                                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                 <%= order.state %>
                             </span>
-                                    <% } else if (order.state === "Ready") { %>
+                                    <% } else if (order.state === "SORTING") { %>
                                         <span
                                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">
                                 <%= order.state %>
                             </span>
+                                    <% } else if (order.state === "READY") { %>
+                                        <span
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">
+                              <%= order.state %>
+                          </span>
                                     <% } else { %>
                                         <span
                                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
@@ -233,14 +238,12 @@
                 Rows per page:
             </p>
             <div class="inline-block relative w-32 ml-4">
-
-                <select id="pageLimit" onchange="location = '?limit=' + this.value"
+                <select onchange="location = '?limit=' + this.value"
                         class="block appearance-none w-full border border-gray-300 px-3 py-2 rounded-lg leading-tight focus:outline-none focus:shadow-outline">
                     <option>25</option>
                     <option>50</option>
                     <option>100</option>
                 </select>
-
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                         <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
@@ -248,38 +251,33 @@
                 </div>
             </div>
 
-                <button id="buttonPrev"
+            <a id="prevLink" href="#">
+                <button id="prevButton"
                         class="hover:bg-slate-100 border border-solid border-slate-300 rounded-lg px-3 py-2 ml-4 text-slate-700 disabled:text-slate-300 disabled:hover:bg-slate-50">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
                         <path d="M3.414 7.657l3.95 3.95A1 1 0 0 1 5.95 13.02L.293 7.364a.997.997 0 0 1 0-1.414L5.95.293a1 1 0 1 1 1.414 1.414l-3.95 3.95H13a1 1 0 0 1 0 2H3.414z"></path>
                     </svg>
                 </button>
+            </a>
 
-            <button id="buttonNext" class="hover:bg-slate-100 border border-solid border-slate-300 rounded-lg px-3 py-2 ml-4 text-slate-700 disabled:text-slate-400">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
-                    <path d="M10.586 5.657l-3.95-3.95A1 1 0 0 1 8.05.293l5.657 5.657a.997.997 0 0 1 0 1.414L8.05 13.021a1 1 0 1 1-1.414-1.414l3.95-3.95H1a1 1 0 1 1 0-2h9.586z"></path>
-                </svg>
-            </button>
+            <a id="nextLink" href="?page=">
+                <button id="nextButton"
+                        class="hover:bg-slate-100 border border-solid border-slate-300 rounded-lg px-3 py-2 ml-4 text-slate-700 disabled:text-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
+                        <path d="M10.586 5.657l-3.95-3.95A1 1 0 0 1 8.05.293l5.657 5.657a.997.997 0 0 1 0 1.414L8.05 13.021a1 1 0 1 1-1.414-1.414l3.95-3.95H1a1 1 0 1 1 0-2h9.586z"></path>
+                    </svg>
+                </button>
+            </a>
 
         </div>
     </div>
 
 </div>
+
 <script>
-    const queryString = window.location.search
-    const urlParams = new URLSearchParams(queryString)
 
-    let buttonNext = document.getElementById('buttonNext')
-    let buttonPrev = document.getElementById('buttonPrev')
 
-    /*const check = urlParams.append('check', 'test')
-    console.log(check)*/
 
-    buttonNext.addEventListener('click', () =>{
-        urlParams.append('page', '2')
-        console.log(queryString)
-    })
 </script>
-
 </body>
 </html>
