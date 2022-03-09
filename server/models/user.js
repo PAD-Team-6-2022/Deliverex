@@ -32,14 +32,12 @@ const User = sequelize.define(
       validate: {
         min: 8,
       },
+      set(value) {
+        this.setDataValue("password", hashSync(value, 10));
+      },
     },
   },
   {
-    hooks: {
-      beforeCreate: async (user, options) => {
-        user.password = hashSync(user.password, 10);
-      },
-    },
     underscored: true,
     defaultScope: {
       attributes: {
