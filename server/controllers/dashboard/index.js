@@ -1,7 +1,11 @@
 const router = require("express").Router();
 const Order = require("../../models/order");
 
-router.get("/", async (req, res) => {
+router.get("/", (req, res) => {
+    res.redirect("/dashboard/overview");
+});
+
+router.get("/overview", async (req, res) => {
     const limit = Number(req.query.limit || 25)
     let orders;
 
