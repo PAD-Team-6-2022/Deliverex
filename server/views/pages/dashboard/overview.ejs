@@ -4,6 +4,7 @@
     <%- include("../../partials/head", {js: 'dashboard/overview'}) %>
 </head>
 <body>
+<%- include("../../partials/modal") %>
 <%- include("../../partials/dashboard/navbar") %>
 <div class="h-16"></div>
 <div class="max-w-7xl mx-auto px-4 mt-16">
@@ -161,7 +162,7 @@
                             </td>
                         </tr>
                         <% orders.forEach(order => { %>
-                            <tr class="text-slate-500">
+                            <tr data-order-code=<%= order.id %> class="text-slate-500">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="text-sm font-medium text-slate-900">
@@ -216,7 +217,7 @@
                                     </button>
                                 </td>
                                 <td class="px-6 pl-0 text-right text-sm font-medium">
-                                    <button class="mr-none inline">
+                                    <button data-order-delete class="mr-none inline">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -2 24 24" width="24"
                                              fill="currentColor">
                                             <path
