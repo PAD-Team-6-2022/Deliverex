@@ -1,63 +1,62 @@
-const { Response, Request } = require("express");
+const router = require("express").Router();
 const User = require("../../models/user");
 
-/**
- * The controller used to handle
- * all the users api logic.
- * 
- * @author Team 6
- * @since 1.0
- */
-const UsersController = {
-  /**
-   * Render the result of creating a new user.
-   * 
-   * @param {Request} req the request object.
-   * @param {Response} res the response object.
-   */
-  create: async (req, res) => {
-    const { username, password } = req.body;
+router.post("/", (req, res) => {
+  const { username, password } = req.body;
 
-    try {
-      const newUser = await User.create({
-        username,
-        password
-      });
+  User.create({
+    username,
+    password,
+  })
+    .then((user) => {
       delete newUser.dataValues.password; // remove password from result
       res.status(200).json(newUser);
-    } catch (err) {
+    })
+    .catch((err) => {
       res.status(500).json(err);
-    }
-  },
-  findOne: async (req, res) => {
-    try { 
-      res.status(200).json(await User.findOne({ where: {
-        id: req.params.id
-      }, attributes: {
-        exclude: ["password"]
-      }}));
-    } catch (err) {
+    });
+});
+
+router.get("/:id", (req, res) => {
+  User.findOne({
+    where: {
+      id: req.params.id,
+    },
+  }).then((user) => {
+    if (user) {
+      res.status(200).json(user);
+    } else {
       res.status(404).json(err);
     }
-  },
-  findAll: async (req, res) => {
-    try {
-      res.status(200).json(await User.findAll({ attributes: {
-        exclude: ["password"]
-      }}));
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  },
-  destroy: async (req, res) => {
-    try {
-      res.status(200).json(await User.destroy({ where: {
-        id: req.params.id
-      }}));
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  }
-}
+  });
+});
 
-module.exports = UsersController;
+router.get("/", (req, res) => {
+  User.findAll()
+    .then((users) => {
+      res.status(200).json(users);
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
+});
+
+router.delete("/:id", (req, res) => {
+  User.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((result) => {
+      res.status(200).json({
+        message: "Successfully deleted user",
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: `Something went wrong while trying to delete the user: ${err}`,
+      });
+    });
+});
+
+module.exports = router;

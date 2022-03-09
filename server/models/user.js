@@ -41,6 +41,11 @@ const User = sequelize.define(
       },
     },
     underscored: true,
+    defaultScope: {
+      attributes: {
+        exclude: ["password"],
+      },
+    },
   }
 );
 
