@@ -2,7 +2,7 @@
   "private": "true",
   "scripts": {
     "start": "node server/app.js",
-    "dev": "NODE_ENV=development npm-run-all --parallel dev:nodemon watch:tailwind",
+    "dev": "npm-run-all --parallel dev:nodemon watch:tailwind",
     "dev:nodemon": "nodemon server/app.js",
     "watch:tailwind": "npx tailwindcss -i tailwind.css -o client/assets/css/tailwind.css --watch"
   },

@@ -98,50 +98,7 @@ For more help, head over to [EJS's documentation](https://ejs.co/#docs).
 
 ## Creating
 
-To create a new controller, navigate over to the `controllers/` folder within the project's source.
-
-Here's a small snippet with the basics of creating a controller:
-
-```js
-// Import the response and request
-// types to use for documenting.
-const { Response, Request } = require("express");
-
-/**
- * The controller used to handle
- * all the tracker frontend logic.
- *
- * @author Team 6
- * @since 1.0
- */
-const TrackerController = {
-  /**
-   * Render the tracker's index page. (views/pages/tracker.ejs)
-   *
-   * @param {Request} req the request object
-   * @param {Response} res the response object
-   */
-  index: (req, res) => {
-    res.render("tracker", { title: "Track & Trace" });
-  },
-};
-
-module.exports = TrackerController;
-```
-
-## Convention
-
 TODO
-
-## Documentation
-
-For more help, head over to [Express's documentation](http://expressjs.com/en/5x/api.html#router).
-
-# Routes
-
-## Creating
-
-To create a new route, navigate over to the `routes/` folder within the project's source.
 
 ## Convention
 
