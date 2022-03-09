@@ -1,11 +1,13 @@
 const router = require("express").Router();
 const Order = require("../../models/order");
+const passport = require("../../auth/passport");
+const auth = require("../../middleware/auth");
 
-router.get("/", (req, res) => {
+router.get("/", auth, (req, res) => {
   res.redirect("/dashboard/overview");
 });
 
-router.get("/overview", async (req, res) => {
+router.get("/overview", auth, async (req, res) => {
   // Calculate limit. Cannot be anything other than 25, 50 or 100
   let limit = Number(req.query.limit);
   limit = limit === 25 || limit === 50 || limit === 100 ? limit : 25;
@@ -28,6 +30,20 @@ router.get("/signin", (req, res) => {
   res.render("dashboard/signin", {
     title: "Sign In - Dashboard",
   });
+});
+
+// Authentication via Passport.js
+router.post(
+  "/signin",
+  passport.authenticate("local", {
+    successRedirect: "/dashboard",
+    failureRedirect: "/dashboard/signin",
+  })
+);
+
+router.post("/signout", auth, (req, res) => {
+  req.logout();
+  res.redirect("/");
 });
 
 router.use("/orders", require("./orders"));

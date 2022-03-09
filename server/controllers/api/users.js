@@ -2,15 +2,16 @@ const router = require("express").Router();
 const User = require("../../models/user");
 
 router.post("/", (req, res) => {
-  const { username, password } = req.body;
+  const { email, username, password } = req.body;
 
   User.create({
+    email,
     username,
     password,
   })
     .then((user) => {
-      delete newUser.dataValues.password; // remove password from result
-      res.status(200).json(newUser);
+      delete user.dataValues.password; // remove password from result
+      res.status(200).json(user);
     })
     .catch((err) => {
       res.status(500).json(err);
