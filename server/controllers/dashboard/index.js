@@ -24,6 +24,12 @@ router.get("/overview", async (req, res) => {
   });
 });
 
+router.get("/signin", (req, res) => {
+  res.render("dashboard/signin", {
+    title: "Sign In - Dashboard",
+  });
+});
+
 router.use("/orders", require("./orders"));
 
 module.exports = router;
