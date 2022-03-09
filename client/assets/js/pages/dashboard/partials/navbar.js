@@ -10,3 +10,10 @@ const navToggle = () => {
         menu.classList.add('hidden');
     }
 }
+
+/**
+ * Event listener for menu toggle
+ */
+document.querySelector('#menu-toggle').onclick = () => {
+    navToggle();
+};

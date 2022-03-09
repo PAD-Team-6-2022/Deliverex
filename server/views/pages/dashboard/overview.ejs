@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-slate-50">
 <head>
-  <%- include("../../partials/head") %>
-  <script src="/assets/js/pages/shared_business_pages.js" defer></script>
+  <%- include("../../partials/head", {js: 'dashboard/overview'}) %>
 </head>
 <body>
-  <%- include("../../partials/navbar") %> 
+  <%- include("../../partials/dashboard/navbar") %> 
   <div class="h-16"></div>
   <div class="max-w-7xl mx-auto px-4 mt-16">
     <div class="mb-10">
@@ -147,17 +146,17 @@
                     <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
                   </td>
                 </tr>
-                <%- include("../../partials/order_row", {orderCode: 01938031, email: "pete@mail.com" ,
+                <%- include("../../partials/dashboard/order_row", {orderCode: 01938031, email: "pete@mail.com" ,
                   status: "Deliverd" , date: "07-03-2022" }) %>
-                <%- include("../../partials/order_row", {orderCode: 18751012, email: "dave@mail.com" ,
+                <%- include("../../partials/dashboard/order_row", {orderCode: 18751012, email: "dave@mail.com" ,
                   status: "Send" , date: "31-02-2022" }) %>
-                <%- include("../../partials/order_row", {orderCode: 41515105, email: "mike@mail.com" ,
+                <%- include("../../partials/dashboard/order_row", {orderCode: 41515105, email: "mike@mail.com" ,
                 status: "Deliverd" , date: "15-05-2021" }) %>
-                <%- include("../../partials/order_row", {orderCode: 17571818, email: "jim@mail.com" ,
+                <%- include("../../partials/dashboard/order_row", {orderCode: 17571818, email: "jim@mail.com" ,
                 status: "Failed" , date: "02-05-2022" }) %>
-                <%- include("../../partials/order_row", {orderCode: 15356167, email: "erick@mail.com" ,
+                <%- include("../../partials/dashboard/order_row", {orderCode: 15356167, email: "erick@mail.com" ,
                 status: "Ready" , date: "13-08-2022" }) %>
-                <%- include("../../partials/order_row", {orderCode: 24627789, email: "richard@mail.com" ,
+                <%- include("../../partials/dashboard/order_row", {orderCode: 24627789, email: "richard@mail.com" ,
                 status: "Deliverd" , date: "24-02-2022" }) %>
               </tbody>
             </table>
