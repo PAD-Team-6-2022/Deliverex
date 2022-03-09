@@ -20,7 +20,7 @@ const init = async () => {
       );
 
       await sequelize.sync({
-        alter: process.env.NODE_ENV === "development" ? true : false,
+        alter: true,
       });
 
       console.log("All models were succesfully synced with the database");
