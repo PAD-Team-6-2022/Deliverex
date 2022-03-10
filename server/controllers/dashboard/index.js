@@ -55,6 +55,10 @@ router.post(
     failureRedirect: "/dashboard/signin",
   }),
   (req, res) => {
+    // Saving the session before redirecting,
+    // otherwise req#isAuthenticated() returns
+    // null. Not sure why that is, but it has
+    // been an issue since 2015.
     req.session.save(() => {
       res.redirect("/dashboard");
     });
