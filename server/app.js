@@ -20,11 +20,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Session
+const SessionStore = require("./session/store");
+
 app.use(
   require("express-session")({
     secret: "secret",
     resave: false,
     saveUninitialized: false,
+    store: new SessionStore(),
   })
 );
 
