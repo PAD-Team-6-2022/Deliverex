@@ -34,10 +34,10 @@ class SessionStore extends ExpressSessionStore {
     return Session.findByPk(id)
       .then((session) => {
         if (session) {
-          session.data = data;
-          session.expiresAt = expiresAt;
-
-          return session.save();
+          return session.update({
+            data,
+            expiresAt,
+          });
         } else {
           return Session.create({
             id,
