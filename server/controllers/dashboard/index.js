@@ -52,9 +52,13 @@ router.post(
   "/signin",
   auth(false),
   passport.authenticate("local", {
-    successRedirect: "/dashboard",
     failureRedirect: "/dashboard/signin",
-  })
+  }),
+  (req, res) => {
+    req.session.save(() => {
+      res.redirect("/dashboard");
+    });
+  }
 );
 
 router.get("/signout", auth(true), (req, res) => {

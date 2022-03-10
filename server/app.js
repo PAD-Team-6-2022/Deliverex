@@ -34,7 +34,8 @@ app.use(
 // Authentication
 const passport = require("./auth/passport");
 
-app.use(passport.authenticate("session"));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Set controllers
 app.use("/dashboard", require("./controllers/dashboard"));

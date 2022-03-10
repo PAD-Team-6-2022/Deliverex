@@ -7,7 +7,7 @@ passport.use(
   new LocalStrategy((username, password, cb) => {
     const errMessage = "Incorrect username or password";
 
-    User.findOne({ where: { username }, attributes: ["password"] })
+    User.findOne({ where: { username }, attributes: ["id", "password"] })
       .then((user) => {
         if (!user) return cb(null, false, { message: errMessage });
 
@@ -25,16 +25,14 @@ passport.use(
   })
 );
 
-passport.serializeUser((user, cb) => {
-  process.nextTick(() => {
-    cb(null, { id: user.id, username: user.username });
-  });
+passport.serializeUser((user, callback) => {
+  callback(null, user.id);
 });
 
-passport.deserializeUser((user, cb) => {
-  process.nextTick(() => {
-    cb(null, user);
-  });
+passport.deserializeUser((id, callback) => {
+  User.findByPk(id)
+    .then((user) => callback(null, user))
+    .catch((err) => callback(err));
 });
 
 module.exports = passport;
