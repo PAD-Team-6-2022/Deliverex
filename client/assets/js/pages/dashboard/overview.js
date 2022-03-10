@@ -17,22 +17,11 @@ if (page > 1) {
     prevLink.href = "?page=" + (parseInt(page) - 1)
 }
 
-
-console.log(document.querySelectorAll(".clickableArrow").length);
-
 document.querySelectorAll(".clickableArrow").forEach((arrowButton) => {
     arrowButton.addEventListener("click", () => {
 
-        if(arrowButton.id === "id")
-            urlParams.set("col", "id");
-        else if(arrowButton.id === "mail")
-            urlParams.set("col", "mail");
-        else if(arrowButton.id === "state")
-            urlParams.set("col", "state");
-        else if(arrowButton.id === "created_at")
-            urlParams.set("col", "created_at");
-
-        urlParams.set("order", "asc");
+        urlParams.set("col", arrowButton.id);
+        urlParams.set("order", document.getElementById(arrowButton.id).classList.contains("rotate-180") ? "desc" : "asc");
 
       window.location.search = urlParams.toString();
     })

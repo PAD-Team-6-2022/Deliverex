@@ -2,7 +2,7 @@ const ordering = (req, res, next) => {
     const column = req.query.col || "id";
     const orderDirection = req.query.order || "asc";
 
-    if(!(column === "id" || column === "email" ||
+    if(!(column === "id" || column === "weight" || column === "email" ||
         column === "state" || column === "created_at"))
         throw Error("Invalid column parameter");
 

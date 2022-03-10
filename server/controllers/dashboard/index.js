@@ -4,6 +4,7 @@ const passport = require("../../auth/passport");
 const auth = require("../../middleware/auth");
 const pagination = require("../../middleware/pagination");
 const ordering = require("../../middleware/ordering");
+const convert = require('convert-units');
 
 router.get("/", auth, (req, res) => {
   res.redirect("/dashboard/overview");
@@ -13,6 +14,11 @@ router.get("/overview", auth, pagination([25, 50, 100]), ordering, async (req, r
 
   // Get the orders with the calculated offset, limit for pagination and details about the sorting order
   const orders = await Order.findAll({ offset: req.offset, limit: req.limit, order: [[req.col, req.order]]});
+
+  //converteer het gewicht van elke order naar de
+  orders.forEach((order) => {
+    order.weight = convert(order.weight).from('g').toBest().val;
+  })
 
   // Render the page, pass on the order array
   res.render("dashboard/overview", {
