@@ -78,44 +78,76 @@
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex items-center">
                       Ordercode
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
-                        <path
-                                d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
-                        </path>
-                      </svg>
+                      <% if(queryParams.filteredId == "ASC"){ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="rotate-180">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                      <% }else{ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                       <% } %>
                     </span>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex">
                       Email adress
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
-                        <path
-                                d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
-                        </path>
-                      </svg>
+                      <% if(queryParams.filteredEmail == "ASC"){ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="rotate-180">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                      <% }else{ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                       <% } %>
                     </span>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex">
                       State
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
-                        <path
-                                d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
-                        </path>
-                      </svg>
+                      <% if(queryParams.filteredState == "ASC"){ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="rotate-180">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                      <% }else{ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                       <% } %>
                     </span>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex">
                       Date
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
-                        <path
-                                d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
-                        </path>
-                      </svg>
+                      <% if(queryParams.filteredDate == "ASC"){ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="rotate-180">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                      <% }else{ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                       <% } %>
                     </span>
                             </th>
                         </tr>
