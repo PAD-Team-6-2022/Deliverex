@@ -717,6 +717,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+<<<<<<< HEAD
+=======
+.rotate-180 {
+  --tw-rotate: 180deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+>>>>>>> 7e00c75d02a5fd050aa0e08adffbcb104acc06e2
 @-webkit-keyframes pulse {
   50% {
     opacity: .5;
@@ -819,6 +827,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-radius: 9999px;
 }
 
+<<<<<<< HEAD
 .rounded-md {
   border-radius: 0.375rem;
 }
@@ -829,6 +838,18 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .rounded-lg {
   border-radius: 0.5rem;
+=======
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.rounded-md {
+  border-radius: 0.375rem;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+>>>>>>> 7e00c75d02a5fd050aa0e08adffbcb104acc06e2
 }
 
 .rounded-l-lg {
@@ -839,6 +860,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .rounded-r-lg {
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
+}
+
+.border-2 {
+  border-width: 2px;
 }
 
 .border {
@@ -867,6 +892,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .border-solid {
   border-style: solid;
+}
+
+.border-inherit {
+  border-color: inherit;
 }
 
 .border-slate-200 {
@@ -913,11 +942,17 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(191 219 254 / var(--tw-bg-opacity));
 }
 
+.bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+<<<<<<< HEAD
 .bg-blue-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(37 99 235 / var(--tw-bg-opacity));
@@ -933,6 +968,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
+=======
+>>>>>>> 7e00c75d02a5fd050aa0e08adffbcb104acc06e2
 .bg-gray-300 {
   --tw-bg-opacity: 1;
   background-color: rgb(209 213 219 / var(--tw-bg-opacity));
@@ -966,6 +1003,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bg-red-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 226 226 / var(--tw-bg-opacity));
+}
+
+.bg-opacity-50 {
+  --tw-bg-opacity: 0.5;
 }
 
 .bg-opacity-50 {
@@ -1030,6 +1071,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .py-5 {
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
+<<<<<<< HEAD
+=======
+}
+
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+>>>>>>> 7e00c75d02a5fd050aa0e08adffbcb104acc06e2
 }
 
 .px-6 {
@@ -1057,6 +1106,17 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .pt-2 {
   padding-top: 0.5rem;
+<<<<<<< HEAD
+=======
+}
+
+.pt-8 {
+  padding-top: 2rem;
+}
+
+.pl-0 {
+  padding-left: 0px;
+>>>>>>> 7e00c75d02a5fd050aa0e08adffbcb104acc06e2
 }
 
 .pt-8 {
@@ -1099,6 +1159,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-6xl {
   font-size: 3.75rem;
   line-height: 1;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 .text-4xl {
@@ -1173,6 +1238,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+
 .text-slate-800 {
   --tw-text-opacity: 1;
   color: rgb(30 41 59 / var(--tw-text-opacity));
@@ -1228,6 +1298,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: rgb(37 99 235 / var(--tw-text-opacity));
 }
 
+<<<<<<< HEAD
+=======
+.text-blue-400 {
+  --tw-text-opacity: 1;
+  color: rgb(96 165 250 / var(--tw-text-opacity));
+}
+
+>>>>>>> 7e00c75d02a5fd050aa0e08adffbcb104acc06e2
 .opacity-0 {
   opacity: 0;
 }
