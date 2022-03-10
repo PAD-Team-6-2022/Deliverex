@@ -1,23 +1,21 @@
 const router = require("express").Router();
 
 router.get("/", (req, res) => {
-  res.redirect("/setup/admin");
+  res.redirect("/setup/database");
 });
 
-router.get("/database", (req, res) => {
-  res.render("setup/database", { title: "Database - Setup" });
-});
+router.get("/:stage", (req, res) => {
+  const stages = [
+    { name: "database" },
+    { name: "admin" },
+    { name: "design" },
+    { name: "done" },
+  ].map((stage) => ({ active: req.params.stage === stage.name, ...stage }));
 
-router.get("/admin", (req, res) => {
-  res.render("setup/admin", { title: "Administrator - Setup" });
-});
-
-router.get("/personalisation", (req, res) => {
-  res.render("setup/personalisation", { title: "Personalisatie - Setup" });
-});
-
-router.get("/completed", (req, res) => {
-  res.render("setup/completed", { title: "Compleet - Setup" });
+  res.render("setup", {
+    title: "Setup",
+    stages,
+  });
 });
 
 module.exports = router;

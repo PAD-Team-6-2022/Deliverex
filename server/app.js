@@ -4,7 +4,6 @@ const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "../.env") });
 
 const express = require("express");
-const passport = require("./auth/passport");
 const app = express();
 
 // View engine
@@ -28,6 +27,10 @@ app.use(
     saveUninitialized: false,
   })
 );
+
+// Authentication
+const passport = require("./auth/passport");
+
 app.use(passport.authenticate("session"));
 
 // Set controllers

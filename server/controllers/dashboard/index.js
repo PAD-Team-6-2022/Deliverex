@@ -33,7 +33,7 @@ router.post(
   })
 );
 
-router.post("/signout", auth, (req, res) => {
+router.get("/signout", auth, (req, res) => {
   req.logout();
   res.redirect("/");
 });
