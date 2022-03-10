@@ -14,31 +14,28 @@ router.get(
   "/overview",
   auth(true),
   pagination([25, 50, 100]),
+  ordering,
   async (req, res) => {
-    let filterOptions = [];
-    if (req.query.filteredId) filterOptions.push(["id", req.query.filteredId]);
 
-    if (req.query.filteredEmail)
-      filterOptions.push("email", req.query.filteredEmail);
-
-    if (req.query.filteredState)
-      filterOptions.push(["state", req.query.filteredState]);
-
-    if (req.query.filteredDate)
-      filterOptions.push(["created_at", req.query.filteredDate]);
-
-    // Get the orders with the calculated offset and limit for pagination
+    // Get the orders with the calculated offset, limit for pagination and details about the sorting order
     const orders = await Order.findAll({
       offset: req.offset,
       limit: req.limit,
-      order: filterOptions,
+        order: [[req.col, req.order]],
     });
+
+      //converteer het gewicht van elke order naar de
+      orders.forEach((order) => {
+          let value = convert(order.weight).from('g').toBest();
+          order.weight = `${Math.round(value.val)} ${value.unit}`;
+      })
 
     // Render the page, pass on the order array
     res.render("dashboard/overview", {
       title: "Overzicht - Dashboard",
       orders,
-      queryParams: req.query,
+      column: req.col,
+      orderingDirection: req.order
     });
   }
 );

@@ -15,7 +15,7 @@ const Order = sequelize.define(
       allowNull: false,
     },
     weight: {
-      type: DataTypes.DECIMAL(5, 2),
+      type: DataTypes.DECIMAL(7, 2),
       allowNull: false,
     },
     created_at: {
