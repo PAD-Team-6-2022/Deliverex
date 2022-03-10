@@ -17,6 +17,16 @@ if (page > 1) {
     prevLink.href = "?page=" + (parseInt(page) - 1)
 }
 
+document.querySelectorAll(".clickableArrow").forEach((arrowButton) => {
+    arrowButton.addEventListener("click", () => {
+
+        urlParams.set("col", arrowButton.id);
+        urlParams.set("order", document.getElementById(arrowButton.id).classList.contains("rotate-180") ? "desc" : "asc");
+
+      window.location.search = urlParams.toString();
+    })
+})
+
 document.querySelectorAll("[data-order-code]").forEach((order) => {
 
     const id = order.getAttribute("data-order-code");
@@ -24,6 +34,7 @@ document.querySelectorAll("[data-order-code]").forEach((order) => {
     order.querySelector("[data-order-delete]").addEventListener("click", async () => {
         console.log(id);
         document.getElementsByTagName("html")[0].classList.add("overflow-hidden");
+        document.getElementsByTagName("html")[0].classList.add("invisible");
         document.querySelectorAll("[data-modal-overlay]").forEach((overlay) => {
             overlay.classList.remove("opacity-0");
         });
@@ -39,6 +50,7 @@ document.querySelectorAll("[data-modal-screen]").forEach((screen) => {
 
     screen.querySelector("[data-modal-cancel]").addEventListener("click", async () => {
         document.getElementsByTagName("html")[0].classList.remove("overflow-hidden");
+        document.getElementsByTagName("html")[0].classList.remove("invisible");
         document.querySelectorAll("[data-modal-overlay]").forEach((overlay) => {
             overlay.classList.add("opacity-0");
         });

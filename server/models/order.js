@@ -18,6 +18,10 @@ const Order = sequelize.define(
       type: DataTypes.DECIMAL(5, 2),
       allowNull: false,
     },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
   },
   {
     underscored: true,

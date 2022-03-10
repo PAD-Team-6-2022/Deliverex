@@ -472,6 +472,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   pointer-events: none;
 }
 
+.invisible {
+  visibility: hidden;
+}
+
 .fixed {
   position: fixed;
 }
@@ -753,6 +757,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .animate-pulse {
   -webkit-animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
           animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .appearance-none {
