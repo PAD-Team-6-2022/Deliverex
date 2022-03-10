@@ -2,7 +2,7 @@ const pagination = (limits) => (req, res, next) => {
   if (!limits || limits.length === 0)
     throw new Error("Pagination limits not set");
 
-  // Calculate limit. Cannot be anything other than 25, 50 or 100
+  // Calculate limit
   let limit = Number(req.query.limit);
   limit = limits.includes(limit) ? limit : limits[0];
 
