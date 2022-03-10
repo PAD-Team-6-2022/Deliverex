@@ -10,24 +10,24 @@ const sequelize = new Sequelize({
 });
 
 const init = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log("The database was succesfully connected");
+  sequelize
+    .authenticate()
+    .then(() => {
+      console.log("The database was succesfully connected");
 
-    if (process.env.NODE_ENV === "development") {
-      console.log(
-        "Running in development mode, attempting to sync database..."
-      );
+      if (process.env.NODE_ENV === "development") {
+        console.log("Attempting to sync database...");
 
-      await sequelize.sync({
-        alter: true,
-      });
-
-      console.log("All models were succesfully synced with the database");
-    }
-  } catch (err) {
-    console.error("Unable to connect to the database:", err);
-  }
+        sequelize
+          .sync({
+            alter: true,
+          })
+          .then(() => {
+            console.log("All models were succesfully synced with the database");
+          });
+      }
+    })
+    .catch((err) => console.error("Unable to connect to the database:", err));
 };
 
 init();

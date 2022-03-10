@@ -1,58 +1,54 @@
 const { hashSync } = require("bcrypt");
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/connection");
+const Country = require("./country");
 
-const User = sequelize.define(
-  "user",
+const Receiver = sequelize.define(
+  "receiver",
   {
-    id: {
+    countryIso: {
+      type: DataTypes.CHAR(2),
+      allowNull: false,
+    },
+    countryName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    provinceName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    cityName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    streetName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    houseNumber: {
       type: DataTypes.INTEGER,
-      autoIncrement: true,
+      allowNull: false,
       primaryKey: true,
     },
-    email: {
-      type: DataTypes.STRING,
+    postalCode: {
+      type: DataTypes.STRING(10),
       allowNull: false,
-      validate: {
-        isEmail: true,
-      },
+      primaryKey: true,
     },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        min: 3,
+    addressName: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return `${this.streetName} ${this.houseNumber}, ${this.postalCode}, ${this.cityName}, ${this.countryName}`;
       },
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        min: 8,
-      },
-      set(value) {
-        this.setDataValue("password", hashSync(value, 10));
+      set() {
+        throw new Error("Do not try to set the `address` value!");
       },
     },
   },
   {
     underscored: true,
-    defaultScope: {
-      attributes: {
-        exclude: ["password"],
-      },
-    },
-    indexes: [
-      {
-        fields: ["username"],
-        unique: true,
-      },
-      {
-        fields: ["email"],
-        unique: true,
-      },
-    ],
   }
 );
 
-module.exports = User;
+module.exports = Receiver;
