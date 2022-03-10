@@ -6,6 +6,6 @@
 <% if (typeof css !== "undefined") { %>
 <link rel="stylesheet" href="/assets/css/pages/<%= css %>.css" /> <% } %> <% if
 (typeof js !== "undefined") { %>
-<script type="module" src="/assets/js/pages/<%= js %>.js"></script>
+<script type="module" src="/assets/js/pages/<%= js %>.js" defer></script>
 <% } %>
 <title><%= title %></title>

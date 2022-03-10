@@ -4,6 +4,7 @@
     <%- include("../../partials/head", {js: 'dashboard/overview'}) %>
 </head>
 <body>
+<%- include("../../partials/modal") %>
 <%- include("../../partials/dashboard/navbar") %>
 <div class="max-w-7xl mx-auto px-4 mt-16">
     <div class="mb-10">
@@ -77,44 +78,76 @@
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex items-center">
                       Ordercode
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
-                        <path
-                                d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
-                        </path>
-                      </svg>
+                      <% if(queryParams.filteredId == "ASC"){ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="rotate-180">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                      <% }else{ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                       <% } %>
                     </span>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex">
                       Email adress
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
-                        <path
-                                d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
-                        </path>
-                      </svg>
+                      <% if(queryParams.filteredEmail == "ASC"){ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="rotate-180">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                      <% }else{ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                       <% } %>
                     </span>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex">
                       State
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
-                        <path
-                                d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
-                        </path>
-                      </svg>
+                      <% if(queryParams.filteredState == "ASC"){ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="rotate-180">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                      <% }else{ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                       <% } %>
                     </span>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex">
                       Date
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
-                        <path
-                                d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
-                        </path>
-                      </svg>
+                      <% if(queryParams.filteredDate == "ASC"){ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="rotate-180">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                      <% }else{ %>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor">
+                         <path
+                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
+                         </path>
+                       </svg>
+                       <% } %>
                     </span>
                             </th>
                         </tr>
@@ -161,7 +194,7 @@
                             </td>
                         </tr>
                         <% orders.forEach(order => { %>
-                            <tr class="text-slate-500">
+                            <tr data-order-code=<%= order.id %> class="text-slate-500">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="text-sm font-medium text-slate-900">
@@ -216,7 +249,7 @@
                                     </button>
                                 </td>
                                 <td class="px-6 pl-0 text-right text-sm font-medium">
-                                    <button class="mr-none inline">
+                                    <button data-order-delete class="mr-none inline">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -2 24 24" width="24"
                                              fill="currentColor">
                                             <path
