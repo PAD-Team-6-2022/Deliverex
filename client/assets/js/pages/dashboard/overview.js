@@ -31,7 +31,7 @@ document.querySelectorAll("[data-order-code]").forEach((order) => {
 
     const id = order.getAttribute("data-order-code");
 
-    order.querySelector("[data-order-delete]").addEventListener("click", async () => {
+    order.querySelector("[data-order-delete]").addEventListener("click", async (event) => {
         console.log(id);
         document.getElementsByTagName("html")[0].classList.add("overflow-hidden");
         document.querySelectorAll("[data-modal-overlay]").forEach((overlay) => {
@@ -41,6 +41,12 @@ document.querySelectorAll("[data-order-code]").forEach((order) => {
             screen.classList.remove("invisible");
             screen.querySelector("[data-modal-delete]").setAttribute("data-order-code", id);
         });
+        // stop event from going further than current object
+        event.stopPropagation();
+    });
+
+    order.addEventListener("click", async (event) => {
+        window.location.href = `/dashboard/orders/${id}`;
     });
 
 });
