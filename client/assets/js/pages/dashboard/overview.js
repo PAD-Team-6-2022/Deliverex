@@ -31,17 +31,22 @@ document.querySelectorAll("[data-order-code]").forEach((order) => {
 
     const id = order.getAttribute("data-order-code");
 
-    order.querySelector("[data-order-delete]").addEventListener("click", async () => {
+    order.querySelector("[data-order-delete]").addEventListener("click", async (event) => {
         console.log(id);
         document.getElementsByTagName("html")[0].classList.add("overflow-hidden");
-        document.getElementsByTagName("html")[0].classList.add("invisible");
         document.querySelectorAll("[data-modal-overlay]").forEach((overlay) => {
-            overlay.classList.remove("opacity-0");
+            overlay.classList.remove("invisible");
         });
         document.querySelectorAll("[data-modal-screen]").forEach((screen) => {
-            screen.classList.remove("opacity-0");
+            screen.classList.remove("invisible");
             screen.querySelector("[data-modal-delete]").setAttribute("data-order-code", id);
         });
+        // stop event from going further than current object
+        event.stopPropagation();
+    });
+
+    order.addEventListener("click", async (event) => {
+        window.location.href = `/dashboard/orders/${id}`;
     });
 
 });
@@ -50,12 +55,11 @@ document.querySelectorAll("[data-modal-screen]").forEach((screen) => {
 
     screen.querySelector("[data-modal-cancel]").addEventListener("click", async () => {
         document.getElementsByTagName("html")[0].classList.remove("overflow-hidden");
-        document.getElementsByTagName("html")[0].classList.remove("invisible");
         document.querySelectorAll("[data-modal-overlay]").forEach((overlay) => {
-            overlay.classList.add("opacity-0");
+            overlay.classList.add("invisible");
         });
         document.querySelectorAll("[data-modal-screen]").forEach((screen) => {
-            screen.classList.add("opacity-0");
+            screen.classList.add("invisible");
         }); 
     });
 
@@ -67,10 +71,10 @@ document.querySelectorAll("[data-modal-screen]").forEach((screen) => {
         document.getElementsByTagName("html")[0].classList.remove("overflow-hidden");
 
         document.querySelectorAll("[data-modal-overlay]").forEach((overlay) => {
-            overlay.classList.add("opacity-0");
+            overlay.classList.add("invisible");
         });
         document.querySelectorAll("[data-modal-screen]").forEach((screen) => {
-            screen.classList.add("opacity-0");
+            screen.classList.add("invisible");
         }); 
 
         if(id) {
@@ -81,10 +85,6 @@ document.querySelectorAll("[data-modal-screen]").forEach((screen) => {
                     "Content-Type": "application/json"
                 }
             });
-            // await fetch({
-            //     url: `/api/orders/${id}`,
-            //     method: "DELETE"
-            // });
             window.location.reload();
         } else {
             alert("Failed to delete the order.");
