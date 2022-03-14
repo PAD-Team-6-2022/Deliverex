@@ -4,7 +4,7 @@ const passport = require("../../auth/passport");
 const auth = require("../../middleware/auth");
 const pagination = require("../../middleware/pagination");
 const ordering = require("../../middleware/ordering");
-const convert = require('convert-units');
+const convert = require("convert-units");
 
 router.get("/", auth(true), (req, res) => {
   res.redirect("/dashboard/overview");
@@ -14,28 +14,28 @@ router.get(
   "/overview",
   auth(true),
   pagination([25, 50, 100]),
-  ordering,
+  ordering("id", "asc"),
   async (req, res) => {
-
     // Get the orders with the calculated offset, limit for pagination and details about the sorting order
     const orders = await Order.findAll({
       offset: req.offset,
       limit: req.limit,
-        order: [[req.col, req.order]],
+      order: [[req.sort, req.order]],
     });
 
-      //converteer het gewicht van elke order naar de
-      orders.forEach((order) => {
-          let value = convert(order.weight).from('g').toBest();
-          order.weight = `${Math.round(value.val)} ${value.unit}`;
-      })
+    //converteer het gewicht van elke order naar de
+    orders.forEach((order) => {
+      let value = convert(order.weight).from("g").toBest();
+      order.weight = `${Math.round(value.val)} ${value.unit}`;
+    });
 
     // Render the page, pass on the order array
     res.render("dashboard/overview", {
       title: "Overzicht - Dashboard",
       orders,
-      column: req.col,
-      orderingDirection: req.order
+      sort: req.sort,
+      order: req.order,
+      limit: req.limit,
     });
   }
 );

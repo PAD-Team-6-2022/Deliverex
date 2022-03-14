@@ -29,7 +29,7 @@
     </div>
 
     <!-- order overview -->
-    <div class="flex flex-col bg-white rounded-md border border-slate-200 my-16 overflow-hidden p-8">
+    <form class="flex flex-col bg-white rounded-md border border-slate-200 my-16 overflow-hidden p-8">
         <h2 class="font-medium text-2xl text-slate-800 mb-4 flex">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -4 24 24" width="24" fill="currentColor">
                 <path
@@ -77,10 +77,10 @@
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex items-center">
-                      Ordercode
+                      Id
                        <svg id="id" xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="clickableArrow 
-                            rotate-<%= (column === "id" && orderingDirection === "asc") ? 180 : 0 %>
-                            <%= (column === "id" ? "text-slate-500" : "text-slate-300") %> cursor-pointer">
+                            rotate-<%= (sort === "id" && order === "asc") ? 180 : 0 %>
+                            <%= (sort === "id" ? "text-slate-500" : "text-slate-300") %> cursor-pointer">
                          <path
                            d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
                          </path>
@@ -91,22 +91,9 @@
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex">
                       Weight
-                       <svg id="weight" xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="clickableArrow
-                            rotate-<%= (column === "weight" && orderingDirection === "asc") ? 180 : 0 %>
-                             <%= (column === "weight" ? "text-slate-500" : "text-slate-300") %> cursor-pointer">
-                         <path
-                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
-                         </path>
-                       </svg>
-                    </span>
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
-                    <span class="flex">
-                      Email adress
-                       <svg id="mail" xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="clickableArrow 
-                            rotate-<%= (column === "mail" && orderingDirection === "asc") ? 180 : 0 %>
-                            <%= (column === "mail" ? "text-slate-500" : "text-slate-300") %> cursor-pointer">
+                       <svg id="weight" xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="clickableArrow 
+                            rotate-<%= (sort === "weight" && order === "asc") ? 180 : 0 %>
+                            <%= (sort === "weight" ? "text-slate-500" : "text-slate-300") %> cursor-pointer">
                          <path
                            d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
                          </path>
@@ -118,8 +105,8 @@
                     <span class="flex">
                       State
                        <svg id="state" xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="clickableArrow 
-                            rotate-<%= (column === "state" && orderingDirection === "asc") ? 180 : 0 %>
-                            <%= (column === "state" ? "text-slate-500" : "text-slate-300") %> cursor-pointer">
+                            rotate-<%= (sort === "state" && order === "asc") ? 180 : 0 %>
+                            <%= (sort === "state" ? "text-slate-500" : "text-slate-300") %> cursor-pointer">
                          <path
                            d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
                          </path>
@@ -131,8 +118,8 @@
                     <span class="flex">
                       Date
                        <svg id="created_at" xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="clickableArrow
-                            rotate-<%= (column === "created_at" && orderingDirection === "asc") ? 180 : 0 %>
-                            <%= (column === "created_at" ? "text-slate-500" : "text-slate-300") %> cursor-pointer">
+                            rotate-<%= (sort === "created_at" && order === "asc") ? 180 : 0 %>
+                            <%= (sort === "created_at" ? "text-slate-500" : "text-slate-300") %> cursor-pointer">
                          <path
                            d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
                          </path>
@@ -142,46 +129,6 @@
                         </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-slate-200">
-                        <tr>
-                            <td class="text-sm px-6 py-4">
-                                <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
-                            </td>
-                            <td class="text-sm px-6 py-4">
-                                <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
-                            </td>
-                            <td class="text-sm px-6 py-4">
-                                <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
-                            </td>
-                            <td class="text-sm px-6 py-4">
-                                <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
-                            </td>
-                            <td class="text-sm px-6 py-4">
-                                <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
-                            </td>
-                            <td class="text-sm px-6 py-4">
-                                <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-sm px-6 py-4">
-                                <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
-                            </td>
-                            <td class="text-sm px-6 py-4">
-                                <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
-                            </td>
-                            <td class="text-sm px-6 py-4">
-                                <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
-                            </td>
-                            <td class="text-sm px-6 py-4">
-                                <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
-                            </td>
-                            <td class="text-sm px-6 py-4">
-                                <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
-                            </td>
-                            <td class="text-sm px-6 py-4">
-                                <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
-                            </td>
-                        </tr>
                         <% orders.forEach(order => { %>
                             <tr data-order-code=<%= order.id %> class="text-slate-500 hover:bg-slate-100 cursor-pointer">
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -196,11 +143,6 @@
                                         <div class="text-sm font-medium text-slate-900">
                                             <%= order.weight %>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm">
-                                        <%= /*order.email*/ %>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -267,11 +209,11 @@
                 Rows per page:
             </p>
             <div class="inline-block relative w-32 ml-4">
-                <select onchange="location = '?limit=' + this.value"
+                <select name="limit" onchange="this.form.submit()"
                         class="block appearance-none w-full border border-gray-300 px-3 py-2 rounded-lg leading-tight focus:outline-none focus:shadow-outline">
-                    <option>25</option>
-                    <option>50</option>
-                    <option>100</option>
+                    <option value="25"<%= limit === 25 ? " selected" : "" %>>25</option>
+                    <option value="50"<%= limit === 50 ? " selected": "" %>>50</option>
+                    <option value="100"<%= limit === 100 ? " selected" : "" %>>100</option>
                 </select>
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -307,7 +249,7 @@
             <%} %>
     
         </div>
-    </div>
+    </form>
 
 </div>
 

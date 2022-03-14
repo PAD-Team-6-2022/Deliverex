@@ -4,6 +4,8 @@ specifiers:
   autoprefixer: ^10.4.2
   bcrypt: ^5.0.1
   body-parser: ^1.19.2
+  convert-units: ^2.3.4
+  dateformat: ^5.0.3
   dotenv: ^16.0.0
   ejs: ^3.1.6
   express: ^4.17.3
@@ -32,6 +34,8 @@ dependencies:
 
 devDependencies:
   autoprefixer: 10.4.2
+  convert-units: 2.3.4
+  dateformat: 5.0.3
   nodemon: 2.0.15
   npm-run-all: 4.1.5
   tailwindcss: 3.0.23_autoprefixer@10.4.2
@@ -465,6 +469,13 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
+  /convert-units/2.3.4:
+    resolution: {integrity: sha512-ERHfdA0UhHJp1IpwE6PnFJx8LqG7B1ZjJ20UvVCmopEnVCfER68Tbe3kvN63dLbYXDA2xFWRE6zd4Wsf0w7POg==}
+    dependencies:
+      lodash.foreach: 2.3.0
+      lodash.keys: 2.3.0
+    dev: true
+
   /cookie-signature/1.0.6:
     resolution: {integrity: sha1-4wOogrNCzD7oylE6eZmXNNqzriw=}
     dev: false
@@ -510,6 +521,11 @@ packages:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
     engines: {node: '>=4'}
     hasBin: true
+    dev: true
+
+  /dateformat/5.0.3:
+    resolution: {integrity: sha512-Kvr6HmPXUMerlLcLF+Pwq3K7apHpYmGDVqrxcDasBg86UcKeTSNWbEzU8bwdXnxnR44FtMhJAxI4Bov6Y/KUfA==}
+    engines: {node: '>=12.20'}
     dev: true
 
   /debug/2.6.9:
@@ -1309,6 +1325,128 @@ packages:
       parse-json: 4.0.0
       pify: 3.0.0
       strip-bom: 3.0.0
+    dev: true
+
+  /lodash._basebind/2.3.0:
+    resolution: {integrity: sha1-K1vEUqDhBhQ7IYafIzvbWHQX0kg=}
+    dependencies:
+      lodash._basecreate: 2.3.0
+      lodash._setbinddata: 2.3.0
+      lodash.isobject: 2.3.0
+    dev: true
+
+  /lodash._basecreate/2.3.0:
+    resolution: {integrity: sha1-m4ioak3P97fzxh2Dovz8BnHsneA=}
+    dependencies:
+      lodash._renative: 2.3.0
+      lodash.isobject: 2.3.0
+      lodash.noop: 2.3.0
+    dev: true
+
+  /lodash._basecreatecallback/2.3.0:
+    resolution: {integrity: sha1-N7KrF1kaM56YjbMln81GAZ16w2I=}
+    dependencies:
+      lodash._setbinddata: 2.3.0
+      lodash.bind: 2.3.0
+      lodash.identity: 2.3.0
+      lodash.support: 2.3.0
+    dev: true
+
+  /lodash._basecreatewrapper/2.3.0:
+    resolution: {integrity: sha1-qgxhrZYETDkzN2ExSDqXWcNlEkc=}
+    dependencies:
+      lodash._basecreate: 2.3.0
+      lodash._setbinddata: 2.3.0
+      lodash._slice: 2.3.0
+      lodash.isobject: 2.3.0
+    dev: true
+
+  /lodash._createwrapper/2.3.0:
+    resolution: {integrity: sha1-0arhEC2t9EDo4G/BM6bt1/4UYHU=}
+    dependencies:
+      lodash._basebind: 2.3.0
+      lodash._basecreatewrapper: 2.3.0
+      lodash.isfunction: 2.3.0
+    dev: true
+
+  /lodash._objecttypes/2.3.0:
+    resolution: {integrity: sha1-aj6jmH3W7rgCGy1cnDA1Scwrrh4=}
+    dev: true
+
+  /lodash._renative/2.3.0:
+    resolution: {integrity: sha1-d9jt1M7SbdWXH54Vpfdy5OMX+9M=}
+    dev: true
+
+  /lodash._setbinddata/2.3.0:
+    resolution: {integrity: sha1-5WEEkKzRMnfVmFjZW18nJ/FQjwQ=}
+    dependencies:
+      lodash._renative: 2.3.0
+      lodash.noop: 2.3.0
+    dev: true
+
+  /lodash._shimkeys/2.3.0:
+    resolution: {integrity: sha1-YR+TFJ4+bHIQlrSHae8pU3rai6k=}
+    dependencies:
+      lodash._objecttypes: 2.3.0
+    dev: true
+
+  /lodash._slice/2.3.0:
+    resolution: {integrity: sha1-FHGYEyhZly5GgMoppZkshVZpqlw=}
+    dev: true
+
+  /lodash.bind/2.3.0:
+    resolution: {integrity: sha1-wqjhi2jl7MFS4rFoJmEW/qWwFsw=}
+    dependencies:
+      lodash._createwrapper: 2.3.0
+      lodash._renative: 2.3.0
+      lodash._slice: 2.3.0
+    dev: true
+
+  /lodash.foreach/2.3.0:
+    resolution: {integrity: sha1-CDQEyR6EbudyRf3512UZxosq8Wg=}
+    dependencies:
+      lodash._basecreatecallback: 2.3.0
+      lodash.forown: 2.3.0
+    dev: true
+
+  /lodash.forown/2.3.0:
+    resolution: {integrity: sha1-JPtKr4ANRfwtxgv+w84EyDajrX8=}
+    dependencies:
+      lodash._basecreatecallback: 2.3.0
+      lodash._objecttypes: 2.3.0
+      lodash.keys: 2.3.0
+    dev: true
+
+  /lodash.identity/2.3.0:
+    resolution: {integrity: sha1-awGiEMlIU1XCqRO0i2cRIZoXPe0=}
+    dev: true
+
+  /lodash.isfunction/2.3.0:
+    resolution: {integrity: sha1-aylz5HpkfPEucNZ2rqE2Q3BuUmc=}
+    dev: true
+
+  /lodash.isobject/2.3.0:
+    resolution: {integrity: sha1-LhbT/Fg9qYMZaJU/LY5tc0NPZ5k=}
+    dependencies:
+      lodash._objecttypes: 2.3.0
+    dev: true
+
+  /lodash.keys/2.3.0:
+    resolution: {integrity: sha1-s1D0+Syqn0WkouzwGEVM8vKK4lM=}
+    dependencies:
+      lodash._renative: 2.3.0
+      lodash._shimkeys: 2.3.0
+      lodash.isobject: 2.3.0
+    dev: true
+
+  /lodash.noop/2.3.0:
+    resolution: {integrity: sha1-MFnWKNUbv5N80qC2/Dp/ISpmnCw=}
+    dev: true
+
+  /lodash.support/2.3.0:
+    resolution: {integrity: sha1-fq8DivTw1qq3drRKptz8gDNMm/0=}
+    dependencies:
+      lodash._renative: 2.3.0
     dev: true
 
   /lodash/4.17.21:
