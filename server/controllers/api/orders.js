@@ -26,8 +26,11 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
+
+    console.log(req.body.sizeFormat);
+
     Order.create({state: 'SORTING', weight: req.body.weight, created_at: Date.now(),
-        country: req.body.country, address: `${req.body.street} ${Number(req.body.houseNumber)}`, format: 'its a big boi'})
+        country: req.body.country, address: `${req.body.street} ${Number(req.body.houseNumber)}`, format: req.body.sizeFormat})
         .then((orders) => {
             res.redirect('/dashboard')
         })
