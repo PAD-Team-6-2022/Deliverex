@@ -5,6 +5,8 @@ const auth = require("../../middleware/auth");
 const pagination = require("../../middleware/pagination");
 const ordering = require("../../middleware/ordering");
 const convert = require("convert-units");
+const searching = require("../../middleware/searching");
+const searchQueryToWhereClause = require("../../util");
 
 router.get("/", auth(true), (req, res) => {
   res.redirect("/dashboard/overview");
@@ -15,12 +17,14 @@ router.get(
   auth(true),
   pagination([25, 50, 100]),
   ordering("id", "asc"),
+  searching,
   async (req, res) => {
     // Get the orders with the calculated offset, limit for pagination and details about the sorting order
     const orders = await Order.findAll({
       offset: req.offset,
       limit: req.limit,
       order: [[req.sort, req.order]],
+      where: searchQueryToWhereClause(req.search, ["id", "weight", "state"]),
     });
 
     //converteer het gewicht van elke order naar de
@@ -37,6 +41,7 @@ router.get(
       order: req.order,
       limit: req.limit,
       user: req.user,
+      search: req.search,
     });
   }
 );
