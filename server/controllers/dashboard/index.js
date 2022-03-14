@@ -36,6 +36,7 @@ router.get(
       sort: req.sort,
       order: req.order,
       limit: req.limit,
+      user: req.user,
     });
   }
 );
