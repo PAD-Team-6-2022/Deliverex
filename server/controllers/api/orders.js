@@ -25,4 +25,15 @@ router.get("/", (req, res) => {
     });
 });
 
+router.post("/", (req, res) => {
+    Order.create({state: 'SORTING', weight: req.body.weight, created_at: Date.now(),
+        country: req.body.country, address: `${req.body.street} ${Number(req.body.houseNumber)}`, format: 'its a big boi'})
+        .then((orders) => {
+            res.redirect('/dashboard')
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+});
+
 module.exports = router;
