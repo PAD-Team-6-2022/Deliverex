@@ -1,18 +1,14 @@
-const ordering = (req, res, next) => {
-    const column = req.query.col || "id";
-    const orderDirection = req.query.order || "asc";
+const ordering = (defaultSort, defaultOrder) => (req, res, next) => {
+  const sort = req.query.sort || defaultSort;
+  let order = req.query.order || defaultOrder;
 
-    if(!(column === "id" || column === "weight" || column === "email" ||
-        column === "state" || column === "created_at"))
-        throw Error("Invalid column parameter");
+  // Default to asc if invalid order value
+  if (order !== "asc" && order !== "desc") order = "asc";
 
-    if(!(orderDirection === "asc" || orderDirection === "desc"))
-        throw Error("Invalid order parameter");
+  req.sort = sort;
+  req.order = order;
 
-    req.col = column;
-    req.order = orderDirection;
-
-    next();
-}
+  next();
+};
 
 module.exports = ordering;
