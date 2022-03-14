@@ -1,15 +1,71 @@
-<div data-modal-overlay class="z-50 fixed inset-0 bg-black bg-opacity-50 pointer-events-none invisible"></div>
-<div data-modal-screen class="z-50 fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-lg
-border-2 border-inherit bg-white px-10 py-5 invisible" id="modal">
-  <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-2">
-    <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -3 24 24" width="24" fill="currentColor"><path d="M12.8 1.613l6.701 11.161c.963 1.603.49 3.712-1.057 4.71a3.213 3.213 0 0 1-1.743.516H3.298C1.477 18 0 16.47 0 14.581c0-.639.173-1.264.498-1.807L7.2 1.613C8.162.01 10.196-.481 11.743.517c.428.276.79.651 1.057 1.096zm-2.22.839a1.077 1.077 0 0 0-1.514.365L2.365 13.98a1.17 1.17 0 0 0-.166.602c0 .63.492 1.14 1.1 1.14H16.7c.206 0 .407-.06.581-.172a1.164 1.164 0 0 0 .353-1.57L10.933 2.817a1.12 1.12 0 0 0-.352-.365zM10 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0-9a1 1 0 0 1 1 1v4a1 1 0 0 1-2 0V6a1 1 0 0 1 1-1z"></path></svg>
+<div
+  class="fixed z-50 flex w-screen h-screen items-center justify-center bg-opacity-30 bg-slate-900 opacity-0 transition-opacity pointer-events-none"
+  data-modal="<%= id %>"
+>
+  <div class="bg-white rounded-md max-w-md w-full shadow relative">
+    <div
+      class="flex border-b border-b-slate-200 p-4 justify-between items-center"
+    >
+      <h1 class="text-slate-800 text-lg font-semibold">Delete Order</h1>
+      <% if(typeof cancellable !== "undefined" ? cancellable : true) { %>
+      <button
+        class="hover:bg-neutral-100 transition-colors rounded-md p-2"
+        data-modal-close
+      >
+        <svg
+          class="h-6 w-6 text-slate-500"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="-6 -6 24 24"
+          width="24"
+          fill="currentColor"
+        >
+          <path
+            d="M7.314 5.9l3.535-3.536A1 1 0 1 0 9.435.95L5.899 4.485 2.364.95A1 1 0 1 0 .95 2.364l3.535 3.535L.95 9.435a1 1 0 1 0 1.414 1.414l3.535-3.535 3.536 3.535a1 1 0 1 0 1.414-1.414L7.314 5.899z"
+          ></path>
+        </svg>
+      </button>
+      <% } %>
+    </div>
+    <div class="p-8 space-y-5">
+      <% if(type === "warning") { %>
+      <div class="p-2 rounded-full bg-red-100 mx-auto w-fit">
+        <svg
+          class="h-6 w-6 text-red-600"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="-2 -3 24 24"
+          width="24"
+          fill="currentColor"
+        >
+          <path
+            d="M12.8 1.613l6.701 11.161c.963 1.603.49 3.712-1.057 4.71a3.213 3.213 0 0 1-1.743.516H3.298C1.477 18 0 16.47 0 14.581c0-.639.173-1.264.498-1.807L7.2 1.613C8.162.01 10.196-.481 11.743.517c.428.276.79.651 1.057 1.096zm-2.22.839a1.077 1.077 0 0 0-1.514.365L2.365 13.98a1.17 1.17 0 0 0-.166.602c0 .63.492 1.14 1.1 1.14H16.7c.206 0 .407-.06.581-.172a1.164 1.164 0 0 0 .353-1.57L10.933 2.817a1.12 1.12 0 0 0-.352-.365zM10 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0-9a1 1 0 0 1 1 1v4a1 1 0 0 1-2 0V6a1 1 0 0 1 1-1z"
+          ></path>
+        </svg>
+      </div>
+      <% } %>
+      <div class="text-center space-y-3">
+        <h1 class="text-slate-800 text-2xl font-bold"><%= title %></h1>
+        <p class="text-slate-500 font-xl font-medium"><%= description %></p>
+      </div>
+    </div>
+    <div
+      class="<%= (typeof cancellable !== "undefined" ? cancellable : true) ? "justify-between" : "justify-end" %> flex items-center border-t border-t-slate-200 p-4"
+    >
+      <% if(typeof cancellable !== "undefined" ? cancellable : true) { %>
+      <button
+        class="underline hover:bg-slate-100 transition-colors text-slate-500 rounded-md px-5 py-3"
+        data-modal-close
+      >
+        Cancel
+      </button>
+      <% } %>
+      <% Object.entries(actions).forEach(([name, action]) => { %>
+      <button
+        class="<%= action.type === "warning" ? "text-red-50 bg-red-500 hover:bg-red-600" : "" %> transition-color rounded-md px-5 py-3"
+        data-modal-action="<%= name %>"
+      >
+        <%= action.label %>
+      </button>
+      <% }) %>
+    </div>
   </div>
-    <div class="block">
-      <div class="block text-center font-bold text-lg">Are you sure?</div>
-      <div class="block pt-2 text-gray-500 text-center">Do you really want to delete this order?<br>You can't undo this action.</div>
-    </div>
-    <div class="flex justify-between items-center pt-8 px-10">
-      <button data-modal-cancel class="bg-white hover:bg-slate-100 border border-gray-300 text-slate-800 rounded px-4 py-2">Cancel</button>
-      <button data-modal-delete class="inline bg-red-500 hover:bg-red-600 text-red-50 rounded px-4 py-2">Delete</button>
-    </div>
- </div>
+</div>
