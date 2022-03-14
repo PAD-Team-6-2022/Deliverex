@@ -11,8 +11,7 @@ const Order = sequelize.define(
     },
     state: {
       type: DataTypes.ENUM,
-      values: ["SORTING", "READY", "TRANSIT", "DELIVERED", "FAILED"],
-      allowNull: false,
+      values: ["SORTING", "READY", "TRANSIT", "DELIVERED", "FAILED"]
     },
     weight: {
       type: DataTypes.DECIMAL(7, 2),
@@ -22,6 +21,18 @@ const Order = sequelize.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    format: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    }
   },
   {
     underscored: true,
