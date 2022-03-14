@@ -35,6 +35,10 @@ document.querySelectorAll(".clickableArrow").forEach((arrowButton) => {
 document.querySelectorAll("[data-order-code]").forEach((order) => {
   const id = order.getAttribute("data-order-code");
 
+  order.addEventListener("click", () => {
+    window.location.href = `/dashboard/orders/${id}`;
+  });
+
   order
     .querySelector("[data-order-delete]")
     .addEventListener("click", async (event) => {
