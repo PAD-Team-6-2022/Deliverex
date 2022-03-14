@@ -35,10 +35,6 @@ document.querySelectorAll(".clickableArrow").forEach((arrowButton) => {
 document.querySelectorAll("[data-order-code]").forEach((order) => {
   const id = order.getAttribute("data-order-code");
 
-  order.addEventListener("click", () => {
-    window.location.href = `/dashboard/orders/${id}`;
-  });
-
   order
     .querySelector("[data-order-delete]")
     .addEventListener("click", async (event) => {
@@ -55,5 +51,12 @@ document.querySelectorAll("[data-order-code]").forEach((order) => {
           },
         },
       });
+
+      // stop event from going further than current object
+      event.stopPropagation();
     });
+
+  order.addEventListener("click", () => {
+    window.location.href = `/dashboard/orders/${id}`;
+  });
 });
