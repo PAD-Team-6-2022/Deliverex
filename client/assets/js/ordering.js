@@ -1,4 +1,4 @@
-document.querySelectorAll("form").forEach((form) => {
+document.querySelectorAll("form[data-ordering-enabled]").forEach((form) => {
   form.querySelectorAll("[data-order-toggle]").forEach((orderToggle) => {
     const col = orderToggle.getAttribute("data-order-toggle");
 

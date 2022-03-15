@@ -1,23 +1,7 @@
 import "./navbar.js";
 import { openModal } from "../../modal.js";
 import "../../ordering.js";
-
-let nextLink = document.getElementById("nextLink");
-let prevLink = document.getElementById("prevLink");
-
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-let page = urlParams.get("page");
-
-if (page == null) {
-  page = 1;
-}
-
-nextLink.href = "?page=" + (parseInt(page) + 1);
-
-if (page > 1) {
-  prevLink.href = "?page=" + (parseInt(page) - 1);
-}
+import "../../pagination.js";
 
 document.querySelectorAll("[data-order-code]").forEach((order) => {
   const id = order.getAttribute("data-order-code");
@@ -38,10 +22,14 @@ document.querySelectorAll("[data-order-code]").forEach((order) => {
           },
         },
       });
-
       // stop event from going further than current object
       event.stopPropagation();
     });
+
+  order.querySelector("[data-order-edit]").addEventListener("click", async (event) => {
+      window.location.href = `/dashboard/orders/edit/${id}`;
+      event.stopPropagation();
+  });
 
   order.addEventListener("click", () => {
     window.location.href = `/dashboard/orders/${id}`;
