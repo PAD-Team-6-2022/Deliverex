@@ -25,15 +25,15 @@
     <h2 class="font-medium text-2xl text-slate-800 mb-5">Statisics</h2>
     <div class="flex space-x-3">
         <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
-            <h1 class="font-bold text-4xl text-slate-800">56</h1>
+            <h1 class="font-bold text-4xl text-slate-800"><%= ordersAmount %></h1>
             <p class="font-medium text-slate-500 text-xl mt-2">Orders</p>
         </div>
         <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
-            <h1 class="font-bold text-4xl text-slate-800">62</h1>
+            <h1 class="font-bold text-4xl text-slate-800"><%= deliverdAmount %></h1>
             <p class="font-medium text-slate-500 text-xl mt-2">Delivered</p>
         </div>
         <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
-            <h1 class="font-bold text-4xl text-slate-800">€420.69</h1>
+            <h1 class="font-bold text-4xl text-slate-800">€ <span class="animate-pulse">---</span></h1>
             <p class="font-medium text-slate-500 text-xl mt-2">Money raised</p>
         </div>
     </div>
@@ -261,11 +261,5 @@
     </form>
 
 </div>
-
-<script>
-
-
-
-</script>
 </body>
 </html>

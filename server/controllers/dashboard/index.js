@@ -16,7 +16,7 @@ router.get(
   "/overview",
   auth(true),
   pagination([25, 50, 100]),
-  ordering("id", "asc"),
+  ordering("created_at", "desc"),
   searching,
   async (req, res) => {
     // Get the orders with the calculated offset, limit for pagination and details about the sorting order
@@ -26,6 +26,16 @@ router.get(
       order: [[req.sort, req.order]],
       where: searchQueryToWhereClause(req.search, ["id", "weight", "state"]),
     });
+
+    //Get all orders to count specific values
+    const allOrders = await Order.findAll();
+    const ordersAmount = allOrders.length;
+    let deliverdAmount = 0;
+    for (order in allOrders) {
+      if (allOrders[order]["dataValues"]["state"] === "DELIVERED") {
+        deliverdAmount++;
+      }
+    }
 
     //converteer het gewicht van elke order naar de
     orders.forEach((order) => {
@@ -43,6 +53,8 @@ router.get(
       user: req.user,
       search: req.search,
       page: req.page,
+      ordersAmount,
+      deliverdAmount,
     });
   }
 );
