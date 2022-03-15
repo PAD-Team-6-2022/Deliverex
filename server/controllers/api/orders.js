@@ -36,9 +36,9 @@ router.post("/", (req, res) => {
         });
 });
 
-router.put("/", (req, res) => {
+router.post("/edit", (req, res) => {
     Order.update({weight: req.body.weight, country: req.body.country,
-        address: `${req.body.street} ${Number(req.body.houseNumber)}`, format: req.body.sizeFormat},
+        address: `${req.body.street} ${Number(req.body.houseNumber)}`, format: req.body.sizeFormat, state: req.body.state},
         {where: {id: req.body.id}})
         .then(() => {
             res.redirect("/dashboard");
