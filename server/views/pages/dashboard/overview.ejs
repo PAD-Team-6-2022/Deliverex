@@ -33,17 +33,18 @@
             <p class="font-medium text-slate-500 text-xl mt-2">Delivered</p>
         </div>
         <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
-            <h1 class="font-bold text-4xl text-slate-800">€420.69</h1>
+            <h1 class="font-bold text-4xl text-slate-800">€ <span class="animate-pulse">---</span></h1>
             <p class="font-medium text-slate-500 text-xl mt-2">Money raised</p>
         </div>
     </div>
 
     <%# order overview %>
-    <form class="flex flex-col bg-white rounded-md border border-slate-200 my-16 overflow-hidden p-8">
+    <form class="flex flex-col bg-white rounded-md border border-slate-200 my-16 overflow-hidden p-8" data-pagination-enabled data-ordering-enabled>
 
-        <%# Hidden inputs for column sorting %>
+        <%# Hidden inputs for column sorting and pagination %>
         <input type="hidden" name="sort" value="<%= sort %>">
         <input type="hidden" name="order" value="<%= order %>">
+        <input type="hidden" name="page" value="<%= page %>">   
 
         <h2 class="font-medium text-2xl text-slate-800 mb-4 flex">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -4 24 24" width="24" fill="currentColor">
@@ -235,24 +236,18 @@
                     </svg>
                 </div>
             </div>
-
-            <a id="prevLink" href="#">
-                <button id="prevButton"
-                        class="hover:bg-slate-100 border border-solid border-slate-300 rounded-lg px-3 py-2 ml-4 text-slate-700 disabled:text-slate-300 disabled:hover:bg-slate-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
-                        <path d="M3.414 7.657l3.95 3.95A1 1 0 0 1 5.95 13.02L.293 7.364a.997.997 0 0 1 0-1.414L5.95.293a1 1 0 1 1 1.414 1.414l-3.95 3.95H13a1 1 0 0 1 0 2H3.414z"></path>
-                    </svg>
-                </button>
-            </a>
-
-            <a id="nextLink" href="?page=">
-                <button id="nextButton"
-                        class="hover:bg-slate-100 border border-solid border-slate-300 rounded-lg px-3 py-2 ml-4 text-slate-700 disabled:text-slate-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
-                        <path d="M10.586 5.657l-3.95-3.95A1 1 0 0 1 8.05.293l5.657 5.657a.997.997 0 0 1 0 1.414L8.05 13.021a1 1 0 1 1-1.414-1.414l3.95-3.95H1a1 1 0 1 1 0-2h9.586z"></path>
-                    </svg>
-                </button>
-            </a>
+            <button type="button" data-pagination-prev-trigger
+                    class="hover:bg-slate-100 border border-solid border-slate-300 rounded-lg px-3 py-2 ml-4 text-slate-700 disabled:text-slate-300 disabled:hover:bg-slate-50">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
+                    <path d="M3.414 7.657l3.95 3.95A1 1 0 0 1 5.95 13.02L.293 7.364a.997.997 0 0 1 0-1.414L5.95.293a1 1 0 1 1 1.414 1.414l-3.95 3.95H13a1 1 0 0 1 0 2H3.414z"></path>
+                </svg>
+            </button>
+            <button type="button" data-pagination-next-trigger
+                    class="hover:bg-slate-100 border border-solid border-slate-300 rounded-lg px-3 py-2 ml-4 text-slate-700 disabled:text-slate-400">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
+                    <path d="M10.586 5.657l-3.95-3.95A1 1 0 0 1 8.05.293l5.657 5.657a.997.997 0 0 1 0 1.414L8.05 13.021a1 1 0 1 1-1.414-1.414l3.95-3.95H1a1 1 0 1 1 0-2h9.586z"></path>
+                </svg>
+            </button>
             <% } else { %>
               <div class="mx-auto mt-4">
                 <img src="/assets/img/no_orders_found.svg" class="max-h-60">
@@ -266,11 +261,5 @@
     </form>
 
 </div>
-
-<script>
-
-
-
-</script>
 </body>
 </html>
