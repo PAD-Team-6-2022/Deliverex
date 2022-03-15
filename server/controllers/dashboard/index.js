@@ -16,7 +16,7 @@ router.get(
   "/overview",
   auth(true),
   pagination([25, 50, 100]),
-  ordering("id", "asc"),
+  ordering("created_at", "desc"),
   searching,
   async (req, res) => {
     // Get the orders with the calculated offset, limit for pagination and details about the sorting order
