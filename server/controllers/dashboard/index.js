@@ -42,6 +42,7 @@ router.get(
       limit: req.limit,
       user: req.user,
       search: req.search,
+      page: req.page,
     });
   }
 );

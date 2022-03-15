@@ -1,6 +1,7 @@
 import "./navbar.js";
 import { openModal } from "../../modal.js";
 import "../../ordering.js";
+import "../../pagination.js";
 
 let nextLink = document.getElementById("nextLink");
 let prevLink = document.getElementById("prevLink");
