@@ -6,8 +6,7 @@ const toggleVisibility = (modal) =>
 export const openModal = (id, options = {}) => {
   const modal = document.querySelector(`[data-modal="${id}"]`);
 
-  if (!modal) throw new Error(`Modal with id ${id} couldn't be found`);
-
+  if (!modal) throw new Error(`Modal with id ${id} couldn't be found`)
   // Setting the modal to active state
   toggleVisibility(modal);
   toggleScroll();
