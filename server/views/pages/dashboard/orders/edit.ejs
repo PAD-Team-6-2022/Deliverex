@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-slate-50">
+  <head>
+    <%- include("../../../partials/head") %>
+  </head>
+  <body>
+  <%- include("../../../partials/dashboard/navbar") %>
+
+  <div class="flex justify-center items-center h-screen w-full bg-white-400">
+      <div class="w-1/2 bg-white rounded border border-slate-200 p-8 m-4">
+          <h1 class="block w-full text-center text-gray-800 text-2xl font-bold mb-6">Edit order #<%= order.id %></h1>
+          <form action="/api/orders" method="put">
+              <input type="hidden" value="<%= order.id %>" name="id">
+              <div class="flex flex-col mb-4">
+                  <label class="mb-2 font-bold text-lg text-gray-900" for="first_name">Email-Adress</label>
+                  <input data-order-email class="border py-2 px-3 text-grey-800" type="email" name="first_name" id="first_name">
+              </div>
+
+              <div class="flex flex-col mb-4">
+                  <label class="mb-2 font-bold text-lg text-gray-900" for="weight">Weight in grams</label>
+                  <input data-order-weight class="border py-2 px-3 text-grey-800" type="number" name="weight" id="weight" value=<%= order.weight %>>
+              </div>
+
+                <div class="flex flex-col mb-4">
+                  <label class="mb-2 font-bold text-lg text-gray-900" for="country">Country/Origin</label>
+                  <input data-order-country class="border py-2 px-3 text-grey-800" type="text" name="country" id="country" value=<%= order.country %>>
+              </div>
+
+                <div class="flex flex-row flex-wrap mb-4 justify-between grow">
+                    <div class="flex flex-col mb-4 grow">
+                        <label class="mb-2 font-bold text-lg text-gray-900" for="street">Street</label>
+                        <input data-order-street class="border py-2 px-3 text-grey-800" type="text" name="street" id="street">
+                    </div>
+                    <div class="flex flex-col mb-4 grow">
+                        <label class="mb-2 font-bold text-lg text-gray-900" for="houseNumber">Housenumber</label>
+                        <input data-order-housenumber class="border py-2 px-3 text-grey-800" type="number" name="houseNumber" id="houseNumber">
+                    </div>
+                </div>
+
+               <div class="flex flex-col  top-8">
+                   <p class="flex mb-2 font-bold text-lg text-gray-900" for="sizeFormat">Size format</p>
+             <select class="mb-2 font-bold text-lg text-gray-900 border border-slate-200 " name="sizeFormat" id="sizeFormat">
+               <option value="1">format 1</option>
+               <option value="2">format 2</option>
+               <option value="3">format 3</option>
+             </select>
+              </div>
+
+              <button class="block bg-blue-400 hover:bg-blue-600 text-white uppercase text-lg mx-auto p-4 rounded " type="submit">Save</button>
+          </form>
+
+      </div>
+  </div>
+  </body>
+</html>

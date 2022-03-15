@@ -38,10 +38,14 @@ document.querySelectorAll("[data-order-code]").forEach((order) => {
           },
         },
       });
-
       // stop event from going further than current object
       event.stopPropagation();
     });
+
+  order.querySelector("[data-order-edit]").addEventListener("click", async (event) => {
+      window.location.href = `/dashboard/orders/edit/${id}`;
+      event.stopPropagation();
+  });
 
   order.addEventListener("click", () => {
     window.location.href = `/dashboard/orders/${id}`;

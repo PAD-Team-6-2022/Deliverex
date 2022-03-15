@@ -8,6 +8,18 @@ router.get("/create", auth(true), (req, res) => {
   res.render("dashboard/orders/create", { title: "Create order" });
 });
 
+router.get("/edit/:id", auth(true), async (req, res) => {
+  const { id } = req.params;
+  const order = await Order.findByPk(id);
+
+  if (!order) {
+    res.redirect("/dashboard/overview");
+    return;
+  }
+
+  res.render("dashboard/orders/edit", { title: "Edit order", order});
+});
+
 router.get("/:id", auth(true), async (req, res) => {
   const { id } = req.params;
   const order = await Order.findByPk(id);
