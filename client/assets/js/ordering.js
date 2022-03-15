@@ -6,8 +6,12 @@ document.querySelectorAll("form").forEach((form) => {
       const sort = form.querySelector('input[name="sort"]');
       const order = form.querySelector('input[name="order"]');
 
-      sort.value = col;
-      order.value = order.value === "asc" ? "desc" : "asc";
+      if(sort.value === col){
+        order.value = order.value === "asc" ? "desc" : "asc";
+      }else{
+        sort.value = col;
+        order.value = "asc";
+      }
 
       form.submit();
     });
