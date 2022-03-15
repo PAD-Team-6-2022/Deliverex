@@ -96,49 +96,28 @@
                                 class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex items-center">
                       Id
-                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class=" 
-                            rotate-<%= (sort === "id" && order === "asc") ? 180 : 0 %>
-                            <%= (sort === "id" ? "text-slate-500" : "text-slate-300") %>">
-                         <path
-                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
-                         </path>
-                       </svg>
+                        <%- include("../../partials/dashboard/tableArrow", { column: 'id' }) %>
                     </span>
                             </th>
                             <th data-order-toggle="weight" scope="col"
                                 class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex">
                       Weight
-                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="                            rotate-<%= (sort === "weight" && order === "asc") ? 180 : 0 %>
-                            <%= (sort === "weight" ? "text-slate-500" : "text-slate-300") %>">
-                         <path
-                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
-                         </path>
-                       </svg>
+                        <%- include("../../partials/dashboard/tableArrow", { column: 'weight' }) %>
                     </span>
                             </th>
                             <th data-order-toggle="state" scope="col"
                                 class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex">
                       State
-                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="rotate-<%= (sort === "state" && order === "asc") ? 180 : 0 %> <%= (sort === "state" ? "text-slate-500" : "text-slate-300") %>">
-                         <path
-                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
-                         </path>
-                       </svg>
+                        <%- include("../../partials/dashboard/tableArrow", { column: 'state' }) %>
                     </span>
                             </th>
                             <th data-order-toggle="created_at" scope="col"
                                 class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                     <span class="flex">
                       Date
-                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" width="16" fill="currentColor" class="
-                            rotate-<%= (sort === "created_at" && order === "asc") ? 180 : 0 %>
-                            <%= (sort === "created_at" ? "text-slate-500" : "text-slate-300") %>">
-                         <path
-                           d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z">
-                         </path>
-                       </svg>
+                        <%- include("../../partials/dashboard/tableArrow", { column: 'created_at' }) %>
                     </span>
                             </th>
                         </tr>
