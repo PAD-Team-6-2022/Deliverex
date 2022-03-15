@@ -12,7 +12,7 @@ router.get("/", auth(true), (req, res) => {
     res.redirect("/dashboard/overview");
 });
 
-router.get("/overview", auth(true), pagination([25, 50, 100]), ordering("created_at", "desc"), searching, async (req, res) => {
+router.get("/overview", auth(true), pagination([25, 50, 100]), ordering("id", "desc"), searching, async (req, res) => {
     // Get the orders with the calculated offset, limit for pagination and details about the sorting order
     const orders = await Order.findAll({
         offset: req.offset,
