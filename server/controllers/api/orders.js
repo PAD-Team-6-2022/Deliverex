@@ -36,4 +36,16 @@ router.post("/", (req, res) => {
         });
 });
 
+router.put("/", (req, res) => {
+    Order.update({weight: req.body.weight, country: req.body.country,
+        address: `${req.body.street} ${Number(req.body.houseNumber)}`, format: req.body.sizeFormat},
+        {where: {id: req.body.id}})
+        .then(() => {
+            res.redirect("/dashboard");
+        })
+        .catch((err) => {
+            res.status(500).json(req.body);
+        })
+})
+
 module.exports = router;
