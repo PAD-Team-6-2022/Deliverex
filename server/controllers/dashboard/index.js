@@ -21,11 +21,8 @@ router.get("/overview", auth(true), pagination([25, 50, 100]), ordering("created
         where: searchQueryToWhereClause(req.search, ["id", "weight", "state"]),
     });
 
-    //Get all orders to count specific values
-    const allOrders = await Order.count();
-    console.log(allOrders)
+    //Count specific values from database
     const ordersAmount = await Order.count();
-
     const deliverdAmount = await Order.count({
         where: {
             state: "DELIVERED"
