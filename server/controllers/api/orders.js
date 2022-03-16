@@ -37,7 +37,7 @@ router.post("/", (req, res) => {
 });
 
 router.post("/edit", (req, res) => {
-    Order.update({weight: req.body.weight, email: reg.body.email, country: req.body.country,
+    Order.update({weight: req.body.weight, email: req.body.email, country: req.body.country,
         address: `${req.body.street} ${Number(req.body.houseNumber)}`, format: req.body.sizeFormat, state: req.body.state},
         {where: {id: req.body.id}})
         .then(() => {

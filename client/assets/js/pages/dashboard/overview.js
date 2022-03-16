@@ -27,7 +27,7 @@ document.querySelectorAll("[data-order-code]").forEach((order) => {
     });
 
   order.querySelector("[data-order-edit]").addEventListener("click", async (event) => {
-      window.location.href = `/dashboard/orders/edit/${id}`;
+      window.location.href = `/dashboard/orders/${id}/edit`;
       event.stopPropagation();
   });
 
