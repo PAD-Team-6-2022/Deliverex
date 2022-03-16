@@ -509,10 +509,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   left: -0.25rem;
 }
 
-.top-8 {
-  top: 2rem;
-}
-
 .z-50 {
   z-index: 50;
 }
@@ -1102,11 +1098,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(226 232 240 / var(--tw-bg-opacity));
 }
 
-.bg-blue-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(96 165 250 / var(--tw-bg-opacity));
-}
-
 .bg-opacity-30 {
   --tw-bg-opacity: 0.3;
 }
@@ -1292,10 +1283,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .font-normal {
   font-weight: 400;
-}
-
-.uppercase {
-  text-transform: uppercase;
 }
 
 .leading-5 {
@@ -1484,11 +1471,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .hover\:bg-red-200:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(254 202 202 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-blue-600:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
 }
 
 .hover\:text-blue-700:hover {

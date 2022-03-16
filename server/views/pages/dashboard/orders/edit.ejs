@@ -12,32 +12,32 @@
               <input type="hidden" name="id" value="<%= order.id %>">
               <div class="flex flex-col mb-4 mx-2">
                   <label class="mb-2 font-bold text-sm text-gray-900" for="first_name">Email-Adress</label>
-                  <input class="border py-2 px-3 text-grey-800 rounded-lg" type="email" name="first_name" id="first_name">
+                  <input class="border py-2 px-3 text-grey-800 rounded-lg" type="email" name="first_name" id="first_name" required>
               </div>
 
                 <div class="flex flex-col mb-4 mx-2">
                   <label class="mb-2 font-bold text-sm text-gray-900" for="country">Country/Origin</label>
                   <input class="border py-2 px-3 text-grey-800 rounded-lg" type="text" name="country" id="country"
-                  value="<%= order.country %>">
+                  value="<%= order.country %>" required>
               </div>
 
                 <div class="flex flex-row flex-wrap justify-between grow">
                     <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
                         <label class="mb-2 font-bold text-sm text-gray-900" for="street">Street</label>
                         <input class="border py-2 px-3 text-grey-800 rounded-lg" type="text" name="street" id="street"
-                        value="<%= order.address.split(" ")[0] %>">
+                        value="<%= order.address.split(" ")[0] %>" required>
                     </div>
                     <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
                         <label class="mb-2 font-bold text-sm text-gray-900" for="houseNumber">House number</label>
                         <input class="border py-2 px-3 text-grey-800 rounded-lg" type="number" name="houseNumber" id="houseNumber"
-                        value="<%= order.address.split(" ")[1] %>">
+                        value="<%= order.address.split(" ")[1] %>" required>
                     </div>
                 </div>
 
                 <div class="flex flex-col mb-4 mx-2">
                     <label class="mb-2 font-bold text-sm text-gray-900" for="weight">Weight in grams</label>
                     <input class="border py-2 px-3 text-grey-800 rounded-lg" type="number" name="weight" id="weight"
-                    value="<%= order.weight %>">
+                    value="<%= order.weight %>" required>
                 </div>
 
                 <div class="flex flex-col mx-2 mb-4">
