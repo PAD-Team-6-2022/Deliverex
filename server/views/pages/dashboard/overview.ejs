@@ -18,12 +18,12 @@
 }) %>
 <%- include("../../partials/dashboard/navbar") %>
 <div class="max-w-7xl mx-auto px-4 mt-16">
-    <div class="mb-10">
-        <h1 class="font-bold text-4xl text-slate-800">Welcome back, <%= user.username %>!</h1>
-        <p class="text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block">See how your business is doing by looking at the statistics below</p>
+    <div class="mb-10 text-center sm:text-left">
+        <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Welcome back, <%= user.username %>!</h1>
+        <p class="text-lg sm:text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block">See how your business is doing by looking at the statistics below</p>
     </div>
     <h2 class="font-medium text-2xl text-slate-800 mb-5">Statisics</h2>
-    <div class="flex space-x-3">
+    <div class="flex gap-3 flex-col sm:flex-row">
         <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
             <h1 class="font-bold text-4xl text-slate-800"><%= ordersAmount %></h1>
             <p class="font-medium text-slate-500 text-xl mt-2">Orders</p>
@@ -199,12 +199,9 @@
         </div>
 
         <div class="text-slate-700 flex justify-end items-center mt-4">
-            <p>
-                Rows per page:
-            </p>
             <div class="inline-block relative w-32 ml-4">
                 <select name="limit" onchange="this.form.submit()"
-                        class="block appearance-none w-full border border-gray-300 px-3 py-2 rounded-lg leading-tight focus:outline-none focus:shadow-outline">
+                        class="h-10 block appearance-none w-full border border-gray-300 px-3 py-2 rounded-lg leading-tight focus:outline-none focus:shadow-outline">
                     <option value="25"<%= limit === 25 ? " selected" : "" %>>25</option>
                     <option value="50"<%= limit === 50 ? " selected": "" %>>50</option>
                     <option value="100"<%= limit === 100 ? " selected" : "" %>>100</option>
@@ -216,13 +213,13 @@
                 </div>
             </div>
             <button type="button" data-pagination-prev-trigger
-                    class="hover:bg-slate-100 border border-solid border-slate-300 rounded-lg px-3 py-2 ml-4 text-slate-700 disabled:text-slate-300 disabled:hover:bg-slate-50">
+                    class="h-10 hover:bg-slate-100 border border-solid border-slate-300 rounded-lg px-3 py-2 ml-4 text-slate-700 disabled:text-slate-300 disabled:hover:bg-slate-50">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
                     <path d="M3.414 7.657l3.95 3.95A1 1 0 0 1 5.95 13.02L.293 7.364a.997.997 0 0 1 0-1.414L5.95.293a1 1 0 1 1 1.414 1.414l-3.95 3.95H13a1 1 0 0 1 0 2H3.414z"></path>
                 </svg>
             </button>
             <button type="button" data-pagination-next-trigger
-                    class="hover:bg-slate-100 border border-solid border-slate-300 rounded-lg px-3 py-2 ml-4 text-slate-700 disabled:text-slate-400">
+                    class="h-10 first-letter:hover:bg-slate-100 border border-solid border-slate-300 rounded-lg px-3 py-2 ml-4 text-slate-700 disabled:text-slate-400">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
                     <path d="M10.586 5.657l-3.95-3.95A1 1 0 0 1 8.05.293l5.657 5.657a.997.997 0 0 1 0 1.414L8.05 13.021a1 1 0 1 1-1.414-1.414l3.95-3.95H1a1 1 0 1 1 0-2h9.586z"></path>
                 </svg>
