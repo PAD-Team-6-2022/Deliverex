@@ -9,6 +9,13 @@ const Order = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+          isEmail: true,
+      },
+    },
     state: {
       type: DataTypes.ENUM,
       values: ["SORTING", "READY", "TRANSIT", "DELIVERED", "FAILED"]
