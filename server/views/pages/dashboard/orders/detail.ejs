@@ -3,7 +3,19 @@
   <head>
     <%- include("../../../partials/head", {js: 'dashboard/orders/detail'}) %>
   </head>
-  <body>
+  <body data-order-code=<%= order.id %>>
+    <%- include("../../../partials/modal", {
+        id: "delete-order",
+        type: "warning",
+        actions: {
+            confirm: {
+                type: "warning",
+                label: "Delete"
+            }
+        },
+        title: "Are you sure?",
+        description: "Are you sure you want to delete order " + order.id + "? You cannot go back."
+    }) %>
     <%- include("../../../partials/dashboard/navbar") %>
     <nav class="sticky top-16 bg-white h-16 z-40 border-b border-gray-200">
         <div class="max-w-7xl flex justify-between items-center h-full px-4 mx-auto">
@@ -20,7 +32,7 @@
             </div>
         </div>
     </nav>
-    <div data-order-code=<%= order.id %> class="max-w-7xl mx-auto px-4 mt-16">
+    <div class="max-w-7xl mx-auto px-4 mt-16">
         <div class="flex flex-col bg-white rounded-md border border-slate-200 mb-16 overflow-hidden p-8">
             <div class="mx-auto">
                 <% if (order.state === "DELIVERED") { %>
