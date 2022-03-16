@@ -498,6 +498,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   right: 0px;
 }
 
+.top-0 {
+  top: 0px;
+}
+
 .-left-4 {
   left: -1rem;
 }
@@ -514,8 +518,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   left: -0.25rem;
 }
 
-.top-0 {
-  top: 0px;
+.top-10 {
+  top: 2.5rem;
+}
+
+.top-14 {
+  top: 3.5rem;
+}
+
+.top-16 {
+  top: 4rem;
 }
 
 .z-50 {
@@ -703,16 +715,24 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 2rem;
 }
 
-.h-\[74px\] {
-  height: 74px;
-}
-
 .h-3 {
   height: 0.75rem;
 }
 
 .h-5 {
   height: 1.25rem;
+}
+
+.h-20 {
+  height: 5rem;
+}
+
+.h-14 {
+  height: 3.5rem;
+}
+
+.h-16 {
+  height: 4rem;
 }
 
 .max-h-60 {
@@ -922,6 +942,18 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-space-y-reverse: 0;
   margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+}
+
+.space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.space-x-5 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1.25rem * var(--tw-space-x-reverse));
+  margin-left: calc(1.25rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .divide-y > :not([hidden]) ~ :not([hidden]) {
@@ -1603,10 +1635,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   .md\:hidden {
     display: none;
-  }
-
-  .md\:h-\[64px\] {
-    height: 64px;
   }
 
   .md\:w-auto {
