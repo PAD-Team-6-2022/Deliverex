@@ -46,8 +46,6 @@ router.get(
       order.date = moment(order.created_at).format("YYYY-MM-DD");
     });
 
-    console.log(orders);
-
     // Render the page, pass on the order array
     res.render("dashboard/overview", {
       title: "Overzicht - Dashboard",
