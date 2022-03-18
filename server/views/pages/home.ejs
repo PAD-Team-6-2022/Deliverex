@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("../partials/head", { js: "home" }) %>
+</head>
+<body class="bg-slate-50">
+  <div class="px-4 flex justify-center items-center min-h-screen">
+    <form class="max-w-xl bg-white rounded-md border border-slate-200 p-8 my-16">
+      <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Track and trace</h1>
+          <p class="text-base mb-6 font-medium text-slate-500 mt-3 max-w-sm inline-block">Enter in your tracking code and zipcode to see the status of your order</p>
+      <div class="mb-6">
+        <label for="orderCode" class="block mb-2 text-sm font-medium text-slate-800">Tracking code</label>
+        <input id="orderCode" type="text" id="code" class="bg-slate-50 border text-slate-800 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="1918264109" required>
+      </div>
+      <div class="mb-6">
+        <label for="postcode" class="block mb-2 text-sm font-medium text-slate-800">Postcode</label>
+        <input id="postcode" type="text" id="postcode" class="bg-slate-50 border text-slate-800 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="2045GZ" required>
+      </div>
+      <button type="button" id="submit" class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-4 rounded-xl " type="submit">Track</button>
+    </form>
+  </div>
+</body>
+</html>
