@@ -42,6 +42,8 @@ app.use("/dashboard", require("./controllers/dashboard"));
 app.use("/setup", require("./controllers/setup"));
 app.use("/", require("./controllers/tracker"));
 app.use("/api", require("./controllers/api"));
+app.use("/settings", require("./controllers/settings"));
+
 
 // Set fallback route
 app.get("*", (req, res) => {

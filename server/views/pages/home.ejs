@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("../partials/head", { js: "home" }) %>
+</head>
+<body>
+  <header class="bg-cyan-500 px-4 flex justify-center items-center min-h-[50vh]">
+    <form id="track-form" class="max-w-xl bg-white rounded-md border border-slate-200 p-8 my-16 shadow-xl">
+      <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Track and trace</h1>
+          <p class="text-base mb-6 font-medium text-slate-500 mt-3 max-w-sm inline-block">Enter in your tracking code and postcode to see the status of your order</p>
+      <div class="mb-6">
+        <label for="orderCode" class="block mb-2 text-sm font-medium text-slate-800">Tracking code</label>
+        <input id="orderCode" type="text" id="code" class="bg-slate-50 border text-slate-800 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="1918264109" required>
+      </div>
+      <div class="mb-6">
+        <label for="postcode" class="block mb-2 text-sm font-medium text-slate-800">Postcode</label>
+        <input id="postcode" type="text" id="postcode" class="bg-slate-50 border text-slate-800 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="2045GZ" required>
+      </div>
+
+      <button type="button" id="submit" class="flex space-x-2 h-10 text-white bg-cyan-500 hover:bg-cyan-700 transition-colors rounded-md px-4 py-2">
+        <div>Track</div>
+        <svg class="inline" xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor"><path d="M10.586 5.657l-3.95-3.95A1 1 0 0 1 8.05.293l5.657 5.657a.997.997 0 0 1 0 1.414L8.05 13.021a1 1 0 1 1-1.414-1.414l3.95-3.95H1a1 1 0 1 1 0-2h9.586z"></path></svg>
+      </button>
+    </form>
+  </header>
+
+  <section class="max-w-6xl px-4 mx-auto flex justify-center space-x-4 py-16">
+    <div class="flex-1 px-4 max-w-xl mx-auto sm:px-5 lg:max-w-none lg:mx-0 lg:px-0">
+      <div class="bg-cyan-500 text-white p-3 w-fit rounded-md">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" fill="currentColor"><path d="M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-3.92-4.606a1 1 0 1 1 1.84-.788 2.264 2.264 0 0 0 4.16 0 1 1 0 1 1 1.84.788 4.264 4.264 0 0 1-7.84 0zM7 6a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V7a1 1 0 0 1 1-1zm6 0a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0V7a1 1 0 0 1 1-1z"></path></svg>
+      </div>
+      <div class="mt-5">
+        <h2 class="text-3xl font-bold text-slate-800">
+          Vote and help improve your community
+        </h2>
+        <p class="mt-4 text-xl text-slate-500">
+          With this application you can help improve your community by voting on goals.<br><br> Stores assigned to this help by donating a small percentage <b class="text-slate-800">every order</b> to a goal the community votes for.
+        </p>
+      </div>
+    </div>
+    <div class="hidden lg:flex flex-1 justify-end items-center">
+      <img class="max-h-64" src="/assets/img/community-vote.svg" alt="">
+    </div>
+  </section>
+  <section class="max-w-6xl px-4 mx-auto flex justify-center space-x-4 py-16 mb-16">
+    <div class="hidden lg:flex flex-1 justify-start items-center">
+      <img class="max-h-64" src="/assets/img/local-business.svg" alt="">
+    </div>
+    <div class="flex-1 px-4 max-w-xl mx-auto sm:px-5 lg:max-w-none lg:mx-0 lg:px-0">
+      <div class="bg-cyan-500 text-white p-3 w-fit rounded-md">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -4 24 24" width="24" fill="currentColor"><path d="M9.293 1.55l.707.708.707-.707a5 5 0 1 1 7.071 7.071l-7.07 7.071a1 1 0 0 1-1.415 0L2.222 8.622a5 5 0 1 1 7.07-7.071z"></path></svg>
+      </div>
+      <div class="mt-5">
+        <h2 class="text-3xl font-bold text-slate-800">
+          Support your local businesses
+        </h2>
+        <p class="mt-4 text-xl text-slate-500">
+          We take pride in <b class="text-slate-800">giving the control back</b> to the local businesses.<br><br> Big delivery companies take away control from the business owner and make it hard to compete.
+        </p>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
