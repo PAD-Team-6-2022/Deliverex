@@ -6,7 +6,7 @@
   <body>
     <div class="flex">
       <%- include("../../../partials/dashboard/sidebar") %>
-      <div class="max-w-7xl mx-auto px-4 my-16 flex-1">
+      <div class="max-w-7xl mx-auto px-4 my-16 flex-1 overflow-hidden">
         <div class="bg-white rounded-xl border border-slate-200 p-8">
             <h1 class="block text-gray-800 text-2xl font-bold mb-6">Edit order #<%= order.id %></h1>
             <form action="/api/orders/edit" method="POST">
