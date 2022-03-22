@@ -8,7 +8,40 @@ module.exports = {
       fontFamily: {
         sans: ["Inter var", ...defaultTheme.fontFamily.sans],
       },
+      keyframes: {
+        from_right: {
+          '0%': {
+            transform: 'translateX(100vw)',
+            opacity: 0
+          },
+          '100%': {
+            transform: 'translateX(0)',
+            opacity: 1
+          },
+        }
+      },
+      animation: {
+        from_right: 'from_right 0.8s ease-in-out',
+      }
     },
   },
   plugins: [],
 };
+
+
+// .w3-animate-right {
+// 	position: relative;
+// 	animation:animateright 0.4s
+// }
+
+// @keyframes animateright {
+// 	from {
+// 		right: -300px;
+// 		opacity:0
+// 	}
+
+// 	to {
+// 		right: 0;
+// 		opacity: 1
+// 	}
+// }

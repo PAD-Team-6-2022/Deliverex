@@ -37,6 +37,10 @@ const passport = require("./auth/passport");
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Flash messages
+const flash = require('connect-flash');
+app.use(flash());
+
 // Set controllers
 app.use("/dashboard", require("./controllers/dashboard"));
 app.use("/setup", require("./controllers/setup"));

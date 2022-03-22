@@ -1,0 +1,39 @@
+<div class="fixed top-5 right-5 pl-4">
+    <% toasters.forEach((toaster, id) => {
+
+        colors = "text-slate-500 bg-slate-100";
+        switch (toaster.type) {
+            case "ERROR":
+                    colors = "text-red-500 bg-red-100";
+                break;
+            case "SUCCES":
+                    colors = "text-green-500 bg-green-100";
+                break;
+            default:
+                colors = "text-slate-500 bg-slate-100";
+                break;
+        }
+        %>
+
+        <div data-toaster-code=<%= id %> class="flex items-center p-4 w-full max-w-xs text-slate-500 bg-white rounded-lg border shadow-lg mb-2 animate-from_right">
+            <div class="inline-flex flex-shrink-0 justify-center items-center w-8 h-8 <%= colors %> rounded-lg">
+                <% switch (toaster.type) {
+                    case "ERROR": %>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -3 24 24" width="24" fill="currentColor"><path d="M12.8 1.613l6.701 11.161c.963 1.603.49 3.712-1.057 4.71a3.213 3.213 0 0 1-1.743.516H3.298C1.477 18 0 16.47 0 14.581c0-.639.173-1.264.498-1.807L7.2 1.613C8.162.01 10.196-.481 11.743.517c.428.276.79.651 1.057 1.096zm-2.22.839a1.077 1.077 0 0 0-1.514.365L2.365 13.98a1.17 1.17 0 0 0-.166.602c0 .63.492 1.14 1.1 1.14H16.7c.206 0 .407-.06.581-.172a1.164 1.164 0 0 0 .353-1.57L10.933 2.817a1.12 1.12 0 0 0-.352-.365zM10 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0-9a1 1 0 0 1 1 1v4a1 1 0 0 1-2 0V6a1 1 0 0 1 1-1z"></path></svg>
+                        <% break;
+                    case "SUCCES": %>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -7 24 24" width="24" fill="currentColor"><path d="M5.486 9.73a.997.997 0 0 1-.707-.292L.537 5.195A1 1 0 1 1 1.95 3.78l3.535 3.535L11.85.952a1 1 0 0 1 1.415 1.414L6.193 9.438a.997.997 0 0 1-.707.292z"></path></svg>
+                        <% break;
+                    default: %>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" fill="currentColor"><path d="M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-10a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm0-1a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"></path></svg>
+                        <% break;
+                }
+                %>
+            </div>
+            <div class="mx-3 text-sm font-normal"><%= toaster.message %> </div>
+            <button data-toaster-close type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-slate-400 hover:text-slate-900 rounded-lg focus:ring-2 focus:ring-slate-300 p-1.5 hover:bg-slate-100 inline-flex h-8 w-8 transition-colors cursor-pointer">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </button>
+        </div>
+    <% }) %>
+</div>
