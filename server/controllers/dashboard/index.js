@@ -91,7 +91,13 @@ router.get("/signout", auth(true), (req, res) => {
   res.redirect("/");
 });
 
+/**
+ * Render the package size page
+ */
+router.get("/settings", (req, res) => {
+    res.render("dashboard/settings", {title: "Package sizes"})
+});
+
 router.use("/orders", require("./orders"));
-router.use("/settings", require("./settings"));
 
 module.exports = router;
