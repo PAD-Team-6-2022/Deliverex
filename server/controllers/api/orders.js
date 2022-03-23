@@ -26,7 +26,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-    Order.create({state: 'SORTING', email: req.body.email, weight: req.body.weight, created_at: Date.now(),
+    Order.create({status: 'SORTING', email: req.body.email, weight: req.body.weight, created_at: Date.now(),
         country: req.body.country, address: `${req.body.street} ${Number(req.body.houseNumber)}`, format: req.body.sizeFormat})
         .then((orders) => {
             res.redirect('/dashboard')
@@ -38,7 +38,7 @@ router.post("/", (req, res) => {
 
 router.post("/edit", (req, res) => {
     Order.update({weight: req.body.weight, email: req.body.email, country: req.body.country,
-        address: `${req.body.street} ${Number(req.body.houseNumber)}`, format: req.body.sizeFormat, state: req.body.state},
+        address: `${req.body.street} ${Number(req.body.houseNumber)}`, format: req.body.sizeFormat, status: req.body.status},
         {where: {id: req.body.id}})
         .then(() => {
             res.redirect("/dashboard");

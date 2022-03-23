@@ -25,14 +25,14 @@ router.get(
       offset: req.offset,
       limit: req.limit,
       order: [[req.sort, req.order]],
-      where: searchQueryToWhereClause(req.search, ["id", "weight", "state"]),
+      where: searchQueryToWhereClause(req.search, ["id", "weight", "status"]),
     });
 
     //Count specific values from database
     const ordersAmount = await Order.count();
     const deliverdAmount = await Order.count({
       where: {
-        state: "DELIVERED",
+        status: "DELIVERED",
       },
     });
 
