@@ -27,7 +27,7 @@ router.get("/", (req, res) => {
 
 router.post("/", (req, res) => {
     Order.create({
-        state: 'SORTING',
+        status: 'SORTING',
         email: req.body.email,
         weight: req.body.weight,
         created_at: Date.now(),
@@ -49,7 +49,7 @@ router.post("/edit", (req, res) => {
             country: req.body.country,
             address: `${req.body.street} ${Number(req.body.houseNumber)}`,
             format: req.body.sizeFormat,
-            state: req.body.state},
+            status: req.body.status},
         {where: {id: req.body.id}})
         .then(() => {
             res.redirect("/dashboard");

@@ -16,7 +16,7 @@ const Order = sequelize.define(
           isEmail: true,
       },
     },
-    state: {
+    status: {
       type: DataTypes.ENUM,
       values: ["SORTING", "READY", "TRANSIT", "DELIVERED", "FAILED"]
     },
@@ -28,15 +28,27 @@ const Order = sequelize.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    country: {
-      type: DataTypes.STRING,
-      allowNull: true
+    updated_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
     },
     address: {
       type: DataTypes.STRING,
       allowNull: false
     },
+    postal_code: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     format: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    is_pickup: {
       type: DataTypes.STRING,
       allowNull: false,
     }
