@@ -11,11 +11,13 @@
           <p class="text-base mb-6 font-medium text-slate-500 mt-3 max-w-sm inline-block">Enter in your tracking code and postcode to see the status of your order</p>
       <div class="mb-6">
         <label for="orderCode" class="block mb-2 text-sm font-medium text-slate-800">Tracking code</label>
-        <input id="orderCode" type="text" id="code" class="bg-slate-50 border text-slate-800 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="1918264109" required>
+        <input id="orderCode" type="text" id="code" class="bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="1918264109" required>
+        <p id="trackingError" class="text-red-500 mt-1 hidden">Tracking code  is not filled in correctly</p>
       </div>
       <div class="mb-6">
-        <label for="postcode" class="block mb-2 text-sm font-medium text-slate-800">Postal code</label>
-        <input id="postcode" type="text" id="postcode" class="bg-slate-50 border text-slate-800 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="2045GZ" required>
+        <label for="postalCode" class="block mb-2 text-sm font-medium text-slate-800">Postal code</label>
+        <input id="postalCode" type="text" id="postalCode" class="bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="2045GZ" required>
+        <p id="postalError" class="text-red-500 mt-1 hidden">Postal code is not filled in correctly</p>
       </div>
 
       <button type="button" id="submit" class="flex space-x-2 h-10 text-white bg-cyan-500 hover:bg-cyan-700 transition-colors rounded-md px-4 py-2">

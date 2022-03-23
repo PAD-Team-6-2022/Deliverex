@@ -13,10 +13,17 @@ router.get("/", (req, res) => {
 /**
  * Render tracker page for order with given id
  */
-router.get("/track/:id", async (req, res) => {
-  const { id } = req.params;
-  const order = await Order.findByPk(id);
+router.get("/track/:id&:postal_code", async (req, res) => {
+  const { id, postal_code } = req.params;
+  // find the one order with the given id and postal_code combination
+  const order = await Order.findOne({
+    where: {
+      id: id,
+      postal_code: postal_code
+    }
+  });;
 
+  // redirect with toaster and the given order
   if (!order) {
     const toasters = [
       {
@@ -33,7 +40,7 @@ router.get("/track/:id", async (req, res) => {
     
     return;
   }
-
+  
   res.render("tracker", { title: "Track & Trace", order });
 });
 

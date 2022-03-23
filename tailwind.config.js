@@ -27,20 +27,3 @@ module.exports = {
   },
   plugins: [require("@tailwindcss/forms")],
 };
-
-// .w3-animate-right {
-// 	position: relative;
-// 	animation:animateright 0.4s
-// }
-
-// @keyframes animateright {
-// 	from {
-// 		right: -300px;
-// 		opacity:0
-// 	}
-
-// 	to {
-// 		right: 0;
-// 		opacity: 1
-// 	}
-// }
