@@ -9,3 +9,13 @@ export const toggleClasses = (el, classes) => {
 export const toggleScroll = () => {
   toggleClasses(HTML_ELEMENT, ["overflow-hidden"]);
 };
+
+export const delay = (fn, ms) => {
+  let timer;
+
+  return (...args) => {
+    clearTimeout(timer);
+
+    timer = setTimeout(fn.bind(this, ...args), ms || 0);
+  };
+};

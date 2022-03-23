@@ -61,14 +61,14 @@
                     </div>
 
                     <div class="flex flex-col mx-2 mb-4">
-                        <label class="mb-2 font-bold text-sm text-slate-900" for="state">Order state</label>
+                        <label class="mb-2 font-bold text-sm text-slate-900" for="status">Order status</label>
                         <div class="relative">
-                            <select class="border text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 appearance-none" name="state" id="state">
-                                <option value="SORTING" <%= (order.state === "SORTING") ? "selected" : "" %>>Sorting</option>
-                                <option value="READY" <%= (order.state === "READY") ? "selected" : "" %>>Ready</option>
-                                <option value="TRANSIT" <%= (order.state === "TRANSIT") ? "selected" : "" %>>Transit</option>
-                                <option value="DELIVERED" <%= (order.state === "DELIVERED") ? "selected" : "" %>>Delivered</option>
-                                <option value="FAILED" <%= (order.state === "FAILED") ? "selected" : "" %>>Failed</option>
+                            <select class="border text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 appearance-none" name="status" id="status">
+                                <option value="SORTING" <%= (order.status === "SORTING") ? "selected" : "" %>>Sorting</option>
+                                <option value="READY" <%= (order.status === "READY") ? "selected" : "" %>>Ready</option>
+                                <option value="TRANSIT" <%= (order.status === "TRANSIT") ? "selected" : "" %>>Transit</option>
+                                <option value="DELIVERED" <%= (order.status === "DELIVERED") ? "selected" : "" %>>Delivered</option>
+                                <option value="FAILED" <%= (order.status === "FAILED") ? "selected" : "" %>>Failed</option>
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
