@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-slate-50">
   <head>
-    <%- include("../../../partials/head") %>
+    <%- include("../../../partials/head", {js: "dashboard/orders/create"}) %>
   </head>
   <body>
     <div class="flex">
@@ -15,6 +15,7 @@
             Place a new order
           </h1>
           <form action="/api/orders" method="POST">
+<!--             <input type="hidden" class="bg-red-50 focus:outline-red-500 bg-green-50 focus:outline-green-400"> -->
             <div class="flex flex-col mb-4 mx-2">
               <label
                 class="mb-2 font-bold text-sm text-slate-900"
@@ -41,6 +42,53 @@
                 id="country"
                 required
               />
+            </div>
+
+            <div class="flex flex-row flex-wrap justify-between grow">
+              <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
+                <label
+                  class="mb-2 font-bold text-sm text-slate-900"
+                  for="postal_code"
+                  >Postal Code</label
+                >
+                <input
+                  class="border py-2 px-3 text-slate-800 rounded-lg"
+                  type="text"
+                  name="postal_code"
+                  id="postal_code"
+                  required
+                />
+              </div>
+              <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
+                <label
+                  class="mb-2 font-bold text-sm text-slate-900"
+                  for="city"
+                  >City</label
+                >
+                <div class="relative">
+                    <select
+                      class="border text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 appearance-none"
+                      name="city"
+                      id="city"
+                      disabled
+                    >
+                      <option value=""></option>
+                    </select>
+                    <div
+                      class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+                    >
+                      <svg
+                        class="fill-current h-4 w-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+              </div>
             </div>
 
             <div class="flex flex-row flex-wrap justify-between grow">
@@ -122,7 +170,8 @@
             <div class="flex justify-end">
               <button
                 class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-4 w-1/4 rounded-xl"
-                type="submit"
+                type="button"
+                id="submit"
               >
                 Place order
               </button>

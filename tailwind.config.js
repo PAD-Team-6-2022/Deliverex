@@ -2,7 +2,7 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
   mode: "jit",
-  content: ["./server/views/**/*.ejs"],
+  content: ["./client/**/*.js", "./server/views/**/*.ejs"],
   theme: {
     extend: {
       fontFamily: {
@@ -10,24 +10,23 @@ module.exports = {
       },
       keyframes: {
         from_right: {
-          '0%': {
-            transform: 'translateX(100vw)',
-            opacity: 0
+          "0%": {
+            transform: "translateX(100vw)",
+            opacity: 0,
           },
-          '100%': {
-            transform: 'translateX(0)',
-            opacity: 1
+          "100%": {
+            transform: "translateX(0)",
+            opacity: 1,
           },
-        }
+        },
       },
       animation: {
-        from_right: 'from_right 0.8s ease-in-out',
-      }
+        from_right: "from_right 0.8s ease-in-out",
+      },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 };
-
 
 // .w3-animate-right {
 // 	position: relative;

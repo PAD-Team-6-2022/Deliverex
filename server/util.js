@@ -10,4 +10,4 @@ const searchQueryToWhereClause = (query, fields) => {
   };
 };
 
-module.exports = searchQueryToWhereClause;
+module.exports = { searchQueryToWhereClause };

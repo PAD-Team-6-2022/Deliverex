@@ -13,12 +13,12 @@ const Order = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-          isEmail: true,
+        isEmail: true,
       },
     },
     status: {
       type: DataTypes.ENUM,
-      values: ["SORTING", "READY", "TRANSIT", "DELIVERED", "FAILED"]
+      values: ["SORTING", "READY", "TRANSIT", "DELIVERED", "FAILED"],
     },
     weight: {
       type: DataTypes.DECIMAL(7, 2),
@@ -34,11 +34,11 @@ const Order = sequelize.define(
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     postal_code: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     format: {
       type: DataTypes.STRING,
@@ -51,7 +51,7 @@ const Order = sequelize.define(
     is_pickup: {
       type: DataTypes.STRING,
       allowNull: false,
-    }
+    },
   },
   {
     underscored: true,
