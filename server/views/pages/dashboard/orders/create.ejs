@@ -7,7 +7,10 @@
     <div class="flex">
       <%- include("../../../partials/dashboard/sidebar") %>
       <div class="max-w-7xl mx-auto px-4 my-16 flex-1 overflow-hidden">
-        <div class="bg-white rounded-xl border border-slate-200 p-8">
+        <%- include("../../../partials/breadcrumb", { links: [{ name:
+        "Overview", href: "/dashboard/overview" }, { name: "Orders", href:
+        "/dashboard/orders" }, { name: "Create order" }] }) %>
+        <div class="mt-10 bg-white rounded-xl border border-slate-200 p-8">
           <h1 class="block text-slate-800 text-2xl font-bold mb-6">
             Place a new order
           </h1>

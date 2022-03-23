@@ -5,7 +5,7 @@ const Order = require("../models/order");
  * Render the homepage
  */
 router.get("/", (req, res) => {
-  res.render("home", {title: "Homepage"})
+  res.render("home", { title: "Homepage", toasters: req.flash('toasters') })
 });
 
 
@@ -18,7 +18,19 @@ router.get("/track/:id", async (req, res) => {
   const order = await Order.findByPk(id);
 
   if (!order) {
-    res.redirect("/");
+    const toasters = [
+      {
+        type: "ERROR",
+        message: "Oops! We couldn't find your package"
+      },
+    ];
+
+    req.flash('toasters', toasters);
+
+    req.session.save(() => {
+      res.redirect("/");
+    });
+    
     return;
   }
 
