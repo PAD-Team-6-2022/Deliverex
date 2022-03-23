@@ -1,4 +1,3 @@
-import "./navbar.js";
 import { openModal } from "../../modal.js";
 import "../../ordering.js";
 import "../../pagination.js";
@@ -26,10 +25,12 @@ document.querySelectorAll("[data-order-code]").forEach((order) => {
       event.stopPropagation();
     });
 
-  order.querySelector("[data-order-edit]").addEventListener("click", async (event) => {
+  order
+    .querySelector("[data-order-edit]")
+    .addEventListener("click", async (event) => {
       window.location.href = `/dashboard/orders/${id}/edit`;
       event.stopPropagation();
-  });
+    });
 
   order.addEventListener("click", () => {
     window.location.href = `/dashboard/orders/${id}`;

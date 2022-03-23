@@ -1,4 +1,3 @@
-import "../navbar.js";
 import { openModal } from "../../../modal.js";
 
 document.querySelectorAll("[data-order-code]").forEach((order) => {

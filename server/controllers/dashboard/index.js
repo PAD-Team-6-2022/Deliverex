@@ -92,5 +92,6 @@ router.get("/signout", auth(true), (req, res) => {
 });
 
 router.use("/orders", require("./orders"));
+router.use("/settings", require("./settings"));
 
 module.exports = router;
