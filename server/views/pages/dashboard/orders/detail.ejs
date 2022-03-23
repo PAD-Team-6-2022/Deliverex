@@ -18,7 +18,7 @@
     }) %>
     <div class="flex">
       <%- include("../../../partials/dashboard/sidebar") %>
-      <div class="flex-1 overflow-hidden">
+      <div class="flex-1">
         <nav class="sticky top-0 bg-white h-16 z-40 border-b border-gray-200">
             <div class="max-w-7xl flex justify-between items-center h-full px-4 mx-auto">
                 <h1 class="font-bold text-xl">Order #<%= order.id %></h1>
@@ -34,8 +34,13 @@
                 </div>
             </div>
         </nav>
-        <div class="max-w-7xl mx-auto px-4 my-16">
-            <div class="flex flex-col bg-white rounded-md border border-slate-200 mb-16 overflow-hidden p-8">
+        <div class="max-w-7xl mx-auto px-4 my-16 overflow-hidden">
+            <%- include("../../../partials/breadcrumb", { links: [{ name:
+        "Overview", href: "/dashboard/overview" }, {
+            name: "Orders",
+            href: "/dashboard/orders"
+        }, { name: `Order #${order.id}` }] }) %>
+            <div class="mt-10 flex flex-col bg-white rounded-md border border-slate-200 mb-16 overflow-hidden p-8">
                 <div class="mx-auto">
                     <% if (order.status === "DELIVERED") { %>
                         <img src="/assets/img/delivered.svg" class="max-h-60">

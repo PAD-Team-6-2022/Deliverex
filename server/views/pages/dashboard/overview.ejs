@@ -19,7 +19,10 @@
     <div class="flex">
         <%- include("../../partials/dashboard/sidebar") %>
         <div class="max-w-7xl mx-auto px-4 mt-16 flex-1 overflow-hidden">
-    <div class="mb-10 text-center sm:text-left">
+            <%- include("../../partials/breadcrumb", { links: [{
+                name: "Overview"
+            }] }) %>
+    <div class="my-10 text-center sm:text-left">
         <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Welcome back, <%= user.username %>!</h1>
         <p class="text-lg sm:text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block">See how your business is doing by looking at the statistics below</p>
     </div>
@@ -202,7 +205,7 @@
         <div class="text-slate-700 flex justify-end items-center mt-4">
             <div class="inline-block relative w-32 ml-4">
                 <select name="limit" onchange="this.form.submit()"
-                        class="h-10 block appearance-none w-full border border-gray-300 px-3 py-2 rounded-lg leading-tight focus:outline-none focus:shadow-outline">
+                        class="bg-white h-10 block appearance-none w-full border border-gray-300 px-3 py-2 rounded-lg leading-tight focus:outline-none focus:shadow-outline">
                     <option value="25"<%= limit === 25 ? " selected" : "" %>>25</option>
                     <option value="50"<%= limit === 50 ? " selected": "" %>>50</option>
                     <option value="100"<%= limit === 100 ? " selected" : "" %>>100</option>

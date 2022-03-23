@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-slate-50">
+  <head>
+    <%- include("../../../partials/head") %>
+  </head>
+  <body>
+    <div class="flex">
+      <%- include("../../../partials/dashboard/sidebar") %>
+      <div class="max-w-7xl mx-auto px-4 my-16 flex-1 overflow-hidden">
+        <%- include("../../../partials/breadcrumb", { links: [{ name:
+        "Overview", href: "/dashboard/overview" }, { name: "Orders", href:
+        "/dashboard/orders" }] }) %>
+      </div>
+    </div>
+  </body>
+</html>
