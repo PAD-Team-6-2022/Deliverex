@@ -8,6 +8,8 @@ router.get("/", (req, res) => {
   res.render("home", { title: "Homepage", toasters: req.flash('toasters') })
 });
 
+
+
 /**
  * Render tracker page for order with given id
  */

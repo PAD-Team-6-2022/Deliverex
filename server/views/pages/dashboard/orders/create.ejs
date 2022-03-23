@@ -1,82 +1,135 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-slate-50">
   <head>
-    <%- include("../../../partials/head", { js: "dashboard/orders/create" }) %>
+    <%- include("../../../partials/head") %>
   </head>
   <body>
-  <%- include("../../../partials/dashboard/navbar") %>
-
-  <div class="flex justify-center items-center h-screen w-full bg-white-400">
-      <div class="w-1/2 bg-white rounded-xl border border-slate-200 p-8 m-4">
-          <h1 class="block w-full text-center text-slate-800 text-2xl font-bold mb-6">Place a new order</h1>
+    <div class="flex">
+      <%- include("../../../partials/dashboard/sidebar") %>
+      <div class="max-w-7xl mx-auto px-4 my-16 flex-1 overflow-hidden">
+        <%- include("../../../partials/breadcrumb", { links: [{ name:
+        "Overview", href: "/dashboard/overview" }, { name: "Orders", href:
+        "/dashboard/orders" }, { name: "Create order" }] }) %>
+        <div class="mt-10 bg-white rounded-xl border border-slate-200 p-8">
+          <h1 class="block text-slate-800 text-2xl font-bold mb-6">
+            Place a new order
+          </h1>
           <form action="/api/orders" method="POST">
-              <input type="hidden" class="border-red-500 border-2">
-              <div class="flex flex-col mb-4 mx-2">
-                  <label class="mb-2 font-bold text-sm text-slate-900" for="first_name">Email-Adress</label>
-                  <input class="border py-2 px-3 text-slate-800 rounded-lg" type="email" name="email" id="email" required>
-              </div>
+            <div class="flex flex-col mb-4 mx-2">
+              <label
+                class="mb-2 font-bold text-sm text-slate-900"
+                for="first_name"
+                >Email-Adress</label
+              >
+              <input
+                class="border py-2 px-3 text-slate-800 rounded-lg"
+                type="email"
+                name="email"
+                id="email"
+                required
+              />
+            </div>
 
-                <div class="flex flex-col mb-4 mx-2">
-                  <label class="mb-2 font-bold text-sm text-slate-900" for="country">Country/Origin</label>
-                  <input class="border py-2 px-3 text-slate-800 rounded-lg" type="text" name="country" id="country" required>
-              </div>
+            <div class="flex flex-col mb-4 mx-2">
+              <label class="mb-2 font-bold text-sm text-slate-900" for="country"
+                >Country/Origin</label
+              >
+              <input
+                class="border py-2 px-3 text-slate-800 rounded-lg"
+                type="text"
+                name="country"
+                id="country"
+                required
+              />
+            </div>
 
-                <div class="flex flex-row flex-wrap justify-between grow">
+            <div class="flex flex-row flex-wrap justify-between grow">
               <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
-                <label class="mb-2 font-bold text-sm text-slate-900" for="postal_code">Postal Code</label>
-                <input class="border py-2 px-3 text-slate-800 rounded-lg" type="text" name="postal_code" id="postal_code" required>
-                <p class="text-red-500 mt-1 text-xs invisible" id="postal_code_p">Invalid postal code!</p>
+                <label
+                  class="mb-2 font-bold text-sm text-slate-900"
+                  for="street"
+                  >Street</label
+                >
+                <input
+                  class="border py-2 px-3 text-slate-800 rounded-lg"
+                  type="text"
+                  name="street"
+                  id="street"
+                  required
+                />
               </div>
               <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
-                  <label class="mb-2 font-bold text-sm text-slate-900" for="city">City</label>
-                  <div class="relative">
-                      <select disabled class="border text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 appearance-none" name="city" id="city">
-                          <option value=""></option>
-                      </select>
-                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                      </div>
-                  </div>
-                </div>
-                </div>
-
-                <div class="flex flex-row flex-wrap justify-between grow">
-                    <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
-                        <label class="mb-2 font-bold text-sm text-slate-900" for="street">Street</label>
-                        <input class="border py-2 px-3 text-slate-800 rounded-lg" type="text" name="street" id="street" required>
-                    </div>
-                    <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
-                        <label class="mb-2 font-bold text-sm text-slate-900" for="houseNumber">House number</label>
-                        <input class="border py-2 px-3 text-slate-800 rounded-lg" type="number" name="houseNumber" id="houseNumber" required>
-                    </div>
-                </div>
-
-                <div class="flex flex-col mb-4 mx-2">
-                    <label class="mb-2 font-bold text-sm text-slate-900" for="weight">Weight in grams</label>
-                    <input class="border py-2 px-3 text-slate-800 rounded-lg" type="number" name="weight" id="weight" required>
-                </div>
-
-                <div class="flex flex-col mx-2 mb-4">
-                    <label class="mb-2 font-bold text-sm text-slate-900" for="sizeFormat">Size format</label>
-                    <div class="relative">
-                        <select class="border text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 appearance-none" name="sizeFormat" id="sizeFormat">
-                            <option value="1">format 1</option>
-                            <option value="2">format 2</option>
-                            <option value="3">format 3</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                        </div>
-                    </div>
-                </div>
-
-              <div class="flex justify-end">
-                  <button class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-4 w-1/4 rounded-xl " id="submit" type="button">Place order</button>
+                <label
+                  class="mb-2 font-bold text-sm text-slate-900"
+                  for="houseNumber"
+                  >House number</label
+                >
+                <input
+                  class="border py-2 px-3 text-slate-800 rounded-lg"
+                  type="number"
+                  name="houseNumber"
+                  id="houseNumber"
+                  required
+                />
               </div>
+            </div>
 
+            <div class="flex flex-col mb-4 mx-2">
+              <label class="mb-2 font-bold text-sm text-slate-900" for="weight"
+                >Weight in grams</label
+              >
+              <input
+                class="border py-2 px-3 text-slate-800 rounded-lg"
+                type="number"
+                name="weight"
+                id="weight"
+                required
+              />
+            </div>
+
+            <div class="flex flex-col mx-2 mb-4">
+              <label
+                class="mb-2 font-bold text-sm text-slate-900"
+                for="sizeFormat"
+                >Size format</label
+              >
+              <div class="relative">
+                <select
+                  class="border text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 appearance-none"
+                  name="sizeFormat"
+                  id="sizeFormat"
+                >
+                  <option value="1">format 1</option>
+                  <option value="2">format 2</option>
+                  <option value="3">format 3</option>
+                </select>
+                <div
+                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+                >
+                  <svg
+                    class="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end">
+              <button
+                class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-4 w-1/4 rounded-xl"
+                type="submit"
+              >
+                Place order
+              </button>
+            </div>
           </form>
-
+        </div>
       </div>
-  </div>
+    </div>
   </body>
 </html>

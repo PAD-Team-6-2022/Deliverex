@@ -47,6 +47,7 @@ app.use("/setup", require("./controllers/setup"));
 app.use("/", require("./controllers/tracker"));
 app.use("/api", require("./controllers/api"));
 
+
 // Set fallback route
 app.get("*", (req, res) => {
   res.status(404).render("error", { title: "404 - Niet gevonden" });
