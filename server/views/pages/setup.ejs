@@ -6,11 +6,11 @@
   <body class="w-screen h-screen flex items-center justify-center">
     <div class="max-w-md">
       <div class="mb-10 text-center">
-        <h1 class="font-bold text-4xl text-slate-800">Bijna klaar</h1>
+        <h1 class="font-bold text-4xl text-slate-800">Almost there</h1>
         <p
           class="text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block"
         >
-          Voer de benodigde onderdelen in om te beginnen
+          Fill in the required fields to begin
         </p>
       </div>
       <div class="mb-10 flex justify-center items-center space-x-6">
@@ -21,7 +21,7 @@
           <div class="h-1 w-1 bg-gray-400 rounded-full"></div>
         </div>
         <% } %>
-        <div class="rounded-full <%= active ? "p-4" : "p-3" %> bg-cyan-200 text-cyan-400">
+        <div class="rounded-full <%= active ? "p-4" : "p-3" %> bg-cyan-200 text-cyan-600">
           <% if(name === "database") { %>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +78,7 @@
             class="block text-gray-700 text-sm font-medium mb-2"
             for="username"
           >
-            Gebruikersnaam
+            Username
           </label>
           <input
             class="bg-slate-50 appearance-none border border-slate-200 rounded-md w-full py-2 px-3 text-slate-800 focus:outline-cyan-600"
@@ -91,7 +91,7 @@
             class="block text-gray-700 text-sm font-medium mb-2"
             for="username"
           >
-            Wachtwoord
+            Password
           </label>
           <input
             class="bg-slate-50 appearance-none border border-slate-200 rounded-md w-full py-2 px-3 text-slate-800 focus:outline-cyan-600"
@@ -100,10 +100,10 @@
           />
         </div>
         <button
-          class="bg-cyan-600 shadow hover:bg-cyan-700 text-white font-bold py-3 px-5 rounded-md focus:outline-none focus:shadow-outline ml-auto flex"
+          class="bg-cyan-500 shadow hover:bg-cyan-700 text-white font-bold py-3 px-5 rounded-md focus:outline-none focus:shadow-outline ml-auto flex"
           type="button"
         >
-          Verder
+          Continue
           <svg
             class="ml-2"
             xmlns="http://www.w3.org/2000/svg"
