@@ -19,7 +19,10 @@
     <div class="flex">
         <%- include("../../partials/dashboard/sidebar") %>
         <div class="max-w-7xl mx-auto px-4 mt-16 flex-1 overflow-hidden">
-    <div class="mb-10 text-center sm:text-left">
+            <%- include("../../partials/breadcrumb", { links: [{
+                name: "Overview"
+            }] }) %>
+    <div class="my-10 text-center sm:text-left">
         <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Welcome back, <%= user.username %>!</h1>
         <p class="text-lg sm:text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block">See how your business is doing by looking at the statistics below</p>
     </div>

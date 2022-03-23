@@ -4,8 +4,12 @@ const convert = require("convert-units");
 
 const router = require("express").Router();
 
+router.get("/", auth(true), (req, res) => {
+  res.render("dashboard/orders/list", { title: "Orders - Dashboard" });
+});
+
 router.get("/create", auth(true), (req, res) => {
-  res.render("dashboard/orders/create", { title: "Create order" });
+  res.render("dashboard/orders/create", { title: "Create order - Dashboard" });
 });
 
 router.get("/:id/edit", auth(true), async (req, res) => {
@@ -17,7 +21,10 @@ router.get("/:id/edit", auth(true), async (req, res) => {
     return;
   }
 
-  res.render("dashboard/orders/edit", { title: "Edit order", order });
+  res.render("dashboard/orders/edit", {
+    title: "Edit order - Dashboard",
+    order,
+  });
 });
 
 router.get("/:id", auth(true), async (req, res) => {
@@ -34,7 +41,11 @@ router.get("/:id", auth(true), async (req, res) => {
   const convertedWeight = convert(order.weight).from("g").toBest();
   order.weight = `${Math.round(convertedWeight.val)} ${convertedWeight.unit}`;
 
-  res.render("dashboard/orders/detail", { title: "Order detail", id, order });
+  res.render("dashboard/orders/detail", {
+    title: `Order #${id} - Dashboard`,
+    id,
+    order,
+  });
 });
 
 module.exports = router;
