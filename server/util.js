@@ -10,4 +10,14 @@ const searchQueryToWhereClause = (query, fields) => {
   };
 };
 
-module.exports = searchQueryToWhereClause;
+const delay = (fn, ms) => {
+  let timer;
+
+  return (...args) => {
+    clearTimeout(timer);
+
+    timer = setTimeout(fn.bind(this, ...args), ms || 0);
+  };
+};
+
+module.exports = { searchQueryToWhereClause, delay };
