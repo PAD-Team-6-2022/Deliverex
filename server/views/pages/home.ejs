@@ -9,15 +9,15 @@
     <form id="track-form" class="max-w-xl bg-white rounded-md border border-slate-200 p-8 my-16 shadow-lg -mb-24">
       <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Track and trace</h1>
           <p class="text-base mb-6 font-medium text-slate-500 mt-3 max-w-sm inline-block">Enter in your tracking code and postcode to see the status of your order</p>
-      <div class="mb-6">
+      <div data-input-tracking_code class="mb-6">
         <label for="orderCode" class="block mb-2 text-sm font-medium text-slate-800">Tracking code</label>
-        <input id="orderCode" type="text" id="code" class="bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="1918264109" required>
-        <p id="trackingError" class="text-red-500 mt-1 hidden">Tracking code  is not filled in correctly</p>
+        <input id="orderCode" type="text" class="bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="1918264109" required>
+        <p data-input-error class="text-red-500 mt-1 hidden">Tracking code  is not filled in correctly</p>
       </div>
-      <div class="mb-6">
+      <div data-input-postal_code class="mb-6">
         <label for="postalCode" class="block mb-2 text-sm font-medium text-slate-800">Postal code</label>
-        <input id="postalCode" type="text" id="postalCode" class="bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="2045GZ" required>
-        <p id="postalError" class="text-red-500 mt-1 hidden">Postal code is not filled in correctly</p>
+        <input id="postalCode" type="text" class="bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="2045GZ" required>
+        <p data-input-error class="text-red-500 mt-1 hidden">Postal code is not filled in correctly</p>
       </div>
 
       <button type="button" id="submit" class="flex space-x-2 h-10 text-white bg-cyan-500 hover:bg-cyan-700 transition-colors rounded-md px-4 py-2">

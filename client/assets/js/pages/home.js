@@ -1,37 +1,65 @@
 import "../toaster.js";
 
+// form fields
+const trackCode = document.querySelector("[data-input-tracking_code]");
+const postalCode = document.querySelector("[data-input-postal_code]");
+
+/**
+ * Show an error for the given field with the given message
+ * @param {Element} elem 
+ * @param {boolean} error 
+ * @param {string} message 
+ */
+const showError = (elem, error, message) => {
+    const input = elem.querySelector("input");
+    const errorMessage = elem.querySelector("[data-input-error]");
+
+    if (error) {
+        input.classList.add("bg-red-100");
+        input.classList.add("border-red-500");
+        errorMessage.innerText = message;
+        errorMessage.classList.remove("hidden");
+    } else {
+        input.classList.remove("bg-red-100");
+        input.classList.remove("border-red-500");
+        errorMessage.classList.add("hidden");
+    }
+}
+
+
 // send to track page if order code is filled in
 document.querySelector("#submit").addEventListener("click", () => {
+    // trim all inputs
+    document.querySelectorAll("input").forEach(input => {
+        input.value = input.value.trim();
+    });
+
     let formIsValid = true;
-
     const postal_code_regex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
+    const trackCodeValue = trackCode.querySelector("input").value;
+    const postalCodeValue = postalCode.querySelector("input").value;
 
-    const orderCode = document.querySelector("#orderCode");
-    const postalCode = document.querySelector("#postalCode");
-
-    if (orderCode.value.trim() === "") {
-        orderCode.classList.add("bg-red-100");
-        orderCode.classList.add("border-red-500");
-        document.querySelector("#trackingError").classList.remove("hidden");
+    // tracking code validation
+    if (trackCodeValue === "") {
+        showError(trackCode, true, "Please fill in a tracking code");
         formIsValid = false;
     } else {
-        orderCode.classList.remove("bg-red-100");
-        orderCode.classList.remove("border-red-500");
-        document.querySelector("#trackingError").classList.add("hidden");
+        showError(trackCode, false, "");
     }
 
-    if (postalCode.value.trim() === "" || !postal_code_regex.test(postalCode.value)) {
-        postalCode.classList.add("bg-red-100");
-        postalCode.classList.add("border-red-500");
-        document.querySelector("#postalError").classList.remove("hidden");
+    // postal code validation
+    if (postalCodeValue === "") {
+        showError(postalCode, true, "Please fill in a postal code");
+        formIsValid = false;
+    } else if (!postal_code_regex.test(postalCodeValue)) {
+        showError(postalCode, true, "Postal code is not valid");
         formIsValid = false;
     } else {
-        postalCode.classList.remove("bg-red-100");
-        postalCode.classList.remove("border-red-500");
-        document.querySelector("#postalError").classList.add("hidden");
+        showError(postalCode, false, "");
     }
 
+    // redirect if form is valid
     if (formIsValid) {
-        window.location.href = `/track/${orderCode.value.trim()}&${postalCode.value.trim()}`;
+        window.location.href = `/track/${trackCodeValue}&postal_code=${postalCodeValue}`;
     }
 });
