@@ -44,6 +44,20 @@
               />
             </div>
 
+            <div class="flex flex-col mb-4 mx-2">
+              <label class="mb-2 font-bold text-sm text-slate-900" for="country"
+                >Address</label
+              >
+              <input
+                class="border py-2 px-3 text-slate-800 rounded-lg"
+                type="text"
+                name="address"
+                id="address"
+                placeholder="e.g. Wibautstraat 4"
+                required
+              />
+            </div>
+
             <div class="flex flex-row flex-wrap justify-between grow">
               <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
                 <label
@@ -58,6 +72,11 @@
                   id="postal_code"
                   required
                 />
+                <p
+                class="invisible text-red-500 text-sm"
+                id="postal_code_p"
+                >Invalid postal code!</p
+                >
               </div>
               <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
                 <label
@@ -65,29 +84,13 @@
                   for="city"
                   >City</label
                 >
-                <div class="relative">
-                    <select
-                      class="border text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 appearance-none"
-                      name="city"
-                      id="city"
-                      disabled
-                    >
-                      <option value=""></option>
-                    </select>
-                    <div
-                      class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
-                    >
-                      <svg
-                        class="fill-current h-4 w-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-                        />
-                      </svg>
-                    </div>
-                  </div>
+                <input
+                  class="border py-2 px-3 text-slate-800 rounded-lg"
+                  type="text"
+                  name="city"
+                  id="city"
+                  required
+                />
               </div>
             </div>
 
@@ -120,6 +123,18 @@
                   required
                 />
               </div>
+            </div>
+
+            <div class="flex flex-col mb-4 mx-2 border rounded-lg">
+                <table class="border py-2 px-3 text-slate-800 rounded-lg">
+                    <thead>
+                        <tr>
+                            <th>Found addresses</th>
+                        </tr>
+                    </thead>
+                    <tbody id="addresses">
+                    <tbody>
+                </table>
             </div>
 
             <div class="flex flex-col mb-4 mx-2">
