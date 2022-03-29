@@ -32,19 +32,19 @@ const Order = sequelize.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    address: {
+    street: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    house_number: {
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     postal_code: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    format: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
+    city: {
       type: DataTypes.STRING,
       allowNull: false,
     },
