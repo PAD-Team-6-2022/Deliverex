@@ -7,9 +7,8 @@ const houseNumberInput = document.getElementById("house_number");
 const cityInput = document.getElementById("city");
 const addressInput = document.getElementById("address");
 const countryInput = document.getElementById("country");
-const submit = () => document.querySelector("#createForm").submit();
 
-document.getElementById("submit").addEventListener("click", async () => {
+document.getElementById("submitButton").addEventListener("click", async () => {
 
     let wrongInputs = [];
 
@@ -26,8 +25,6 @@ document.getElementById("submit").addEventListener("click", async () => {
     });
 
     console.log(document.querySelector("#createForm"));
-
-    submit();
 
     if(wrongInputs.length === 0) {
 

@@ -14,7 +14,7 @@
           <h1 class="block text-slate-800 text-2xl font-bold mb-6">
             Place a new order
           </h1>
-          <form name="name" id="createform" action="/api/orders" method="POST" onSubmit="return validate();">
+          <form name="name" id="createform" action="/api/orders" method="POST">
             <div class="flex flex-col mb-4 mx-2">
               <label
                 class="mb-2 font-bold text-sm text-slate-900"
@@ -191,11 +191,11 @@
               <button
                 class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-4 w-1/4 rounded-xl"
                 type="button"
-                id="submit"
+                id="submitButton"
               >
                 Place order
               </button>
-              <button type="submit">submit</button>
+              <!-- <button type="submit">submit</button> -->
             </div>
           </form>
         </div>
