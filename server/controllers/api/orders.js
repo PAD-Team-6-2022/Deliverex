@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Order = require("../../models/order");
+const Format = require("../../models/format")
 
 router.delete("/:id", (req, res) => {
   Order.destroy({ where: { id: req.params.id } })
@@ -58,5 +59,30 @@ router.post("/edit", (req, res) => {
             res.status(500).json(req.body);
         })
 })
+
+router.post("/setting", (req, res) => {
+    Format.create({
+        length: req.body.length,
+        height: req.body.height,
+        nameformat: req.body.name,
+        width: req.body.width})
+        .then((orders) => {
+            res.redirect('/dashboard/settings')
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+});
+
+router.get("/", (req, res) => {
+    Format.findAll()
+        .then((orders) => {
+            res.status(200).json(orders);
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+});
+
 
 module.exports = router;
