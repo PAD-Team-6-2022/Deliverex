@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Order = require("../models/order");
+const convert = require("convert-units");
 
 /**
  * Render the homepage
@@ -40,6 +41,9 @@ router.get("/track/:id&postal_code=:postal_code", async (req, res) => {
     
     return;
   }
+
+  const convertedWeight = convert(order.weight).from("g").toBest();
+  order.weight = `${Math.round(convertedWeight.val)} ${convertedWeight.unit}`;
   
   res.render("tracker", { title: "Track & Trace", order });
 });
