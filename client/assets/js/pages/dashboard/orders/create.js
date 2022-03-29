@@ -1,18 +1,61 @@
 import { delay } from "../../../util.js";
 
-const postal_code_input = document.getElementById("postal_code");
-postal_code_input.addEventListener("keyup", async () => {
+
+const postalCodeInput = document.getElementById("postal_code");
+const streetInput = document.getElementById("street");
+const houseNumberInput = document.getElementById("house_number");
+const cityInput = document.getElementById("city");
+const addressInput = document.getElementById("address");
+const countryInput = document.getElementById("country");
+const submit = () => document.querySelector("#createForm").submit();
+
+document.getElementById("submit").addEventListener("click", async () => {
+
+    let wrongInputs = [];
+
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach((input) => {
+        input.classList.remove(
+            "bg-red-50",
+            "border-red-500");
+        if(input.id !== "address" && input.type !== "checkbox") {
+            if(input.value === "" || input.value.includes(" ")) {
+                wrongInputs.push(input);
+            }
+        }
+    });
+
+    console.log(document.querySelector("#createForm"));
+
+    submit();
+
+    if(wrongInputs.length === 0) {
+
+        document.getElementById("createform").submit();
+    } else {
+        wrongInputs.forEach((input) => {
+           input.classList.add(
+               "bg-red-50",
+               "border-red-500");
+        });
+    }
+
+});
+
+
+
+postalCodeInput.addEventListener("keyup", async () => {
     console.log("change detected");
     const postal_code_regex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
     document.getElementById("postal_code_p").classList.add("invisible");
-    postal_code_input.classList.remove(
+    postalCodeInput.classList.remove(
         "bg-red-50",
         "focus:border-red-500",
         "focus:ring-red-500",
         "border-red-500"
     );
-    if(!postal_code_regex.test(postal_code_input.value) && postal_code_input.value !== "") {
-        postal_code_input.classList.add(
+    if(!postal_code_regex.test(postalCodeInput.value) && postalCodeInput.value !== "") {
+        postalCodeInput.classList.add(
             "bg-red-50",
             "focus:border-red-500",
             "focus:ring-red-500",
@@ -22,18 +65,11 @@ postal_code_input.addEventListener("keyup", async () => {
     }
 });
 
-const inputs = [document.getElementById("postal_code"), document.getElementById("street"), document.getElementById("houseNumber")];
-
-const cityInput = document.getElementById("city");
-
-const addressInput = document.getElementById("address");
-const countryInput = document.getElementById("country");
-
 addressInput.addEventListener("keyup", delay((e) => {
 
     if(addressInput.value === "") return;
 
-    fetch(`https://api.openrouteservice.org/geocode/search?api_key=5b3ce3597851110001cf62482d328da4ad724df196a3e2f0af3e15f3&text=${addressInput.value}&boundary.country=NL`)
+     fetch(`https://api.openrouteservice.org/geocode/search?api_key=5b3ce3597851110001cf62482d328da4ad724df196a3e2f0af3e15f3&text=${addressInput.value}&boundary.country=NL`)
         .then(res => res.json())
         .then(data => {
 
@@ -47,12 +83,11 @@ addressInput.addEventListener("keyup", delay((e) => {
                         let tr = document.createElement("tr");
                         tr.classList.add("hover:bg-gray-200", "hover:cursor-pointer");
                         tr.addEventListener("click", async () => {
-                            inputs[0].value = address.properties.postalcode;
-                            inputs[1].value = address.properties.street;
-                            inputs[2].value = address.properties.housenumber;
+                            postalCodeInput.value = address.properties.postalcode;
+                            streetInput.value = address.properties.street;
+                            houseNumberInput.value = address.properties.housenumber;
                             cityInput.value = address.properties.locality;
                             countryInput.value = address.properties.country;
-
                         });
                         let newAddress = document.createElement("td");
                         newAddress.innerHTML = address.properties.label;
@@ -67,44 +102,3 @@ addressInput.addEventListener("keyup", delay((e) => {
 
 
 }, 500));
-
-// inputs.forEach(input => input.addEventListener("keyup", delay((e) => {
-//     const street = document.getElementById("street").value;
-//     const house_number = document.getElementById("houseNumber").value;
-//     const postal_code = postal_code_input.value;
-//     if(street === "" || street.includes(" ") || house_number === "") return;
-//     fetch(`https://api.openrouteservice.org/geocode/search?api_key=5b3ce3597851110001cf62482d328da4ad724df196a3e2f0af3e15f3&text=${street}%20${house_number}&boundary.country=NL`)
-//         .then(response => response.json())
-//         .then(data => {
-//             document.getElementById("city").innerHTML = "";
-//             if(data.features.length > 0) {
-//                 const table = document.getElementById("addresses");
-//                 table.innerHTML = "";
-//                 data.features.forEach((address) => {
-//                     let newAddress = document.createElement("td");
-//                     newAddress.innerHTML = `${address.properties.street} ${address.properties.housenumber}\n
-//                     ${address.properties.postalcode} ${address.properties.locality}`;
-//                     table.appendChild(newAddress);
-//                     if(postal_code.toLowerCase() === address.properties.postalcode.toLowerCase()) {
-//                         const select = document.getElementById("city");
-//                         select.removeAttribute("disabled");
-//                         let option = document.createElement("option");
-//                         option.value = address.properties.locality;
-//                         option.innerHTML = address.properties.locality;
-//                         select.appendChild(option);
-//                         // console.log(address.properties.locality);
-//                     } else if (postal_code === "") {
-//                         const select = document.getElementById("city");
-//                         select.removeAttribute("disabled");
-//                         let option = document.createElement("option");
-//                         option.value = address.properties.locality;
-//                         option.innerHTML = address.properties.locality;
-//                         select.appendChild(option);
-//                         // console.log(address.properties.locality);
-//                     }
-//                 });
-//             }
-//
-//         })
-//         .catch(err => console.log(err));
-// }, 500)));

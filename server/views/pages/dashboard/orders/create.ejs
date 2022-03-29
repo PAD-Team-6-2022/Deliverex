@@ -14,20 +14,19 @@
           <h1 class="block text-slate-800 text-2xl font-bold mb-6">
             Place a new order
           </h1>
-          <form action="/api/orders" method="POST">
-<!--             <input type="hidden" class="bg-red-50 focus:outline-red-500 bg-green-50 focus:outline-green-400"> -->
+          <form name="name" id="createform" action="/api/orders" method="POST" onSubmit="return validate();">
             <div class="flex flex-col mb-4 mx-2">
               <label
                 class="mb-2 font-bold text-sm text-slate-900"
                 for="first_name"
-                >Email-Adress</label
+                >Email-Address</label
               >
               <input
                 class="border py-2 px-3 text-slate-800 rounded-lg"
                 type="email"
                 name="email"
                 id="email"
-                required
+
               />
             </div>
 
@@ -40,7 +39,7 @@
                 type="text"
                 name="country"
                 id="country"
-                required
+
               />
             </div>
 
@@ -54,8 +53,20 @@
                 name="address"
                 id="address"
                 placeholder="e.g. Wibautstraat 4"
-                required
+
               />
+            </div>
+
+            <div class="flex flex-col mb-4 mx-2 border rounded-lg">
+                <table class="border py-2 px-3 text-slate-800 rounded-lg">
+                    <thead>
+                        <tr>
+                            <th>Found addresses</th>
+                        </tr>
+                    </thead>
+                    <tbody id="addresses">
+                    <tbody>
+                </table>
             </div>
 
             <div class="flex flex-row flex-wrap justify-between grow">
@@ -70,7 +81,7 @@
                   type="text"
                   name="postal_code"
                   id="postal_code"
-                  required
+
                 />
                 <p
                 class="invisible text-red-500 text-sm"
@@ -89,7 +100,7 @@
                   type="text"
                   name="city"
                   id="city"
-                  required
+
                 />
               </div>
             </div>
@@ -106,7 +117,7 @@
                   type="text"
                   name="street"
                   id="street"
-                  required
+
                 />
               </div>
               <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
@@ -117,24 +128,12 @@
                 >
                 <input
                   class="border py-2 px-3 text-slate-800 rounded-lg"
-                  type="number"
-                  name="houseNumber"
-                  id="houseNumber"
-                  required
+                  type="text"
+                  name="house_number"
+                  id="house_number"
+
                 />
               </div>
-            </div>
-
-            <div class="flex flex-col mb-4 mx-2 border rounded-lg">
-                <table class="border py-2 px-3 text-slate-800 rounded-lg">
-                    <thead>
-                        <tr>
-                            <th>Found addresses</th>
-                        </tr>
-                    </thead>
-                    <tbody id="addresses">
-                    <tbody>
-                </table>
             </div>
 
             <div class="flex flex-col mb-4 mx-2">
@@ -146,7 +145,7 @@
                 type="number"
                 name="weight"
                 id="weight"
-                required
+
               />
             </div>
 
@@ -183,6 +182,12 @@
             </div>
 
             <div class="flex justify-end">
+              <div class="flex items-center h-5">
+                 <input name="is_pickup" id="is_pickup" aria-describedby="is_pickup" type="checkbox" class="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800">
+               </div>
+               <div class="ml-3 text-sm">
+                 <label for="remember" class="font-medium text-gray-900 dark:text-gray-300">isPickup?</label>
+               </div>
               <button
                 class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-4 w-1/4 rounded-xl"
                 type="button"
@@ -190,6 +195,7 @@
               >
                 Place order
               </button>
+              <button type="submit">submit</button>
             </div>
           </form>
         </div>

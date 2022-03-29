@@ -26,14 +26,25 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
+    let pickup_stats;
+    if(req.body.is_pickup == null) {
+        pickup_status = false;
+    } else {
+        pickup_status = true;
+    }
     Order.create({
         status: 'SORTING',
         email: req.body.email,
         weight: req.body.weight,
         created_at: Date.now(),
         country: req.body.country,
-        address: `${req.body.street} ${Number(req.body.houseNumber)}`,
-        format: req.body.sizeFormat})
+        street: req.body.street,
+        house_number: req.body.house_number,
+        postal_code: req.body.postal_code,
+        city: req.body.city,
+        format: req.body.sizeFormat,
+        is_pickup: pickup_status,
+        updated_at: Date.now()})
         .then((orders) => {
             res.redirect('/dashboard')
         })
@@ -47,7 +58,10 @@ router.post("/edit", (req, res) => {
             weight: req.body.weight,
             email: req.body.email,
             country: req.body.country,
-            address: `${req.body.street} ${Number(req.body.houseNumber)}`,
+            street: req.body.street,
+            house_number: req.body.house_number,
+            postal_code: req.body.postal_code,
+            city: req.body.city,
             format: req.body.sizeFormat,
             status: req.body.status},
         {where: {id: req.body.id}})
