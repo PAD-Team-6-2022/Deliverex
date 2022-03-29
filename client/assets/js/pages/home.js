@@ -15,17 +15,15 @@ const showError = (elem, error, message) => {
     const errorMessage = elem.querySelector("[data-input-error]");
 
     if (error) {
-        input.classList.add("bg-red-100");
-        input.classList.add("border-red-500");
+        input.classList.remove("bg-slate-50", "border-slate-200");
+        input.classList.add("bg-red-100", "border-red-500");
         errorMessage.innerText = message;
         errorMessage.classList.remove("hidden");
     } else {
-        input.classList.remove("bg-red-100");
-        input.classList.remove("border-red-500");
+        input.classList.remove("bg-red-100", "border-red-500");
         errorMessage.classList.add("hidden");
     }
 }
-
 
 // send to track page if order code is filled in
 document.querySelector("#submit").addEventListener("click", () => {

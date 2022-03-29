@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Order = require("../../models/order");
+const Format = require("../../models/format");
 const passport = require("../../auth/passport");
 const auth = require("../../middleware/auth");
 const pagination = require("../../middleware/pagination");
@@ -94,9 +95,17 @@ router.get("/signout", auth(true), (req, res) => {
 /**
  * Render the package size page
  */
-router.get("/settings", (req, res) => {
-    res.render("dashboard/settings", {title: "Package sizes"})
+router.get("/settings", async (req, res) => {
+    const formats = await Format.findAll();
+
+
+    res.render("dashboard/settings", {
+        title: "Package sizes",
+        formats
+    })
 });
+
+
 
 router.use("/orders", require("./orders"));
 
