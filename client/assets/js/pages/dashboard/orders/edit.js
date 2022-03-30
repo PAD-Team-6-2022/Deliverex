@@ -1,6 +1,5 @@
 import { delay } from "../../../util.js";
 
-
 const postalCodeInput = document.getElementById("postal_code");
 const streetInput = document.getElementById("street");
 const houseNumberInput = document.getElementById("house_number");
@@ -26,18 +25,16 @@ document.getElementById("submitButton").addEventListener("click", async () => {
 
     if(wrongInputs.length === 0) {
 
-        document.getElementById("createform").submit();
+        document.getElementById("editform").submit();
     } else {
         wrongInputs.forEach((input) => {
-           input.classList.add(
-               "bg-red-50",
-               "border-red-500");
+            input.classList.add(
+                "bg-red-50",
+                "border-red-500");
         });
     }
 
 });
-
-
 
 postalCodeInput.addEventListener("keyup", delay((e) => {
     console.log("change detected");
@@ -64,7 +61,7 @@ addressInput.addEventListener("keyup", delay((e) => {
 
     if(addressInput.value === "") return;
 
-     fetch(`https://api.openrouteservice.org/geocode/search?api_key=5b3ce3597851110001cf62482d328da4ad724df196a3e2f0af3e15f3&text=${addressInput.value}&boundary.country=NL`)
+    fetch(`https://api.openrouteservice.org/geocode/search?api_key=5b3ce3597851110001cf62482d328da4ad724df196a3e2f0af3e15f3&text=${addressInput.value}&boundary.country=NL`)
         .then(res => res.json())
         .then(data => {
 
