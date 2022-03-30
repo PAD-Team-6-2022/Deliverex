@@ -59,6 +59,7 @@ const Order = sequelize.define(
   },
   {
     underscored: true,
+    initialAutoIncrement: 100000,
   }
 );
 
