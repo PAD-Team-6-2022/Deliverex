@@ -48,6 +48,10 @@ const Order = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    country: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     is_pickup: {
       type: DataTypes.STRING,
       allowNull: false,
