@@ -24,28 +24,11 @@
                     <span class="ml-3">Active formats</span>
                 </h2>
                 <ul class="max-h-72 divide-y divide-gray-200 w-3.4 text-slate-500 overflow-auto">
+                    <% formats.forEach(format => { %>
+
                     <li class="p-4 flex justify-between">
-                        <p class="text-sm font-medium text-gray-900 ">Optie 1</p>
-                        <div class="actions">
-                            <button type="button" data-order-edit class="inline mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24"
-                                     fill="currentColor">
-                                    <path
-                                            d="M12.238 5.472L3.2 14.51l-.591 2.016 1.975-.571 9.068-9.068-1.414-1.415zM13.78 3.93l1.414 1.414 1.318-1.318a.5.5 0 0 0 0-.707l-.708-.707a.5.5 0 0 0-.707 0L13.781 3.93zm3.439-2.732l.707.707a2.5 2.5 0 0 1 0 3.535L5.634 17.733l-4.22 1.22a1 1 0 0 1-1.237-1.241l1.248-4.255 12.26-12.26a2.5 2.5 0 0 1 3.535 0z">
-                                    </path>
-                                </svg>
-                            </button>
-                            <button type="button" data-order-delete class="mr-none inline float-right">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -2 24 24" width="24"
-                                     fill="currentColor">
-                                    <path
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -2.5 24 24" width="24" fill="currentColor"><path d="M14 18.565v-7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v7H2a2 2 0 0 1-2-2v-14a2 2 0 0 1 2-2h11.22a2 2 0 0 1 1.345.52l2.78 2.527A2 2 0 0 1 18 5.092v11.473a2 2 0 0 1-2 2h-2zm-1-15a1 1 0 0 0-1 1v3a1 1 0 0 0 2 0v-3a1 1 0 0 0-1-1zm-8 0a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H5zm1 9h6v4H6v-4zm0-5v-3h3v3H6z"></path></svg>                                    </path>
-                                </svg>
-                            </button>
-                        </div>
-                    </li>
-                    <li class="p-4 flex justify-between">
-                        <p class="text-sm font-medium text-gray-900 ">Optie 1</p>
+                        <h2><%= format.nameformat %></h2>
+                        <p class="text-sm font-medium text-gray-900 " id="optie"><%= format.width %> x <%= format.length %> x <%= format.height %> </p>
                         <div class="actions">
                             <button type="button" data-order-edit class="inline mr-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24"
@@ -65,54 +48,14 @@
                             </button>
                         </div>
                     </li>
-                    <li class="p-4 flex justify-between">
-                        <p class="text-sm font-medium text-gray-900 ">Optie 1</p>
-                        <div class="actions">
-                            <button type="button" data-order-edit class="inline mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24"
-                                     fill="currentColor">
-                                    <path
-                                            d="M12.238 5.472L3.2 14.51l-.591 2.016 1.975-.571 9.068-9.068-1.414-1.415zM13.78 3.93l1.414 1.414 1.318-1.318a.5.5 0 0 0 0-.707l-.708-.707a.5.5 0 0 0-.707 0L13.781 3.93zm3.439-2.732l.707.707a2.5 2.5 0 0 1 0 3.535L5.634 17.733l-4.22 1.22a1 1 0 0 1-1.237-1.241l1.248-4.255 12.26-12.26a2.5 2.5 0 0 1 3.535 0z">
-                                    </path>
-                                </svg>
-                            </button>
-                            <button type="button" data-order-delete class="mr-none inline float-right">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -2 24 24" width="24"
-                                     fill="currentColor">
-                                    <path
-                                            d="M6 2V1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-.133l-.68 10.2a3 3 0 0 1-2.993 2.8H5.826a3 3 0 0 1-2.993-2.796L2.137 7H2a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h4zm10 2H2v1h14V4zM4.141 7l.687 10.068a1 1 0 0 0 .998.932h6.368a1 1 0 0 0 .998-.934L13.862 7h-9.72zM7 8a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z">
-                                    </path>
-                                </svg>
-                            </button>
-                        </div>
-                    </li>
-                    <li class="p-4 flex justify-between">
-                        <p class="text-sm font-medium text-gray-900 ">Optie 1</p>
-                        <div class="actions">
-                            <button type="button" data-order-edit class="inline mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24"
-                                     fill="currentColor">
-                                    <path
-                                            d="M12.238 5.472L3.2 14.51l-.591 2.016 1.975-.571 9.068-9.068-1.414-1.415zM13.78 3.93l1.414 1.414 1.318-1.318a.5.5 0 0 0 0-.707l-.708-.707a.5.5 0 0 0-.707 0L13.781 3.93zm3.439-2.732l.707.707a2.5 2.5 0 0 1 0 3.535L5.634 17.733l-4.22 1.22a1 1 0 0 1-1.237-1.241l1.248-4.255 12.26-12.26a2.5 2.5 0 0 1 3.535 0z">
-                                    </path>
-                                </svg>
-                            </button>
-                            <button type="button" data-order-delete class="mr-none inline float-right">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -2 24 24" width="24"
-                                     fill="currentColor">
-                                    <path
-                                            d="M6 2V1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-.133l-.68 10.2a3 3 0 0 1-2.993 2.8H5.826a3 3 0 0 1-2.993-2.796L2.137 7H2a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h4zm10 2H2v1h14V4zM4.141 7l.687 10.068a1 1 0 0 0 .998.932h6.368a1 1 0 0 0 .998-.934L13.862 7h-9.72zM7 8a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z">
-                                    </path>
-                                </svg>
-                            </button>
-                        </div>
-                    </li>
+                        <% }); %>
+
 
                 </ul>
             </div>
 
             <div class="w-full md:w-2/3 ">
-                <form class="w-full max-w-lg mx-auto">
+                <form class="w-full max-w-lg mx-auto" action="/api/orders/setting" method="POST">
                     <h2 class="font-medium text-2xl text-slate-800 mb-4 flex">
                         <span>Save format</span>
                     </h2>
@@ -122,8 +65,8 @@
                                    for="grid-first-name">
                                 Name format
                             </label>
-                            <input class="border py-2 px-3 text-slate-800 rounded-lg w-full" id="grid-last-name"
-                                   type="text" placeholder="Name">
+                            <input class="border py-2 px-3 text-slate-800 rounded-lg w-full" id="name"
+                                   type="text" name="name" placeholder="Name">
                         </div>
                     </div>
 
@@ -133,16 +76,16 @@
                                    for="grid-city">
                                 Length
                             </label>
-                            <input class="border py-2 px-3 text-slate-800 rounded-lg w-full" id="grid-city" type="text"
-                                   placeholder="Enter length">
+                            <input class="border py-2 px-3 text-slate-800 rounded-lg w-full" id="length" type="text"
+                                    name="length"  placeholder="Enter length">
                         </div>
                         <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                    for="grid-state">
                                 Height
                             </label>
-                            <input class="border py-2 px-3 text-slate-800 rounded-lg w-full" id="grid-zip" type="text"
-                                   placeholder="Enter height">
+                            <input class="border py-2 px-3 text-slate-800 rounded-lg w-full" id="height" type="text"
+                                   placeholder="Enter height" name="height">
 
                         </div>
                         <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -150,8 +93,8 @@
                                    for="grid-zip">
                                 Width
                             </label>
-                            <input class="border py-2 px-3 text-slate-800 rounded-lg w-full" id="grid-zip" type="text"
-                                   placeholder="Enter width">
+                            <input class="border py-2 px-3 text-slate-800 rounded-lg w-full" id="width" type="text"
+                                   placeholder="Enter width" name="width">
                         </div>
                     </div>
                     <button class="bg-cyan-500 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex my-4 float-right transition-colors"

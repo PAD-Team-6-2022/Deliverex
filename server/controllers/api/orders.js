@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Order = require("../../models/order");
+const Format = require("../../models/format")
 
 router.delete("/:id", (req, res) => {
   Order.destroy({ where: { id: req.params.id } })
@@ -26,14 +27,21 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
+    let pickup_status = req.body.is_pickup != null;
+
     Order.create({
         status: 'SORTING',
         email: req.body.email,
         weight: req.body.weight,
         created_at: Date.now(),
+        street: req.body.street,
+        house_number: req.body.house_number,
+        postal_code: req.body.postal_code,
+        city: req.body.city,
         country: req.body.country,
-        address: `${req.body.street} ${Number(req.body.houseNumber)}`,
-        format: req.body.sizeFormat})
+        format: req.body.sizeFormat,
+        is_pickup: pickup_status,
+        updated_at: Date.now()})
         .then((orders) => {
             res.redirect('/dashboard')
         })
@@ -43,12 +51,18 @@ router.post("/", (req, res) => {
 });
 
 router.post("/edit", (req, res) => {
+    let pickup_status = req.body.is_pickup != null;
+
     Order.update({
             weight: req.body.weight,
             email: req.body.email,
-            country: req.body.country,
-            address: `${req.body.street} ${Number(req.body.houseNumber)}`,
+            street: req.body.street,
+            house_number: req.body.house_number,
+            postal_code: req.body.postal_code,
+            city: req.body.city,
             format: req.body.sizeFormat,
+            is_pickup: pickup_status,
+            updated_at: Date.now(),
             status: req.body.status},
         {where: {id: req.body.id}})
         .then(() => {
@@ -58,5 +72,21 @@ router.post("/edit", (req, res) => {
             res.status(500).json(req.body);
         })
 })
+
+router.post("/setting", (req, res) => {
+    Format.create({
+        length: req.body.length,
+        height: req.body.height,
+        nameformat: req.body.name,
+        width: req.body.width})
+        .then((orders) => {
+            res.redirect('/dashboard/settings')
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+});
+
+
 
 module.exports = router;

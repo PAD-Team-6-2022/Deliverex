@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-slate-50">
   <head>
-    <%- include("../../../partials/head") %>
+    <%- include("../../../partials/head", {js: "dashboard/orders/edit"}) %>
   </head>
   <body>
     <div class="flex">
@@ -14,73 +14,217 @@
         }, { name: `Edit order #${order.id}` }] }) %>
         <div class="mt-10 bg-white rounded-xl border border-slate-200 p-8">
             <h1 class="block text-gray-800 text-2xl font-bold mb-6">Edit order #<%= order.id %></h1>
-            <form action="/api/orders/edit" method="POST">
+            <form name="name" id="editform" action="/api/orders/edit" method="POST">
                 <input type="hidden" name="id" value="<%= order.id %>">
                 <div class="flex flex-col mb-4 mx-2">
-                    <label class="mb-2 font-bold text-sm text-gray-900" for="first_name">Email-Adress</label>
-                    <input class="border py-2 px-3 text-grey-800 rounded-lg" type="email" name="email" id="email" value="<%= order.email %>" required>
+                  <label
+                    class="mb-2 font-bold text-sm text-slate-900"
+                    for="email"
+                    >Email-Address</label
+                  >
+                  <input
+                    class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                    type="email"
+                    name="email"
+                    id="email"
+                    value="<%= order.email %>"
+                  />
                 </div>
 
-                    <div class="flex flex-col mb-4 mx-2">
-                    <label class="mb-2 font-bold text-sm text-gray-900" for="country">Country/Origin</label>
-                    <input class="border py-2 px-3 text-grey-800 rounded-lg" type="text" name="country" id="country"
-                    value="<%= order.country %>" required>
+                <div class="flex flex-col mb-4 mx-2">
+                  <label
+                    class="mb-2 font-bold text-sm text-slate-900"
+                    for="country"
+                    >Country/Origin</label
+                  >
+                  <input
+                    class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                    type="text"
+                    name="country"
+                    id="country"
+                    value="<%= order.country %>"
+                  />
                 </div>
 
-                    <div class="flex flex-row flex-wrap justify-between grow">
-                        <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-gray-900" for="street">Street</label>
-                            <input class="border py-2 px-3 text-grey-800 rounded-lg" type="text" name="street" id="street"
-                            value="<%= order.address.split(" ")[0] %>" required>
-                        </div>
-                        <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-gray-900" for="houseNumber">House number</label>
-                            <input class="border py-2 px-3 text-grey-800 rounded-lg" type="number" name="houseNumber" id="houseNumber"
-                            value="<%= order.address.split(" ")[1] %>" required>
-                        </div>
-                    </div>
+                <div class="flex flex-col mb-4 mx-2">
+                  <label class="mb-2 font-bold text-sm text-slate-900" for="country"
+                    >Address</label
+                  >
+                  <input
+                    class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                    type="text"
+                    name="address"
+                    id="address"
+                    placeholder="e.g. Wibautstraat 4"
+                  />
+                </div>
 
-                    <div class="flex flex-col mb-4 mx-2">
-                        <label class="mb-2 font-bold text-sm text-gray-900" for="weight">Weight in grams</label>
-                        <input class="border py-2 px-3 text-grey-800 rounded-lg" type="number" name="weight" id="weight"
-                        value="<%= order.weight %>" required>
-                    </div>
+                <div class="flex flex-col mb-4 mx-2 border rounded-lg">
+                    <table class="border py-2 px-3 text-slate-800 rounded-lg">
+                        <thead>
+                            <tr>
+                                <th>Found addresses</th>
+                            </tr>
+                        </thead>
+                        <tbody id="addresses">
+                        <tbody>
+                    </table>
+                </div>
 
-                    <div class="flex flex-col mx-2 mb-4">
-                        <label class="mb-2 font-bold text-sm text-slate-900" for="sizeFormat">Size format</label>
-                        <div class="relative">
-                            <select class="border text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 appearance-none" name="sizeFormat" id="sizeFormat">
-                                <option value="1">format 1</option>
-                                <option value="2">format 2</option>
-                                <option value="3">format 3</option>
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                            </div>
-                        </div>
-                    </div>
+                <div class="flex flex-row flex-wrap justify-between grow">
+                  <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
+                    <label
+                      class="mb-2 font-bold text-sm text-slate-900"
+                      for="postal_code"
+                      >Postal Code</label
+                    >
+                    <input
+                      class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                      type="text"
+                      name="postal_code"
+                      id="postal_code"
+                      value="<%= order.postal_code %>"
+                    />
+                    <p
+                    class="invisible text-red-500 text-sm"
+                    id="postal_code_p"
+                    >Invalid postal code!</p
+                    >
+                  </div>
+                  <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
+                    <label
+                      class="mb-2 font-bold text-sm text-slate-900"
+                      for="city"
+                      >City</label
+                    >
+                    <input
+                      class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                      type="text"
+                      name="city"
+                      id="city"
+                      value="<%= order.city %>"
+                    />
+                  </div>
+                </div>
 
-                    <div class="flex flex-col mx-2 mb-4">
-                        <label class="mb-2 font-bold text-sm text-slate-900" for="status">Order status</label>
-                        <div class="relative">
-                            <select class="border text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 appearance-none" name="status" id="status">
-                                <option value="SORTING" <%= (order.status === "SORTING") ? "selected" : "" %>>Sorting</option>
-                                <option value="READY" <%= (order.status === "READY") ? "selected" : "" %>>Ready</option>
-                                <option value="TRANSIT" <%= (order.status === "TRANSIT") ? "selected" : "" %>>Transit</option>
-                                <option value="DELIVERED" <%= (order.status === "DELIVERED") ? "selected" : "" %>>Delivered</option>
-                                <option value="FAILED" <%= (order.status === "FAILED") ? "selected" : "" %>>Failed</option>
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                            </div>
-                        </div>
+                <div class="flex flex-row flex-wrap justify-between grow">
+                  <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
+                    <label
+                      class="mb-2 font-bold text-sm text-slate-900"
+                      for="street"
+                      >Street</label
+                    >
+                    <input
+                      class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                      type="text"
+                      name="street"
+                      id="street"
+                      value="<%= order.street %>"
+                    />
+                  </div>
+                  <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
+                    <label
+                      class="mb-2 font-bold text-sm text-slate-900"
+                      for="houseNumber"
+                      >House number</label
+                    >
+                    <input
+                      class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                      type="text"
+                      name="house_number"
+                      id="house_number"
+                      value="<%= order.house_number %>"
+                    />
+                  </div>
+                </div>
+
+                <div class="flex flex-col mb-4 mx-2">
+                  <label class="mb-2 font-bold text-sm text-slate-900" for="weight"
+                    >Weight in grams</label
+                  >
+                  <input
+                    class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                    type="number"
+                    name="weight"
+                    id="weight"
+                      value="<%= order.weight %>"
+                  />
+                </div>
+
+                <div class="flex flex-col mx-2 mb-4">
+                  <label
+                    class="mb-2 font-bold text-sm text-slate-900"
+                    for="sizeFormat"
+                    >Size format</label
+                  >
+                  <div class="relative">
+                    <select
+                      class="text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 block w-full p-2.5 appearance-none"
+                      name="sizeFormat"
+                      id="sizeFormat"
+                    >
+                      <option value="1">format 1</option>
+                      <option value="2">format 2</option>
+                      <option value="3">format 3</option>
+                    </select>
+                    <div
+                      class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+                    >
+                      <svg
+                        class="fill-current h-4 w-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                        />
+                      </svg>
                     </div>
+                  </div>
+                </div>
+
+                <div class="flex flex-col mx-2 mb-4">
+                  <label class="mb-2 font-bold text-sm text-slate-900" for="status">Order status</label>
+                  <div class="relative">
+                      <select class="border text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border-slate-200 block w-full p-2.5 appearance-none" name="status" id="status">
+                          <option value="SORTING" <%= (order.status === "SORTING") ? "selected" : "" %>>Sorting</option>
+                          <option value="READY" <%= (order.status === "READY") ? "selected" : "" %>>Ready</option>
+                          <option value="TRANSIT" <%= (order.status === "TRANSIT") ? "selected" : "" %>>Transit</option>
+                          <option value="DELIVERED" <%= (order.status === "DELIVERED") ? "selected" : "" %>>Delivered</option>
+                          <option value="FAILED" <%= (order.status === "FAILED") ? "selected" : "" %>>Failed</option>
+                      </select>
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                      </div>
+                  </div>
+              </div>
+
+                <div class="flex justify-end mb-6">
+                      <div class="flex items-center h-5">
+                         <input
+                            name="is_pickup"
+                            id="is_pickup"
+                            aria-describedby="is_pickup"
+                            type="checkbox"
+                            class="w-4 h-4 bg-slate-50 rounded border border-slate-300 focus:ring-3 focus:ring-cyan-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-cyan-600 dark:ring-offset-gray-800"
+                            <%= (order.is_pickup) ? "checked" : "" %>
+                         >
+                       </div>
+                       <div class="ml-3 text-sm" >
+                         <label for="is_pickup" class="font-medium text-gray-900 dark:text-gray-300" >Pickup?</label>
+                       </div>
+                  </div>
 
                 <div class="flex justify-end">
-                    <button class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-4 w-1/4 rounded-xl " type="submit">Save</button>
+                  <button
+                    class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-4 w-1/4 rounded-xl transition-colors"
+                    type="button"
+                    id="submitButton"
+                  >
+                    Save
+                  </button>
                 </div>
-
-            </form>
+              </form>
 
         </div>
     </div>

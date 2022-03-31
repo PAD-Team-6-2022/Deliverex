@@ -14,20 +14,19 @@
           <h1 class="block text-slate-800 text-2xl font-bold mb-6">
             Place a new order
           </h1>
-          <form action="/api/orders" method="POST">
-<!--             <input type="hidden" class="bg-red-50 focus:outline-red-500 bg-green-50 focus:outline-green-400"> -->
+          <form name="name" id="createform" action="/api/orders" method="POST">
             <div class="flex flex-col mb-4 mx-2">
               <label
                 class="mb-2 font-bold text-sm text-slate-900"
                 for="first_name"
-                >Email-Adress</label
+                >Email-Address</label
               >
               <input
-                class="border py-2 px-3 text-slate-800 rounded-lg"
+                class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                 type="email"
                 name="email"
                 id="email"
-                required
+
               />
             </div>
 
@@ -36,11 +35,11 @@
                 >Country/Origin</label
               >
               <input
-                class="border py-2 px-3 text-slate-800 rounded-lg"
+                class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                 type="text"
                 name="country"
                 id="country"
-                required
+
               />
             </div>
 
@@ -49,80 +48,13 @@
                 >Address</label
               >
               <input
-                class="border py-2 px-3 text-slate-800 rounded-lg"
+                class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                 type="text"
                 name="address"
                 id="address"
                 placeholder="e.g. Wibautstraat 4"
-                required
+
               />
-            </div>
-
-            <div class="flex flex-row flex-wrap justify-between grow">
-              <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
-                <label
-                  class="mb-2 font-bold text-sm text-slate-900"
-                  for="postal_code"
-                  >Postal Code</label
-                >
-                <input
-                  class="border py-2 px-3 text-slate-800 rounded-lg"
-                  type="text"
-                  name="postal_code"
-                  id="postal_code"
-                  required
-                />
-                <p
-                class="invisible text-red-500 text-sm"
-                id="postal_code_p"
-                >Invalid postal code!</p
-                >
-              </div>
-              <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
-                <label
-                  class="mb-2 font-bold text-sm text-slate-900"
-                  for="city"
-                  >City</label
-                >
-                <input
-                  class="border py-2 px-3 text-slate-800 rounded-lg"
-                  type="text"
-                  name="city"
-                  id="city"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="flex flex-row flex-wrap justify-between grow">
-              <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
-                <label
-                  class="mb-2 font-bold text-sm text-slate-900"
-                  for="street"
-                  >Street</label
-                >
-                <input
-                  class="border py-2 px-3 text-slate-800 rounded-lg"
-                  type="text"
-                  name="street"
-                  id="street"
-                  required
-                />
-              </div>
-              <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
-                <label
-                  class="mb-2 font-bold text-sm text-slate-900"
-                  for="houseNumber"
-                  >House number</label
-                >
-                <input
-                  class="border py-2 px-3 text-slate-800 rounded-lg"
-                  type="number"
-                  name="houseNumber"
-                  id="houseNumber"
-                  required
-                />
-              </div>
             </div>
 
             <div class="flex flex-col mb-4 mx-2 border rounded-lg">
@@ -137,16 +69,83 @@
                 </table>
             </div>
 
+            <div class="flex flex-row flex-wrap justify-between grow">
+              <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
+                <label
+                  class="mb-2 font-bold text-sm text-slate-900"
+                  for="postal_code"
+                  >Postal Code</label
+                >
+                <input
+                  class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                  type="text"
+                  name="postal_code"
+                  id="postal_code"
+
+                />
+                <p
+                class="invisible text-red-500 text-sm"
+                id="postal_code_p"
+                >Invalid postal code!</p
+                >
+              </div>
+              <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
+                <label
+                  class="mb-2 font-bold text-sm text-slate-900"
+                  for="city"
+                  >City</label
+                >
+                <input
+                  class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                  type="text"
+                  name="city"
+                  id="city"
+
+                />
+              </div>
+            </div>
+
+            <div class="flex flex-row flex-wrap justify-between grow">
+              <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
+                <label
+                  class="mb-2 font-bold text-sm text-slate-900"
+                  for="street"
+                  >Street</label
+                >
+                <input
+                  class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                  type="text"
+                  name="street"
+                  id="street"
+
+                />
+              </div>
+              <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
+                <label
+                  class="mb-2 font-bold text-sm text-slate-900"
+                  for="houseNumber"
+                  >House number</label
+                >
+                <input
+                  class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                  type="text"
+                  name="house_number"
+                  id="house_number"
+
+                />
+              </div>
+            </div>
+
             <div class="flex flex-col mb-4 mx-2">
               <label class="mb-2 font-bold text-sm text-slate-900" for="weight"
                 >Weight in grams</label
               >
               <input
-                class="border py-2 px-3 text-slate-800 rounded-lg"
+                class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                 type="number"
                 name="weight"
                 id="weight"
-                required
+
               />
             </div>
 
@@ -158,7 +157,7 @@
               >
               <div class="relative">
                 <select
-                  class="border text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 appearance-none"
+                  class="text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 block w-full p-2.5 appearance-none"
                   name="sizeFormat"
                   id="sizeFormat"
                 >
@@ -182,11 +181,20 @@
               </div>
             </div>
 
+            <div class="flex justify-end mb-6">
+                  <div class="flex items-center h-5">
+                     <input name="is_pickup" id="is_pickup" aria-describedby="is_pickup" type="checkbox" class="w-4 h-4 bg-slate-50 rounded border border-slate-300 focus:ring-3 focus:ring-cyan-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-cyan-600 dark:ring-offset-gray-800">
+                   </div>
+                   <div class="ml-3 text-sm">
+                     <label for="is_pickup" class="font-medium text-gray-900 dark:text-gray-300">Pickup?</label>
+                   </div>
+              </div>
+
             <div class="flex justify-end">
               <button
-                class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-4 w-1/4 rounded-xl"
+                class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-4 w-1/4 rounded-xl transition-colors"
                 type="button"
-                id="submit"
+                id="submitButton"
               >
                 Place order
               </button>
