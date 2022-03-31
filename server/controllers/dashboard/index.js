@@ -95,7 +95,7 @@ router.get("/signout", auth(true), (req, res) => {
  * Render the package size page
  */
 router.get("/settings", (req, res) => {
-    res.render("dashboard/settings", {title: "Package sizes"})
+    res.render("dashboard/settings", {title: "Settings"})
 });
 
 router.use("/orders", require("./orders"));
