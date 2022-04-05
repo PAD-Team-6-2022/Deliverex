@@ -3,6 +3,9 @@ import { openModal } from "../../../modal.js";
 document.querySelectorAll("[data-order-code]").forEach((order) => {
   const id = order.getAttribute("data-order-code");
 
+  //QR Code is added to the 'qrcode' div element
+  new QRCode(document.querySelector("#qrcode"), order.getAttribute("data-order-code"));
+
   order
     .querySelector("[data-order-delete]")
     .addEventListener("click", async (event) => {
@@ -21,3 +24,4 @@ document.querySelectorAll("[data-order-code]").forEach((order) => {
       });
     });
 });
+
