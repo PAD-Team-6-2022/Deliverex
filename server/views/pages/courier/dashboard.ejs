@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-slate-50">
+<head>
+    <%- include("../../partials/head", { js: "courier/overview" }) %>
+</head>
+<body>
+<div class="flex">
+    <div class="max-w-7xl mx-auto px-4 mt-16 flex-1 overflow-hidden">
+        <div class="my-10 text-center sm:text-left">
+            <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Transit overview</h1>
+            <p class="text-lg sm:text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block">You currently have no orders awaiting delivery.</p>
+        </div>
+        <h2 class="font-medium text-2xl text-slate-800 mb-5">Scan a QR code to add an order to your routes</h2>
+        <a href="/courier/scan">
+            <button type="button" class="bg-cyan-500 hover:bg-cyan-700 text-white text-2xl font-normal py-2 px-4 rounded-lg flex transition-colors">
+                        <span>
+                        Scan QR code
+                        </span>
+            </button>
+        </a>
+
+        <div class="bg-white border border-slate-200 rounded-md my-8 p-8 h-60">
+        </div>
+
+        <%# order overview %>
+        <form method="post" class="flex flex-col bg-white rounded-md border border-slate-200 my-16 overflow-hidden p-8" data-pagination-enabled data-ordering-enabled>
+
+            <input type="hidden" name="selectedOrder" value="">
+
+            <h2 class="font-medium text-2xl text-slate-800 mb-4 flex">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -4 24 24" width="24" fill="currentColor">
+                    <path
+                            d="M3 0h14a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3zm0 2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H3zm10.874 5a4.002 4.002 0 0 1-7.748 0H2V5h16v2h-4.126zm-2.142 0H8.268a2 2 0 0 0 3.464 0z">
+                    </path>
+                </svg>
+                <span class="ml-3">Orders</span>
+            </h2>
+
+            <%# searchbar & add button %>
+            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                    <div class="overflow-hidden border-b border-slate-200">
+                        <table class="min-w-full divide-y divide-slate-200">
+                            <thead>
+                            <tr>
+                                <th data-order-toggle="id" scope="col"
+                                    class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
+                                    <span class="flex items-center">
+                                      Id
+                                    </span>
+                                </th>
+                                <th data-order-toggle="weight" scope="col"
+                                    class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
+                                    <span class="flex">
+                                      Weight
+                                    </span>
+                                </th>
+                                <th data-order-toggle="address" scope="col"
+                                    class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
+                                    <span class="flex">
+                                      Address
+                                    </span>
+                                </th>
+                                <th data-order-toggle="postal code" scope="col"
+                                    class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
+                                    <span class="flex">
+                                      Postal code
+                                    </span>
+                                </th>
+                                <th data-order-toggle="email" scope="col"
+                                    class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
+                                    <span class="flex">
+                                      Email address
+                                    </span>
+                                </th>
+                                <th data-order-toggle="phonenumber" scope="col"
+                                    class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
+                                    <span class="flex">
+                                      Phonenumber
+                                    </span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-slate-200">
+                            <% orders.forEach(order => { %>
+                                <tr data-order-code=<%= order.id %> class="order text-slate-500 <%= order.status === 'DELIVERED' ? 'bg-gray-300 hover:bg-gray-200':  'hover:bg-slate-100 cursor-pointer'%>">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="text-sm font-medium text-slate-900 <%= order.status === 'DELIVERED' ? 'line-through' : ''%>">
+                                            <%= order.id %>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="text-sm font-medium text-slate-900 <%= order.status === 'DELIVERED' ? 'line-through' : ''%>">
+                                            <%= order.weight %>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="text-sm font-medium text-slate-900 <%= order.status === 'DELIVERED' ? 'line-through' : ''%>">
+                                            <%= (order.street + ' ' + order.house_number) %>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="text-sm font-medium text-slate-900 <%= order.status === 'DELIVERED' ? 'line-through' : ''%>">
+                                            <%= order.postal_code %>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="text-sm font-medium text-slate-900 <%= order.status === 'DELIVERED' ? 'line-through' : ''%>">
+                                            <%= order.email %>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="text-sm font-medium text-slate-900 <%= order.status === 'DELIVERED' ? 'line-through' : ''%>">
+                                            <%= order.phone_number %>
+                                        </div>
+                                    </div>
+                                </td>
+                            <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

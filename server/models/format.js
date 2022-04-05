@@ -13,7 +13,6 @@ const Format = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-
         length: {
             type: DataTypes.DOUBLE,
             allowNull: false,

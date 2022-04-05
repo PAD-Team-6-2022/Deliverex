@@ -16,6 +16,10 @@ const Order = sequelize.define(
         isEmail: true,
       },
     },
+    phone_number: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
     status: {
       type: DataTypes.ENUM,
       values: ["SORTING", "READY", "TRANSIT", "DELIVERED", "FAILED"],
@@ -56,6 +60,10 @@ const Order = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    courier_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    }
   },
   {
     underscored: true,
