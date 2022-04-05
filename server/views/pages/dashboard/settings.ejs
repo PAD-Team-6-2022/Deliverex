@@ -23,12 +23,12 @@
                     </svg>
                     <span class="ml-3">Active formats</span>
                 </h2>
-                <ul class="max-h-72 divide-y divide-gray-200 w-3.4 text-slate-500 overflow-auto">
+                <ul class="max-h-72 divide-y divide-slate-200 w-3.4 text-slate-500 overflow-auto">
                     <% formats.forEach(format => { %>
 
                     <li class="p-4 flex justify-between">
                         <h2><%= format.nameformat %></h2>
-                        <p class="text-sm font-medium text-gray-900 " id="optie"><%= format.width %> x <%= format.length %> x <%= format.height %> </p>
+                        <p class="text-sm font-medium text-slate-900 " id="optie"><%= format.width %> x <%= format.length %> x <%= format.height %> </p>
                         <div class="actions">
                             <button type="button" data-order-edit class="inline mr-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24"
@@ -61,39 +61,39 @@
                     </h2>
                     <div class="flex flex-wrap -mx-3 mb-6">
                         <div class="w-full  px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                            <label class="block uppercase tracking-wide text-slate-700 text-xs font-bold mb-2"
                                    for="grid-first-name">
                                 Name format
                             </label>
-                            <input class="border py-2 px-3 text-slate-800 rounded-lg w-full" id="name"
+                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full" id="name"
                                    type="text" name="name" placeholder="Name">
                         </div>
                     </div>
 
                     <div class="flex flex-wrap -mx-3 mb-2">
                         <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                            <label class="block uppercase tracking-wide text-slate-700 text-xs font-bold mb-2"
                                    for="grid-city">
                                 Length
                             </label>
-                            <input class="border py-2 px-3 text-slate-800 rounded-lg w-full" id="length" type="text"
+                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full" id="length" type="text"
                                     name="length"  placeholder="Enter length">
                         </div>
                         <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                            <label class="block uppercase tracking-wide text-slate-700 text-xs font-bold mb-2"
                                    for="grid-state">
                                 Height
                             </label>
-                            <input class="border py-2 px-3 text-slate-800 rounded-lg w-full" id="height" type="text"
+                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full" id="height" type="text"
                                    placeholder="Enter height" name="height">
 
                         </div>
                         <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                            <label class="block uppercase tracking-wide text-slate-700 text-xs font-bold mb-2"
                                    for="grid-zip">
                                 Width
                             </label>
-                            <input class="border py-2 px-3 text-slate-800 rounded-lg w-full" id="width" type="text"
+                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full" id="width" type="text"
                                    placeholder="Enter width" name="width">
                         </div>
                     </div>
