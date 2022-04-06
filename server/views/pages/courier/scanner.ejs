@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" class="bg-slate-50">
+<html lang="en" class="bg-slate-100">
 <head>
     <%- include("../../partials/head", { js: "courier/scanner" }) %>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
-<body>
-    <div id="reader" class="w-5/6 border border-black mx-auto mt-7"></div>
+<body class="bg-slate-100">
+    <div id="content" class="p-8">
+        <h1 class="mb-4 text-2xl">Scan a new order</h1>
+        <div id="reader" class="rounded-2xl max-w-md overflow-hidden"></div>
+        <h3 class="my-4">Face the camera towards a QR code to scan a new order.</h3>
+    </div>
 </body>
 </html>
