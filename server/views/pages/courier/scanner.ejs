@@ -5,9 +5,10 @@
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body class="bg-slate-100">
-    <div id="content" class="p-8">
+    <h1 id="invalid-device-message" class="text-xl text-center my-5">This feature is only available on mobile devices.</h1>
+    <div id="content" class="p-8 hidden">
         <h1 class="mb-4 text-2xl">Scan a new order</h1>
-        <div id="reader" class="rounded-2xl max-w-md overflow-hidden"></div>
+        <div id="qrcode-container" class="rounded-2xl max-w-md overflow-hidden"></div>
         <h3 class="my-4">Face the camera towards a QR code to scan a new order.</h3>
     </div>
 </body>
