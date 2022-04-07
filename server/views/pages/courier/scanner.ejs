@@ -1,15 +1,43 @@
 <!DOCTYPE html>
-<html lang="en" class="bg-slate-100">
+<html lang="en" class="bg-slate-200">
 <head>
     <%- include("../../partials/head", { js: "courier/scanner" }) %>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
-<body class="bg-slate-100">
-    <h1 id="invalid-device-message" class="text-xl text-center my-5">This feature is only available on mobile devices.</h1>
-    <div id="content" class="p-8 hidden">
-        <h1 class="mb-4 text-2xl">Scan a new order</h1>
+<body class="bg-slate-200">
+    <div id="content" class="px-8 py-4">
+        <h1 class="mb-4 text-2xl font-medium text-slate-800">Scan a new order</h1>
         <div id="qrcode-container" class="rounded-2xl max-w-md overflow-hidden"></div>
-        <h3 class="my-4">Face the camera towards a QR code to scan a new order.</h3>
+        <h3 id="instruction-msg" class="my-4">Face the camera towards a QR code to scan a new order.</h3>
+        <div id="loaded-order" class="hidden">
+            <div id="order-info" class="mt-4 bg-white rounded-md p-4">
+                <h1 class="text-xl mb-2">Order info:</h1>
+                <h1>ID: <span id="order-id-container"></span></h1>
+                <h1>Format: <span id="order-format-container"></span></h1>
+                <h1>Weight: <span id="order-weight-container"></span></h1>
+                <h1>Address: <span id="order-address-container"></span></h1>
+                <h1>City: <span id="order-city-container"></span></h1>
+                <h1>Country: <span id="order-country-container"></span></h1>
+                <h1>Postal code: <span id="order-postal-code-container"></span></h1>
+            </div>
+            <div id="customer-info" class="mt-4 bg-white rounded-md p-4">
+                <h1 class="text-xl mb-2">Customer info:</h1>
+                <h1>Email: <span id="customer-email-container"></span></h1>
+                <h1>Phone number: <span id="customer-phone-number-container"></span></h1>
+            </div>
+            <div class="mt-4 flex flex-row justify-between">
+                <button id="add-order-button" type="button" class="bg-cyan-500 hover:bg-cyan-700 text-lg text-white font-medium py-2 px-4 rounded-lg flex transition-colors">
+                  <span class="md:inline">
+                    Add this order
+                  </span>
+                </button>
+                <button id="scan-again-button" type="button" class="bg-cyan-500 hover:bg-cyan-700 text-lg text-white font-medium py-2 px-4 rounded-lg flex transition-colors">
+                  <span class="md:inline">
+                    Scan again
+                  </span>
+                </button>
+            </div>
+        </div>
     </div>
 </body>
 </html>
