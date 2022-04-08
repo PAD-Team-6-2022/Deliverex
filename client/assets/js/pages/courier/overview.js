@@ -4,9 +4,9 @@
  * of the order from 'TRANSIT' to 'DELIVERED'.
  */
 document.querySelectorAll(".order").forEach((order) => {
-    console.log(order.getAttribute('data-order-code'));
 
     const form = document.querySelector("form");
+    form.setAttribute("action", `/api/orders/${order.getAttribute('data-order-code')}/scan`);
     const orderInput = form.querySelector('input[name="selectedOrder"]');
 
     if(order.classList.contains('cursor-pointer'))
@@ -15,4 +15,4 @@ document.querySelectorAll(".order").forEach((order) => {
         orderInput.value = order.getAttribute('data-order-code');
         form.submit();
     });
-})
+});

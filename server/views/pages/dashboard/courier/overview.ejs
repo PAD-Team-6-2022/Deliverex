@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-slate-50">
 <head>
-    <%- include("../../partials/head", { js: "courier/overview" }) %>
+    <%- include("../../../partials/head", { js: "courier/overview" }) %>
 </head>
 <body>
 <div class="flex">
@@ -11,7 +11,7 @@
             <p class="text-lg sm:text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block">You currently have no orders awaiting delivery.</p>
         </div>
         <h2 class="font-medium text-2xl text-slate-800 mb-5">Scan a QR code to add an order to your routes</h2>
-        <a href="/courier/scan">
+        <a href="/dashboard/scan">
             <button type="button" class="bg-cyan-500 hover:bg-cyan-700 text-white text-2xl font-normal py-2 px-4 rounded-lg flex transition-colors">
                         <span>
                         Scan QR code
@@ -23,7 +23,7 @@
         </div>
 
         <%# order overview %>
-        <form method="post" class="flex flex-col bg-white rounded-md border border-slate-200 my-16 overflow-hidden p-8" data-pagination-enabled data-ordering-enabled>
+        <form method="POST" class="flex flex-col bg-white rounded-md border border-slate-200 my-16 overflow-hidden p-8" data-pagination-enabled data-ordering-enabled>
 
             <input type="hidden" name="selectedOrder" value="">
 

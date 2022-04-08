@@ -19,7 +19,7 @@ Html5Qrcode.getCameras().then((cameras) => {
                 aspectRatio: 1.0
             },
             async (decodedText, decodedResult) => {
-                await fetch(`/courier/scan/${decodedText}`, {
+                await fetch(`/api/orders/${decodedText}/scan`, {
                     method: 'GET', // or 'PUT'
                     headers: {
                         'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ document.querySelector("#add-order-button")
 
     const id = document.querySelector("#order-id-container").textContent;
 
-    await fetch(`/courier/scan`, {
+    await fetch(`/api/orders/${id}/scan`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

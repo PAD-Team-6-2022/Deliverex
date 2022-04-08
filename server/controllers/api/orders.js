@@ -124,6 +124,54 @@ router.post("/setting", auth(true), (req, res) => {
         });
 });
 
+/**
+ * Retrieves the order associated with a given ID. Since it is assumed that
+ * request will come from the scanning page, the server will check whether
+ * this order has already been taken by another courier and/or whether it is
+ * in it's READY state so that it may be transported.
+ */
+router.get("/:id/scan", async (req, res) => {
+  const {id} = req.params;
 
+  await Order.findByPk(id).then((order) => {
+    res.json({order: order, isAlreadyAssigned:
+          (order.getDataValue('courier_id') !== null) ||
+          (order.getDataValue('status') !== 'READY')});
+  }).catch((error) => {
+    console.error(`Could not find order with ID ${id}. Error: ${error}`);
+    res.sendStatus(404);
+  });
+});
+
+/**
+ * Updates the 'courier_id' attribute of an order to the given ID of the courier.
+ * In case the order could not be found or another error was caught, the server
+ * will respond with the appropiate error messages.
+ */
+router.put("/:id/scan", auth(true), (req, res) => {
+  Order.findByPk(req.body.id).then((order) => {
+    Order.update({courier_id: req.user.id, status: 'TRANSIT'}, {where: {id: req.body.id}}).then((data) => {
+      res.sendStatus(200);
+    }).catch((error) => {
+      console.error(`Could not assign order to courier. Error message: ${error}`)
+      res.sendStatus(500);
+    });
+  }).catch((error) => {
+    console.error(`Could not find order with ID ${req.body.id}. Error: ${error}`);
+    res.sendStatus(404);
+  })
+});
+
+/**
+ * Updates the status of an order from 'TRANSIT' to 'DELIVERED' and
+ * reloads the page.
+ */
+router.post("/:id/scan", async (req, res) => {
+  Order.update({status: 'DELIVERED'}, {where: {id: req.body.selectedOrder}}).then(() => {
+    res.redirect(req.originalUrl);
+  }).catch((error) => {
+    res.sendStatus(500).send(`Caught error while updating delivery status: ${error}`);
+  });
+});
 
 module.exports = router;
