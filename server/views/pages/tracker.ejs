@@ -112,7 +112,11 @@
                             Dimensions (cm)
                         </span>
                         <p class="text-slate-500 ml-8">
-                            <%= format.length %> x <%= format.width %> x <%= format.height %>
+                            <% if (format) { %>
+                                <%= format.length %> x <%= format.width %> x <%= format.height %>
+                            <% } else { %>
+                                No format specified
+                            <% } %>
                         </p>
                     </div>
                     <div class="mb-4 pl-0 lg:pl-3 w-full lg:w-1/2">
