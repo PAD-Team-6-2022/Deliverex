@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const Order = require("../../models/order");
-const Format = require("../../models/format")
+const { Order, Format } = require("../../models");
+const auth = require("../../middleware/auth");
 const fetch = require("node-fetch");
 
 router.delete("/:id", (req, res) => {
@@ -100,12 +100,13 @@ router.post("/edit", (req, res) => {
         })
 })
 
-router.post("/setting", (req, res) => {
+router.post("/setting", auth(true), (req, res) => {
     Format.create({
         length: req.body.length,
         height: req.body.height,
         nameformat: req.body.name,
-        width: req.body.width})
+        width: req.body.width,
+        userId: req.user.id})
         .then((orders) => {
             res.redirect('/dashboard/settings')
         })
