@@ -1,7 +1,5 @@
-const { hashSync } = require("bcrypt");
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/connection");
-const Country = require("./country");
 
 const Receiver = sequelize.define(
   "receiver",
