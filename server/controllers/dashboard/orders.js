@@ -1,5 +1,5 @@
 const auth = require("../../middleware/auth");
-const Order = require("../../models/order");
+const { Order, Format } = require("../../models");
 const convert = require("convert-units");
 
 const router = require("express").Router();
@@ -8,13 +8,24 @@ router.get("/", auth(true), (req, res) => {
   res.render("dashboard/orders/list", { title: "Orders - Dashboard" });
 });
 
-router.get("/create", auth(true), (req, res) => {
-  res.render("dashboard/orders/create", { title: "Create order - Dashboard" });
+router.get("/create", auth(true), async (req, res) => {
+
+  const formats = await Format.findAll({
+    where: { userId: req.user.id }
+  });
+
+  res.render("dashboard/orders/create", { title: "Create order - Dashboard",
+  formats });
+
 });
 
 router.get("/:id/edit", auth(true), async (req, res) => {
   const { id } = req.params;
   const order = await Order.findByPk(id);
+
+  const formats = await Format.findAll({
+    where: { userId: req.user.id }
+  });
 
   if (!order) {
     res.redirect("/dashboard/overview");
@@ -24,6 +35,7 @@ router.get("/:id/edit", auth(true), async (req, res) => {
   res.render("dashboard/orders/edit", {
     title: "Edit order - Dashboard",
     order,
+    formats
   });
 });
 
