@@ -33,7 +33,7 @@ router.post("/", (req, res) => {
 
   const sendEmail = async (id) => {
     let emailTemplate = await ejs.renderFile(path.resolve(__dirname, "../../views/mail/template.ejs"), {
-      link: `http://${req.rawHeaders[1]}/track/${id}&postal_code=${req.body.postal_code}`,
+      link: `http://${req.rawHeaders[1]}/track/${req.body.postal_code}/${id}`,
     });
 
     await fetch(`https://api.hbo-ict.cloud/mail`, {
