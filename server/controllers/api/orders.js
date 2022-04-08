@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Order = require("../../models/order");
 const Format = require("../../models/format")
+const fetch = require("node-fetch");
 
 router.delete("/:id", (req, res) => {
   Order.destroy({ where: { id: req.params.id } })
@@ -27,6 +28,31 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
+
+    const sendEmail = async (id) => {
+        await fetch(`https://api.hbo-ict.cloud/mail`, {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer pad_rit_6.o8ZLxKESVnaVSVQs',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "from": {
+                    "name": "Team 3",
+                    "address": "team3@hbo-ict.cloud"
+                },
+                "to": [
+                    {
+                        "name": "",
+                        "address": req.body.email
+                    }
+                ],
+                "subject": "Track & Trace",
+                "html": `Hierbij uw track & trace link: http://${req.rawHeaders[1]}/track/${id}&postal_code=${req.body.postal_code}`
+            }),
+        });
+    }
+
     let pickup_status = req.body.is_pickup != null;
 
     Order.create({
@@ -42,8 +68,9 @@ router.post("/", (req, res) => {
         format: req.body.sizeFormat,
         is_pickup: pickup_status,
         updated_at: Date.now()})
-        .then((orders) => {
-            res.redirect('/dashboard')
+        .then((order) => {
+            sendEmail(order.dataValues.id);
+            res.redirect('/dashboard');
         })
         .catch((err) => {
             res.status(500).json(err);
