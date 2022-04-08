@@ -171,7 +171,7 @@ router.put("/:id/scan", auth(true), (req, res) => {
  */
 router.post("/:id/scan", async (req, res) => {
   Order.update({status: 'DELIVERED'}, {where: {id: req.body.selectedOrder}}).then(() => {
-    res.redirect(req.originalUrl);
+    res.redirect('/dashboard/overview');
   }).catch((error) => {
     res.sendStatus(500).send(`Caught error while updating delivery status: ${error}`);
   });
