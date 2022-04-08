@@ -85,9 +85,11 @@ addressInput.addEventListener("keyup", delay((e) => {
                             houseNumberInput.value = address.properties.housenumber;
                             cityInput.value = address.properties.locality;
                             countryInput.value = address.properties.country;
+                            table.innerHTML = "";
                         });
                         let newAddress = document.createElement("td");
                         newAddress.innerHTML = address.properties.label;
+                        newAddress.classList.add("py-1", "px-3");
                         tr.appendChild(newAddress);
                         table.appendChild(tr);
                     }
