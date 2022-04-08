@@ -18,11 +18,13 @@ router.get("/track/:postal_code/:id", async (req, res) => {
   const { id, postal_code } = req.params;
   // find the one order with the given id and postal_code combination
   const order = await Order.findOne({
-    where: {
-      id: id,
-      postal_code: postal_code
-    }
-  });;
+      where: {
+        id,
+        postal_code
+      },
+      include: Format
+    },
+  );
 
   // redirect with toaster and the given order
   if (!order) {
@@ -42,15 +44,10 @@ router.get("/track/:postal_code/:id", async (req, res) => {
     return;
   }
 
-  // find the format for the order
-  const format = await Format.findOne({
-    where: { id: order.formatId }
-  })
-
   const convertedWeight = convert(order.weight).from("g").toBest();
   order.weight = `${Math.round(convertedWeight.val)} ${convertedWeight.unit}`;
   
-  res.render("tracker", { title: "Track & Trace", order, format });
+  res.render("tracker", { title: "Track & Trace", order });
 });
 
 module.exports = router;

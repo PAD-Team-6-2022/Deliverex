@@ -41,16 +41,13 @@ router.get("/:id/edit", auth(true), async (req, res) => {
 
 router.get("/:id", auth(true), async (req, res) => {
   const { id } = req.params;
-  const order = await Order.findByPk(id);
+  const order = await Order.findByPk(id, { include: Format });
 
   // if no order is found redirect it to the dashboard overview
   if (!order) {
     res.redirect("/dashboard/overview");
     return;
   }
-
-  // find the format for the order
-  const format = await Format.findByPk(order.formatId);
 
   // covert the weight to the best value "kg" or "g"
   const convertedWeight = convert(order.weight).from("g").toBest();
@@ -60,7 +57,6 @@ router.get("/:id", auth(true), async (req, res) => {
     title: `Order #${id} - Dashboard`,
     id,
     order,
-    format,
   });
 });
 

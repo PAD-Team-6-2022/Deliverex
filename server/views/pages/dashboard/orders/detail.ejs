@@ -147,8 +147,8 @@
                                 Dimensions (cm) 
                             </span>
                             <p class="text-slate-500 ml-8">
-                                <% if (format) { %>
-                                    <%= format.length %> x <%= format.width %> x <%= format.height %>
+                                <% if (order.format) { %>
+                                    <%= order.format.length %> x <%= order.format.width %> x <%= order.format.height %>
                                 <% } else { %>
                                     No format specified
                                 <% } %>
