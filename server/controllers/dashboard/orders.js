@@ -49,6 +49,9 @@ router.get("/:id", auth(true), async (req, res) => {
     return;
   }
 
+  // find the format for the order
+  const format = await Format.findByPk(order.formatId);
+
   // covert the weight to the best value "kg" or "g"
   const convertedWeight = convert(order.weight).from("g").toBest();
   order.weight = `${Math.round(convertedWeight.val)} ${convertedWeight.unit}`;
@@ -57,6 +60,7 @@ router.get("/:id", auth(true), async (req, res) => {
     title: `Order #${id} - Dashboard`,
     id,
     order,
+    format,
   });
 });
 

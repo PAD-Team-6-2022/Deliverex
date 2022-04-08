@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Order = require("../models/order");
+const { Order, Format } = require("../models/");
 const convert = require("convert-units");
 
 /**
@@ -42,10 +42,15 @@ router.get("/track/:postal_code/:id", async (req, res) => {
     return;
   }
 
+  // find the format for the order
+  const format = await Format.findOne({
+    where: { id: order.formatId }
+  })
+
   const convertedWeight = convert(order.weight).from("g").toBest();
   order.weight = `${Math.round(convertedWeight.val)} ${convertedWeight.unit}`;
   
-  res.render("tracker", { title: "Track & Trace", order });
+  res.render("tracker", { title: "Track & Trace", order, format });
 });
 
 module.exports = router;
