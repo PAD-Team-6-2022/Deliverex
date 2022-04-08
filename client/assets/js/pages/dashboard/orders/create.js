@@ -18,6 +18,7 @@ document.getElementById("submitButton").addEventListener("click", async () => {
             "bg-red-50",
             "border-red-500");
         if(input.id !== "address" && input.type !== "checkbox") {
+            document.getElementById(`${input.id}_p`).innerHTML = "";
             if(input.value === "" || input.value.includes(" ")) {
                 wrongInputs.push(input);
             }
@@ -31,7 +32,9 @@ document.getElementById("submitButton").addEventListener("click", async () => {
         wrongInputs.forEach((input) => {
            input.classList.add(
                "bg-red-50",
-               "border-red-500");
+               "border-red-500"
+           );
+           document.getElementById(`${input.id}_p`).innerHTML = "This field can't be empty!";
         });
     }
 
@@ -40,15 +43,15 @@ document.getElementById("submitButton").addEventListener("click", async () => {
 
 
 postalCodeInput.addEventListener("keyup", delay((e) => {
-    console.log("change detected");
     const postal_code_regex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
-    document.getElementById("postal_code_p").classList.add("invisible");
     postalCodeInput.classList.remove(
         "bg-red-50",
         "focus:border-red-500",
         "focus:ring-red-500",
         "border-red-500"
     );
+    document.getElementById("postal_code_p").innerHTML = "";
+
     if(!postal_code_regex.test(postalCodeInput.value) && postalCodeInput.value !== "") {
         postalCodeInput.classList.add(
             "bg-red-50",
@@ -56,7 +59,7 @@ postalCodeInput.addEventListener("keyup", delay((e) => {
             "focus:ring-red-500",
             "border-red-500"
         );
-        document.getElementById("postal_code_p").classList.remove("invisible");
+        document.getElementById("postal_code_p").innerHTML = "Invalid postal code!";
     }
 }, 500));
 
