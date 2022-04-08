@@ -16,7 +16,7 @@ document.getElementById("submitButton").addEventListener("click", async () => {
         input.classList.remove(
             "bg-red-50",
             "border-red-500");
-        if(input.id !== "address" && input.type !== "checkbox") {
+        if(input.id !== "address" && input.type !== "checkbox" && input.type !== "hidden") {
             document.getElementById(`${input.id}_p`).innerHTML = "";
             if(input.value === "" || input.value.includes(" ")) {
                 wrongInputs.push(input);
