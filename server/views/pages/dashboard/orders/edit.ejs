@@ -193,8 +193,11 @@
                       name="sizeFormat"
                       id="sizeFormat"
                     >
+                    <% if(order.formatId === null) { %>
+                        <option disabled selected>Select a format</option>
+                    <% } %>
                      <% formats.forEach(format => { %>
-                         <option value=<%= format.id %>><%= format.nameformat %></option>
+                         <option value=<%= format.id %> <%= order.formatId === format.id ? "selected" : "" %>><%= format.nameformat %></option>
                      <% }); %>
                     </select>
                   </div>

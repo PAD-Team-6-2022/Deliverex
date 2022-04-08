@@ -8,6 +8,9 @@ const User = require("./user");
 User.hasMany(Format);
 Format.belongsTo(User);
 
+Format.hasMany(Order);
+Order.belongsTo(Format);
+
 User.hasMany(Order);
 Order.belongsTo(User);
 

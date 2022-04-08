@@ -31,11 +31,9 @@ router.get("/", (req, res) => {
 
 router.post("/", (req, res) => {
 
-
-
-  const sendEmail = async () => {
+  const sendEmail = async (id) => {
     let emailTemplate = await ejs.renderFile(path.resolve(__dirname, "../../views/mail/template.ejs"), {
-      link: `http://${req.rawHeaders[1]}/track/${req.body.id}&postal_code=${req.body.postal_code}`,
+      link: `http://${req.rawHeaders[1]}/track/${id}&postal_code=${req.body.postal_code}`,
     });
 
     await fetch(`https://api.hbo-ict.cloud/mail`, {
@@ -73,15 +71,16 @@ router.post("/", (req, res) => {
     postal_code: req.body.postal_code,
     city: req.body.city,
     country: req.body.country,
-    format: req.body.sizeFormat,
+    formatId: req.body.sizeFormat,
     is_pickup: pickup_status,
     updated_at: Date.now()
   })
     .then((order) => {
-      sendEmail();
+      sendEmail(order.id);
       res.redirect('/dashboard');
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).json(err);
     });
 });
@@ -96,7 +95,7 @@ router.post("/edit", (req, res) => {
     house_number: req.body.house_number,
     postal_code: req.body.postal_code,
     city: req.body.city,
-    format: req.body.sizeFormat,
+    formatId: req.body.sizeFormat,
     is_pickup: pickup_status,
     updated_at: Date.now(),
     status: req.body.status
