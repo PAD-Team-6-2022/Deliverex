@@ -71,16 +71,19 @@ router.post("/", (req, res) => {
     postal_code: req.body.postal_code,
     city: req.body.city,
     country: req.body.country,
-    formatId: req.body.sizeFormat,
+    format_id: req.body.sizeFormat,
     is_pickup: pickup_status,
     updated_at: Date.now()
   })
     .then((order) => {
       sendEmail(order.id);
-      res.redirect('/dashboard');
+      // res.redirect('/dashboard');
+      res.status(200).json({
+        order,
+        message: `order ${order.id} created`
+      });
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).json(err);
     });
 });
