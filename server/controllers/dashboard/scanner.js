@@ -10,10 +10,6 @@ const auth = require("../../middleware/auth");
  */
 router.get("/", auth(true), useragent.express(), async (req, res) => {
     res.render("dashboard/courier/scanner", {title: "Courier - Scanner"});
-    // if(req.useragent.isMobile)
-    //     res.render("dashboard/courier/scanner", {title: "Courier - Scanner"});
-    // else
-    //     res.send("This feature is only available on mobile devices."); //<-- update later to something better-looking
 });
 
 module.exports = router;
