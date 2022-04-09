@@ -26,12 +26,21 @@ Html5Qrcode.getCameras().then((cameras) => {
                     }
                 }).then(async (response) => {
 
+                    html5QrCode.pause();
+
                     //In case no order was found, display a 'not found' message
-                    if (response.status === 404)
+                    if (response.status === 404){
                         document.querySelector("#not-found-message").classList.remove("hidden");
+
+                        document.querySelector("#button-container").classList.remove("hidden");
+
+                        //Hide the 'add order' button and center the 'scan again' button
+                        document.querySelector("#button-container").classList
+                            .replace("justify-between", "justify-center");
+                        document.querySelector("#add-order-button").classList.add("hidden");
+                    }
                     else {
                         const order = await response.json();
-                        html5QrCode.pause();
 
                         //Hide the instruction message to make room for the loaded data
                         document.querySelector("#instruction-msg").classList.add("hidden");
@@ -49,6 +58,7 @@ Html5Qrcode.getCameras().then((cameras) => {
                             document.querySelector("#add-order-button").classList.add("hidden");
                         }
 
+                        document.querySelector("#button-container").classList.remove("hidden");
                         document.querySelector("#loaded-order").classList.remove("hidden");
 
                         //Select the container of order info and make it visible

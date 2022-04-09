@@ -143,8 +143,7 @@ router.get("/:id/scan", async (req, res) => {
           (order.getDataValue('courier_id') !== null) ||
           (order.getDataValue('status') !== 'READY')});
   }).catch((error) => {
-    console.error(`Could not find order with ID ${id}. Error: ${error}`);
-    res.sendStatus(404);
+    res.status(404).json(`Could not find order with ID ${id}. Error: ${error}`);
   });
 });
 
@@ -162,8 +161,7 @@ router.put("/:id/scan", auth(true), (req, res) => {
       res.sendStatus(500);
     });
   }).catch((error) => {
-    console.error(`Could not find order with ID ${req.body.id}. Error: ${error}`);
-    res.sendStatus(404);
+    res.status(404).json(`Could not find order with ID ${req.body.id}. Error: ${error}`);
   })
 });
 
@@ -175,7 +173,7 @@ router.post("/:id/scan", async (req, res) => {
   Order.update({status: 'DELIVERED'}, {where: {id: req.body.selectedOrder}}).then(() => {
     res.redirect('/dashboard/overview');
   }).catch((error) => {
-    res.sendStatus(500).send(`Caught error while updating delivery status: ${error}`);
+    res.status(500).json(`Caught error while updating delivery status: ${error}`);
   });
 });
 
