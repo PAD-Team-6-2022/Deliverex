@@ -110,8 +110,7 @@ router.post("/edit", (req, res) => {
       });
     })
     .catch((err) => {
-      res.status(500).json(req.body);
-      console.error(err);
+      res.status(500).json(err);
     })
 })
 
