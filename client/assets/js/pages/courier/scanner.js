@@ -7,7 +7,7 @@
  */
 Html5Qrcode.getCameras().then((cameras) => {
     if (cameras && cameras.length) {
-        const boxLength = screen.width / 3;
+        const boxLength = 190;
         const html5QrCode = new Html5Qrcode("qrcode-container");
         html5QrCode.start(
             { facingMode: "environment" },
