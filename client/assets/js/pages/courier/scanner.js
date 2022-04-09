@@ -25,7 +25,6 @@ Html5Qrcode.getCameras().then((cameras) => {
                         'Content-Type': 'application/json',
                     }
                 }).then(async (response) => {
-
                     html5QrCode.pause();
 
                     //In case no order was found, display a 'not found' message
