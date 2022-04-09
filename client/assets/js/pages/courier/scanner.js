@@ -7,12 +7,10 @@
  */
 Html5Qrcode.getCameras().then((cameras) => {
     if (cameras && cameras.length) {
-        const cameraId = cameras[1].id;
-        const boxLength = screen.width / 3;
-
+        const boxLength = 190;
         const html5QrCode = new Html5Qrcode("qrcode-container");
         html5QrCode.start(
-            cameraId,
+            { facingMode: "environment" },
             {
                 fps: 60,
                 qrbox: { width: boxLength, height: boxLength },
@@ -20,7 +18,7 @@ Html5Qrcode.getCameras().then((cameras) => {
             },
             async (decodedText, decodedResult) => {
                 await fetch(`/api/orders/${decodedText}/scan`, {
-                    method: 'GET', // or 'PUT'
+                    method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                     }

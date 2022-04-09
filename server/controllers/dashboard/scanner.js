@@ -9,11 +9,10 @@ const auth = require("../../middleware/auth");
  * server will send a message informing the user that his platform is incompatible.
  */
 router.get("/", auth(true), useragent.express(), async (req, res) => {
-    res.render("dashboard/courier/scanner", {title: "Courier - Scanner"});
-    // if(req.useragent.isMobile)
-    //     res.render("dashboard/courier/scanner", {title: "Courier - Scanner"});
-    // else
-    //     res.send("This feature is only available on mobile devices."); //<-- update later to something better-looking
+    if(req.user.role === 'COURIER')
+        res.render("dashboard/courier/scanner", {title: "Courier - Scanner"});
+    else
+        res.redirect('/dashboard')
 });
 
 module.exports = router;
