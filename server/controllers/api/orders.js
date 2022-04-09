@@ -77,7 +77,6 @@ router.post("/", (req, res) => {
   })
     .then((order) => {
       sendEmail(order.id);
-      // res.redirect('/dashboard');
       res.status(200).json({
         order,
         message: `order ${order.id} created`
