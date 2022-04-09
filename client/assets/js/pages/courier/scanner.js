@@ -100,7 +100,8 @@ Html5Qrcode.getCameras().then((cameras) => {
             });
     }
 }).catch(err => {
-    console.error(`Error in trying to obtain camera's: ${err}`)
+    console.error(`Error in trying to obtain camera's: ${err}`);
+    document.querySelector("#no-camera-message").classList.remove("hidden");
 });
 
 /**
