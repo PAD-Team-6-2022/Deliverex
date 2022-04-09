@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-slate-50">
 <head>
-    <%- include("../../partials/head") %>
+    <%- include("../../partials/head", { js: "/dashboard/settings" }) %>
 </head>
 <body>
 <div class="flex">
@@ -28,8 +28,8 @@
 
                         <li class="p-4 flex justify-between">
                             <h2><%= format.nameformat %></h2>
-                            <p class="text-sm font-medium text-slate-900 " id="optie"><%= format.width %>
-                                x <%= format.length %> x <%= format.height %> </p>
+                            <p class="text-sm font-medium text-slate-900 " id="optie">
+                                <%= format.length %> x <%= format.width %> x <%= format.height %> </p>
                             <div class="actions">
                                 <button type="button" data-order-edit class="inline mr-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24"
@@ -55,7 +55,7 @@
             </div>
 
             <div class="w-full md:w-2/3 ">
-                <form class="w-full max-w-lg mx-auto" action="/api/orders/setting" method="POST">
+                <form class="w-full max-w-lg mx-auto" id="formatForm">
                     <h2 class="font-medium text-2xl text-slate-800 mb-4 flex">
                         <span>Save format</span>
                     </h2>
@@ -83,6 +83,15 @@
                         </div>
                         <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-slate-700 text-xs font-bold mb-2"
+                                   for="grid-zip">
+                                Width
+                            </label>
+                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full"
+                                   id="width" type="text"
+                                   placeholder="Enter width" name="width">
+                        </div>
+                        <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                            <label class="block uppercase tracking-wide text-slate-700 text-xs font-bold mb-2"
                                    for="grid-state">
                                 Height
                             </label>
@@ -91,18 +100,9 @@
                                    placeholder="Enter height" name="height">
 
                         </div>
-                        <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-slate-700 text-xs font-bold mb-2"
-                                   for="grid-zip">
-                                Width
-                            </label>
-                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full"
-                                   id="width" type="text"
-                                   placeholder="Enter width" name="width">
-                        </div>
                     </div>
                     <button class="bg-cyan-500 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex my-4 float-right transition-colors"
-                            type="submit">
+                            type="button" id="saveFormat">
                         Save
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4.5 -4.5 24 24" width="24"
                              fill="currentColor">
