@@ -1,11 +1,16 @@
 import { delay } from "../../../util.js";
 
+const id = document.querySelector('[name="id"]').value;
+const emailInput = document.getElementById("email");
 const postalCodeInput = document.getElementById("postal_code");
 const streetInput = document.getElementById("street");
 const houseNumberInput = document.getElementById("house_number");
 const cityInput = document.getElementById("city");
 const addressInput = document.getElementById("address");
 const countryInput = document.getElementById("country");
+const weightInput = document.getElementById("weight");
+const sizeFormatInput = document.getElementById("sizeFormat");
+const pickupInput = document.getElementById("is_pickup");
 
 document.getElementById("submitButton").addEventListener("click", async () => {
 
@@ -26,7 +31,35 @@ document.getElementById("submitButton").addEventListener("click", async () => {
 
     if(wrongInputs.length === 0) {
 
-        document.getElementById("editform").submit();
+        const values = {
+            id: id,
+            email: emailInput.value,
+            weight: weightInput.value,
+            street: streetInput.value,
+            house_number: houseNumberInput.value,
+            postal_code: postalCodeInput.value,
+            city: cityInput.value,
+            country: countryInput.value,
+            format_id: sizeFormatInput.value,
+            is_pickup: pickupInput.value,
+        }
+
+        await fetch('/api/orders/edit', {
+            method: 'POST',
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify(values)
+        }).then((response) => {
+            if(response.status === 200){
+                window.location.href = "/dashboard";
+            }
+        }).catch((error) => {
+            console.error(`Fetch error: could not fulfill post request
+             to update order. Errormessage: ${error}`);
+        })
+
+        //document.getElementById("editform").submit();
     } else {
         wrongInputs.forEach((input) => {
             input.classList.add(

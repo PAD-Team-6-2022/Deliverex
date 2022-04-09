@@ -110,6 +110,6 @@ router.get("/settings", async (req, res) => {
 });
 
 router.use("/orders", require("./orders"));
-router.use("/scan", require("./scanner.js"));
+router.use("/scan", require("./scanner"));
 
 module.exports = router;

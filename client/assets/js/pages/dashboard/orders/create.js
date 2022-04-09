@@ -54,7 +54,7 @@ document.getElementById("submitButton").addEventListener("click", async (event) 
             }
         }).catch((error) => {
             console.error(`Fetch error: could not fulfill post request
-             to update order assignment. Errormessage: ${error}`)
+             to create order. Errormessage: ${error}`);
         });
 
     } else {
