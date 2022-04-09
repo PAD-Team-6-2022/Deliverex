@@ -33,7 +33,7 @@ router.post("/", (req, res) => {
 
   const sendEmail = async (id) => {
     let emailTemplate = await ejs.renderFile(path.resolve(__dirname, "../../views/mail/template.ejs"), {
-      link: `http://${req.rawHeaders[1]}/track/${id}&postal_code=${req.body.postal_code}`,
+      link: `http://${req.rawHeaders[1]}/track/${req.body.postal_code}/${id}`,
     });
 
     await fetch(`https://api.hbo-ict.cloud/mail`, {
@@ -71,16 +71,18 @@ router.post("/", (req, res) => {
     postal_code: req.body.postal_code,
     city: req.body.city,
     country: req.body.country,
-    formatId: req.body.sizeFormat,
+    format_id: req.body.sizeFormat,
     is_pickup: pickup_status,
     updated_at: Date.now()
   })
     .then((order) => {
       sendEmail(order.id);
-      res.redirect('/dashboard');
+      res.status(200).json({
+        order,
+        message: `order ${order.id} created`
+      });
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).json(err);
     });
 });
@@ -101,11 +103,13 @@ router.post("/edit", (req, res) => {
     status: req.body.status
   },
     { where: { id: req.body.id } })
-    .then(() => {
-      res.redirect("/dashboard");
+    .then((affectedRows) => {
+      res.status(200).json({
+        message: `${affectedRows} rows updated`
+      });
     })
     .catch((err) => {
-      res.status(500).json(req.body);
+      res.status(500).json(err);
     })
 })
 
@@ -116,14 +120,63 @@ router.post("/setting", auth(true), (req, res) => {
         nameformat: req.body.name,
         width: req.body.width,
         userId: req.user.id})
-        .then((orders) => {
-            res.redirect('/dashboard/settings')
+        .then((format) => {
+          res.status(200).json({
+            format,
+            message: `format ${format.id} created`
+          });
         })
         .catch((err) => {
             res.status(500).json(err);
         });
 });
 
+/**
+ * Retrieves the order associated with a given ID. Since it is assumed that
+ * request will come from the scanning page, the server will check whether
+ * this order has already been taken by another courier and/or whether it is
+ * in it's READY state so that it may be transported.
+ */
+router.get("/:id/scan", async (req, res) => {
+  const {id} = req.params;
 
+  await Order.findByPk(id).then((order) => {
+    res.json({order: order, isAlreadyAssigned:
+          (order.getDataValue('courier_id') !== null) ||
+          (order.getDataValue('status') !== 'READY')});
+  }).catch((error) => {
+    res.status(404).json(`Could not find order with ID ${id}. Error: ${error}`);
+  });
+});
+
+/**
+ * Updates the 'courier_id' attribute of an order to the given ID of the courier.
+ * In case the order could not be found or another error was caught, the server
+ * will respond with the appropiate error messages.
+ */
+router.put("/:id/scan", auth(true), (req, res) => {
+  Order.findByPk(req.body.id).then((order) => {
+    Order.update({courier_id: req.user.id, status: 'TRANSIT'}, {where: {id: req.body.id}}).then((data) => {
+      res.sendStatus(200);
+    }).catch((error) => {
+      console.error(`Could not assign order to courier. Error message: ${error}`)
+      res.sendStatus(500);
+    });
+  }).catch((error) => {
+    res.status(404).json(`Could not find order with ID ${req.body.id}. Error: ${error}`);
+  })
+});
+
+/**
+ * Updates the status of an order from 'TRANSIT' to 'DELIVERED' and
+ * reloads the page.
+ */
+router.post("/:id/scan", async (req, res) => {
+  Order.update({status: 'DELIVERED'}, {where: {id: req.body.selectedOrder}}).then(() => {
+    res.redirect('/dashboard/overview');
+  }).catch((error) => {
+    res.status(500).json(`Caught error while updating delivery status: ${error}`);
+  });
+});
 
 module.exports = router;

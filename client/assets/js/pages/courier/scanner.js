@@ -7,31 +7,38 @@
  */
 Html5Qrcode.getCameras().then((cameras) => {
     if (cameras && cameras.length) {
-        const cameraId = cameras[1].id;
-        const boxLength = screen.width / 3;
-
+        const boxLength = 190;
         const html5QrCode = new Html5Qrcode("qrcode-container");
         html5QrCode.start(
-            cameraId,
+            { facingMode: "environment" },
             {
                 fps: 60,
                 qrbox: { width: boxLength, height: boxLength },
                 aspectRatio: 1.0
             },
             async (decodedText, decodedResult) => {
-                await fetch(`/courier/scan/${decodedText}`, {
-                    method: 'GET', // or 'PUT'
+                await fetch(`/api/orders/${decodedText}/scan`, {
+                    method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                     }
                 }).then(async (response) => {
 
+                    html5QrCode.pause();
+
                     //In case no order was found, display a 'not found' message
-                    if (response.status === 404)
+                    if (response.status === 404){
                         document.querySelector("#not-found-message").classList.remove("hidden");
+
+                        document.querySelector("#button-container").classList.remove("hidden");
+
+                        //Hide the 'add order' button and center the 'scan again' button
+                        document.querySelector("#button-container").classList
+                            .replace("justify-between", "justify-center");
+                        document.querySelector("#add-order-button").classList.add("hidden");
+                    }
                     else {
                         const order = await response.json();
-                        html5QrCode.pause();
 
                         //Hide the instruction message to make room for the loaded data
                         document.querySelector("#instruction-msg").classList.add("hidden");
@@ -49,6 +56,7 @@ Html5Qrcode.getCameras().then((cameras) => {
                             document.querySelector("#add-order-button").classList.add("hidden");
                         }
 
+                        document.querySelector("#button-container").classList.remove("hidden");
                         document.querySelector("#loaded-order").classList.remove("hidden");
 
                         //Select the container of order info and make it visible
@@ -90,7 +98,8 @@ Html5Qrcode.getCameras().then((cameras) => {
             });
     }
 }).catch(err => {
-    console.error(`Error in trying to obtain camera's: ${err}`)
+    console.error(`Error in trying to obtain camera's: ${err}`);
+    document.querySelector("#no-camera-message").classList.remove("hidden");
 });
 
 /**
@@ -104,7 +113,7 @@ document.querySelector("#add-order-button")
 
     const id = document.querySelector("#order-id-container").textContent;
 
-    await fetch(`/courier/scan`, {
+    await fetch(`/api/orders/${id}/scan`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

@@ -58,6 +58,6 @@ document.querySelector("#submit").addEventListener("click", () => {
 
     // redirect if form is valid
     if (formIsValid) {
-        window.location.href = `/track/${trackCodeValue}&postal_code=${postalCodeValue}`;
+        window.location.href = `/track/${postalCodeValue}/${trackCodeValue}`;
     }
 });

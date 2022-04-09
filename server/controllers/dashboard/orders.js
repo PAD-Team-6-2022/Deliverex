@@ -41,7 +41,7 @@ router.get("/:id/edit", auth(true), async (req, res) => {
 
 router.get("/:id", auth(true), async (req, res) => {
   const { id } = req.params;
-  const order = await Order.findByPk(id);
+  const order = await Order.findByPk(id, { include: Format });
 
   // if no order is found redirect it to the dashboard overview
   if (!order) {

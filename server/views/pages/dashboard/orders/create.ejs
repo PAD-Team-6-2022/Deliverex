@@ -14,7 +14,7 @@
           <h1 class="block text-slate-800 text-2xl font-bold mb-6">
             Place a new order
           </h1>
-          <form name="name" id="createform" action="/api/orders" method="POST">
+          <form id="createform">
             <div class="flex flex-col mb-4 mx-2">
               <label
                 class="mb-2 font-bold text-sm text-slate-900"
@@ -55,24 +55,25 @@
               <label class="mb-2 font-bold text-sm text-slate-900" for="country"
                 >Address</label
               >
-              <input
-                class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                type="text"
-                name="address"
-                id="address"
-                placeholder="e.g. Wibautstraat 4"
-              />
-            </div>
-
-            <div class="flex flex-col mb-4 mx-2 border rounded-lg">
-                <table class="border py-2 px-3 text-slate-800 rounded-lg">
-                    <thead>
-                        <tr>
-                            <th>Found addresses</th>
-                        </tr>
-                    </thead>
-                    <tbody id="addresses">
-                    <tbody>
+              <table class="border border-t-0 py-2 px-3 text-slate-800 rounded-lg">
+                  <thead>
+                    <tr>
+                      <div class="relative">
+                          <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24" fill="#475569"><path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zm6.32-1.094l3.58 3.58a1 1 0 1 1-1.415 1.413l-3.58-3.58a8 8 0 1 1 1.414-1.414z"></path></svg>
+                          </div>
+                          <input
+                            class="bg-slate-50 border border-slate-200 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block pl-10 p-2 w-full"
+                            type="text"
+                            name="address"
+                            id="address"
+                            placeholder="e.g. Wibautstraat 4"
+                          />
+                      </div>
+                    </tr>
+                  </thead>
+                  <tbody id="addresses">
+                  </tbody>
                 </table>
             </div>
 

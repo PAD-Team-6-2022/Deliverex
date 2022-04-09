@@ -21,8 +21,11 @@ router.get(
   ordering("id", "desc"),
   searching,
   async (req, res) => {
+
     // Get the orders with the calculated offset, limit for pagination and details about the sorting order
-    const orders = await Order.findAll({
+    const orders = req.user.role === 'COURIER' ?
+        await Order.findAll({where: {courier_id: req.user.getDataValue('id')}}) :
+        await Order.findAll({
       offset: req.offset,
       limit: req.limit,
       order: [[req.sort, req.order]],
@@ -38,7 +41,7 @@ router.get(
     });
 
     orders.forEach((order) => {
-      //converteer het gewicht van elke order naar de
+      //converteer het gewicht van elke order naar de beste maat
       let value = convert(order.weight).from("g").toBest();
 
       order.weight = `${Math.round(value.val)} ${value.unit}`;
@@ -48,7 +51,9 @@ router.get(
     });
 
     // Render the page, pass on the order array
-    res.render("dashboard/overview", {
+    res.render(req.user.role === 'COURIER' ?
+        "dashboard/courier/overview" :
+        "dashboard/overview", {
       title: "Overzicht - Dashboard",
       orders,
       sort: req.sort,
@@ -104,8 +109,7 @@ router.get("/settings", async (req, res) => {
     })
 });
 
-
-
 router.use("/orders", require("./orders"));
+router.use("/scan", require("./scanner"));
 
 module.exports = router;

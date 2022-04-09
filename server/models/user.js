@@ -34,6 +34,10 @@ const User = sequelize.define(
         this.setDataValue("password", hashSync(value, 10));
       },
     },
+    role: {
+      type: DataTypes.ENUM,
+      values: ["ADMIN", "SHOP_OWNER", "COURIER"]
+    }
   },
   {
     underscored: true,
