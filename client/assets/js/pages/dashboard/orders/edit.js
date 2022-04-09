@@ -58,8 +58,6 @@ document.getElementById("submitButton").addEventListener("click", async () => {
             console.error(`Fetch error: could not fulfill post request
              to update order. Errormessage: ${error}`);
         })
-
-        //document.getElementById("editform").submit();
     } else {
         wrongInputs.forEach((input) => {
             input.classList.add(

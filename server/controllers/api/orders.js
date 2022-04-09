@@ -91,8 +91,6 @@ router.post("/", (req, res) => {
 router.post("/edit", (req, res) => {
   let pickup_status = req.body.is_pickup != null;
 
-  console.log('id: ' + req.body.id);
-
   Order.update({
     weight: req.body.weight,
     email: req.body.email,
@@ -100,7 +98,7 @@ router.post("/edit", (req, res) => {
     house_number: req.body.house_number,
     postal_code: req.body.postal_code,
     city: req.body.city,
-    //formatId: req.body.sizeFormat,
+    formatId: req.body.sizeFormat,
     is_pickup: pickup_status,
     updated_at: Date.now(),
     status: req.body.status
