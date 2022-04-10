@@ -11,6 +11,8 @@ const weightInput = document.getElementById("weight");
 const sizeFormatInput = document.getElementById("sizeFormat");
 const pickupInput = document.getElementById("is_pickup");
 
+let coordinates = [];
+
 document.getElementById("submitButton").addEventListener("click", async (event) => {
     event.preventDefault();
 
@@ -40,6 +42,7 @@ document.getElementById("submitButton").addEventListener("click", async (event) 
             country: countryInput.value,
             format_id: sizeFormatInput.value,
             is_pickup: pickupInput.value,
+            coordinates : JSON.stringify(coordinates)
         }
 
         await fetch(`/api/orders/`, {
@@ -106,6 +109,7 @@ addressInput.addEventListener("keyup", delay((e) => {
             if(data.features.length > 0) {
 
                 data.features.forEach((address) => {
+                    console.log(address);
                     if(address.properties.housenumber && address.properties.postalcode) {
                         let tr = document.createElement("tr");
                         tr.classList.add("hover:bg-gray-200", "hover:cursor-pointer");
@@ -116,6 +120,7 @@ addressInput.addEventListener("keyup", delay((e) => {
                             cityInput.value = address.properties.locality;
                             countryInput.value = address.properties.country;
                             table.innerHTML = "";
+                            coordinates = {lat: address.geometry.coordinates[0], long: address.geometry.coordinates[1]};
                         });
                         let newAddress = document.createElement("td");
                         newAddress.innerHTML = address.properties.label;

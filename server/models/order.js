@@ -56,6 +56,10 @@ const Order = sequelize.define(
         type: DataTypes.STRING,
         allowNull: false,
     },
+    coordinates: {
+      type: DataTypes.JSON,
+        allowNull: false
+    },
     is_pickup: {
       type: DataTypes.STRING,
       allowNull: false,

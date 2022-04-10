@@ -73,7 +73,8 @@ router.post("/", (req, res) => {
     country: req.body.country,
     format_id: req.body.sizeFormat,
     is_pickup: pickup_status,
-    updated_at: Date.now()
+    updated_at: Date.now(),
+    coordinates: req.body.coordinates
   })
     .then((order) => {
       sendEmail(order.id);
@@ -100,8 +101,9 @@ router.post("/edit", (req, res) => {
     formatId: req.body.sizeFormat,
     is_pickup: pickup_status,
     updated_at: Date.now(),
-    status: req.body.status
-  },
+    status: req.body.status,
+    coordinates: req.body.coordinates
+    },
     { where: { id: req.body.id } })
     .then((affectedRows) => {
       res.status(200).json({
