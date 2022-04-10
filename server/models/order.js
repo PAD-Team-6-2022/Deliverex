@@ -57,8 +57,7 @@ const Order = sequelize.define(
         allowNull: false,
     },
     coordinates: {
-      type: DataTypes.JSON,
-        allowNull: false
+        type: DataTypes.GEOMETRY('POINT')
     },
     is_pickup: {
       type: DataTypes.STRING,
