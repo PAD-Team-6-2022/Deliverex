@@ -4,6 +4,18 @@
     <%- include("../../partials/head", { js: "/dashboard/settings" }) %>
 </head>
 <body>
+<%- include("../../partials/modal", {
+id: "delete-format",
+type: "warning",
+actions: {
+confirm: {
+type: "warning",
+label: "Delete"
+}
+},
+title: "Are you sure?",
+description: "Are you sure you want to delete order " + formats.id + "? You cannot go back."
+}) %>
 <div class="flex">
     <%- include("../../partials/dashboard/sidebar") %>
     <div class="max-w-7xl mx-auto px-4 my-16 flex-1 overflow-hidden">
@@ -26,7 +38,7 @@
                 <ul class="max-h-72 divide-y divide-slate-200 w-3.4 text-slate-500 overflow-auto">
                     <% formats.forEach(format => { %>
 
-                        <li class="p-4 flex justify-between">
+                        <li data-format-code=<%= format.id %> class="p-4 flex justify-between">
                             <h2><%= format.nameformat %></h2>
                             <p class="text-sm font-medium text-slate-900 " id="optie">
                                 <%= format.length %> x <%= format.width %> x <%= format.height %> </p>
@@ -39,7 +51,7 @@
                                         </path>
                                     </svg>
                                 </button>
-                                <button type="button" data-order-delete class="mr-none inline float-right">
+                                <button type="button" data-format-delete class="mr-none inline float-right">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -2 24 24" width="24"
                                          fill="currentColor">
                                         <path

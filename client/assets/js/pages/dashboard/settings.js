@@ -1,3 +1,4 @@
+import { openModal } from "../../../modal.js";
 // get all form inputs
 const formatInputs = document.querySelector("#formatForm").querySelectorAll("input");;
 
@@ -29,5 +30,27 @@ document.getElementById("saveFormat").addEventListener("click", async (event) =>
         console.error(`Fetch error: could not fulfill post request
          to update order assignment. Errormessage: ${error}`)
     });
+
 });
 
+document.querySelectorAll("[data-format-code]").forEach((format) => {
+    const id = format.getAttribute("data-format-code");
+
+    format
+        .querySelector("[data-format-delete]")
+        .addEventListener("click", async (event) => {
+            openModal("delete-format", {
+                actions: {
+                    confirm: async () => {
+                        await fetch(`/api/orders/settings/${id}`, {
+                            method: "DELETE",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                       });
+                        window.location.reload();
+                    },
+                },
+            });
+        });
+});
