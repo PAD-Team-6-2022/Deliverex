@@ -8,6 +8,17 @@ router.get("/", auth(true), (req, res) => {
   res.render("dashboard/orders/list", { title: "Orders - Dashboard" });
 });
 
+router.get("/editFormat", auth(true), async (req, res) => {
+
+  const formats = await Format.findAll({
+    where: { userId: req.user.id }
+  });
+
+  res.render("dashboard/orders/editFormat", { title: "Edit Page- Formats",
+    formats });
+
+});
+
 router.get("/create", auth(true), async (req, res) => {
 
   const formats = await Format.findAll({
