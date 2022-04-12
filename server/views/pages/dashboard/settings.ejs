@@ -43,7 +43,7 @@ description: "Are you sure you want to delete order " + formats.id + "? You cann
                             <p class="text-sm font-medium text-slate-900 " id="optie">
                                 <%= format.length %> x <%= format.width %> x <%= format.height %> </p>
                             <div class="actions">
-                                <button type="button" data-order-edit class="inline mr-4">
+                                <button onclick="location.href='orders/editFormat' <%= formats.id %>" type="submit" data-order-edit class="inline mr-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24"
                                          fill="currentColor">
                                         <path
