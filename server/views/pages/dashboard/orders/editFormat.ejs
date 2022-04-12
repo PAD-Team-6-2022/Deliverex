@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-slate-50">
+<head>
+    <%- include("../../../partials/head", {js: "dashboard/orders/settings"}) %>
+</head>
+<body>
+<div class="flex">
+    <%- include("../../../partials/dashboard/sidebar") %>
+    <div class="max-w-7xl mx-auto px-4 my-16 flex-1 overflow-hidden">
+        <%- include("../../../partials/breadcrumb", { links: [{ name:
+        "Settings", href: "/dashboard/settings" }, {
+        name: "Format",
+        href: "/dashboard/orders"
+        }, { name: `Edit format #${formats.name}` }] }) %>
+        <div class="mt-10 bg-white rounded-xl border border-slate-200 p-8">
+            <h1 class="block text-gray-800 text-2xl font-bold mb-6">Edit Format #<%= formats.name %></h1>
+            <form name="name" id="editFormat" action="/api/orders/editFormat" method="POST">
+                <input type="hidden" name="id" value="<%= formats.id %>">
+                <div class="flex flex-col mb-4 mx-2">
+                    <label
+                            class="mb-2 font-bold text-sm text-slate-900"
+                            for="email"
+                    >Name Format</label
+                    >
+                    <input
+                            class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                            type="text"
+                            name="email"
+                            id="email"
+                            value="<%= formats.nameformat %>"
+                    />
+                    <p
+                            class="text-red-500 text-sm"
+                            id="email_p"
+                    ></p
+                    >
+                </div>
+
+                <div class="flex flex-col mb-4 mx-2">
+                    <label
+                            class="mb-2 font-bold text-sm text-slate-900"
+                            for="country"
+                    >Length</label
+                    >
+                    <input
+                            class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                            type="number"
+                            name="country"
+                            id="country"
+                            value="<%= formats.length %>"
+                    />
+                    <p
+                            class="text-red-500 text-sm"
+                            id="country_p"
+                    ></p
+                    >
+                </div>
+
+                <div class="flex flex-col mb-4 mx-2">
+                    <label
+                            class="mb-2 font-bold text-sm text-slate-900"
+                            for="country"
+                    >Weight</label
+                    >
+                    <input
+                            class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                            type="number"
+                            name="country"
+                            id="country"
+                            value="<%= formats.length %>"
+                    />
+                    <p
+                            class="text-red-500 text-sm"
+                            id="country_p"
+                    ></p
+                    >
+                </div>
+
+                <div class="flex flex-col mb-4 mx-2">
+                    <label
+                            class="mb-2 font-bold text-sm text-slate-900"
+                            for="country"
+                    >Height</label
+                    >
+                    <input
+                            class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                            type="number"
+                            name="country"
+                            id="country"
+                            value="<%= formats.height %>"
+                    />
+                    <p
+                            class="text-red-500 text-sm"
+                            id="country_p"
+                    ></p
+                    >
+                </div>
+
+                <div class="flex justify-end">
+                    <button
+                            class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-4 w-1/4 rounded-xl transition-colors"
+                            type="button"
+                            id="submitButton1"
+                    >
+                        Save
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</body>
+</html>
