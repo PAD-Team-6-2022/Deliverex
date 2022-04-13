@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, ENUM} = require("sequelize");
 const sequelize = require("../db/connection");
 
 const Order = sequelize.define(
@@ -35,6 +35,17 @@ const Order = sequelize.define(
     updated_at: {
       type: DataTypes.DATE,
       allowNull: false,
+    },
+    delivery_date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false
+    },
+    time_period: {
+        type: ENUM('MORNING', 'AFTERNOON', 'EVENING'),
+        allowNull: true,
+        validate: {
+            hasTimePeriod: true
+        }
     },
     street: {
       type: DataTypes.STRING,

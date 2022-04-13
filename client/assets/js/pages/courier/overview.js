@@ -4,45 +4,12 @@ fetch('/api/ORS/', {
     headers: {
         "Content-Type" : "application/json"
     }
-}).then((response) => {
-    console.log(response.status);
+}).then(response => response.json())
+    .then((routingData) => {
+    console.log(routingData);
 }).catch((error) => {
     console.error(error);
 })
-
-
-
-/*
-await fetch('https://api.openrouteservice.org/geocode/search/structured?api_key=' +
-    '5b3ce3597851110001cf62482d328da4ad724df196a3e2f0af3e15f3' +
-    '&address=Claes%20Boesserstraat%2014,%20Steenderenstraat%2013', {
-    method: "GET",
-    headers: {
-        'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8'
-    }
-}).then(response => response.json())
-    .then((data) => {
-        console.log(data);
-    })
-
-
-fetch('https://api.openrouteservice.org/v2/directions/cycling-regular', {
-    method: 'POST',
-    headers: {
-        'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
-        'Authorization': '5b3ce3597851110001cf62482d328da4ad724df196a3e2f0af3e15f3',
-        'Content-Type': 'application/json; charset=utf-8'
-    },
-    body: '{"coordinates":[[8.681495,49.41461],[8.687872,49.420318],[8.686507,49.41943]],"preference":"fastest"}'
-}).then(response => response.json()).then((data) => {
-    console.log(data);
-}).catch((err) => {
-    console.error(err)
-})
-
-*/
-
-
 
 
 
