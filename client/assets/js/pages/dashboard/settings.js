@@ -55,3 +55,10 @@ document.querySelectorAll("[data-format-code]").forEach((format) => {
         });
 });
 
+var slider = document.getElementById("rangeDoel");
+var output = document.getElementById("rangeDoelInfo");
+output.innerHTML = slider.value + "%";
+
+slider.oninput = function () {
+    output.innerHTML = this.value + "%";
+}
