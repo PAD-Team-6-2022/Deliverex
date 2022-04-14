@@ -74,6 +74,29 @@ const Order = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+      pickup_street: {
+          type: DataTypes.STRING,
+          allowNull: false,
+      },
+      pickup_house_number: {
+          type: DataTypes.STRING,
+          allowNull: false,
+      },
+      pickup_postal_code: {
+          type: DataTypes.STRING,
+          allowNull: false,
+      },
+      pickup_city: {
+          type: DataTypes.STRING,
+          allowNull: false,
+      },
+      pickup_country: {
+          type: DataTypes.STRING,
+          allowNull: false,
+      },
+      pickup_coordinates: {
+          type: DataTypes.GEOMETRY('POINT')
+      },
     courier_id: {
         type: DataTypes.INTEGER,
         allowNull: true

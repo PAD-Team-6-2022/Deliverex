@@ -1,19 +1,18 @@
 
-fetch('/api/ORS/', {
-    method: "GET",
-    headers: {
-        "Content-Type" : "application/json"
-    }
-}).then(response => response.json())
-    .then((routingData) => {
-    console.log(routingData);
-}).catch((error) => {
-    console.error(error);
+document.querySelector("#viewRouteButton").addEventListener("click", () => {
+    fetch('/api/ORS/', {
+        method: "GET",
+        headers: {
+            "Content-Type" : "application/json"
+        }
+    }).then(response => response.json())
+        .then((routingData) => {
+            console.log(routingData);
+
+        }).catch((error) => {
+        console.error(error);
+    })
 })
-
-
-
-
 
 /**
  * For every loaded order in the table on the dashboard, put an eventlistener

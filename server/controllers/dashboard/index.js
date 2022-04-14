@@ -7,15 +7,104 @@ const pagination = require("../../middleware/pagination");
 const ordering = require("../../middleware/ordering");
 const convert = require("convert-units");
 const searching = require("../../middleware/searching");
-const { searchQueryToWhereClause } = require("../../util");
+const { searchQueryToWhereClause,
+    convertOrdersToShipments,
+    convertUsersToVehicles} = require("../../util");
 const moment = require("moment");
+const fetch = require("node-fetch");
 
 router.get("/", auth(true), (req, res) => {
-  res.redirect("/dashboard/overview");
+    if(req.user.role === 'SHOP_OWNER')
+        res.redirect("/dashboard/shop_owner/overview");
+    else if(req.user.role === 'COURIER')
+        res.redirect("/dashboard/courier/overview");
+    else if(req.user.role === 'ADMIN')
+        res.redirect("/dashboard/admin/overview");
+});
+
+router.get("/courier/overview", auth(true), (req, res) => {
+
+    Order.findAll({where: {courier_id: req.user.id}})
+        .then((orders) => {
+
+            const shipments = convertOrdersToShipments(orders);
+
+            const USER_START_COORDINATES = [4.9377803248666865, 52.39922180769369]; //Placeholder. Moet nog  op een of andere manier worden opgehaald
+            const working_hours = [28800, 72000] //placeholder. Moet nog per-order worden opgehaald uit de database.
+
+            //Note:  capacity, main center coordinates & working_hours nog aan te passen
+            const vehicle = {
+                id: req.user.id,
+                profile: "cycling-regular",
+                start: USER_START_COORDINATES,
+                capacity: [4],
+                skills: [1],
+                time_window: working_hours
+            };
+
+            fetch('https://api.openrouteservice.org/optimization', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+                    'Authorization': process.env.ORS_API_KEY,
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: '{"shipments": ' + JSON.stringify(shipments) + ',' +
+                    '"vehicles": ' + JSON.stringify([vehicle]) + '}'
+            }).then(response => response.json())
+                .then((data) => {
+                    //console.log(data.routes[0].steps);
+                    orders.forEach((order) => {
+                        //converteer het gewicht van elke order naar de beste maat
+                        let value = convert(order.weight).from("g").toBest();
+
+                        order.weight = `${Math.round(value.val)} ${value.unit}`;
+
+                        // Format the created_at date
+                        order.date = moment(order.created_at).format("YYYY-MM-DD");
+                    });
+
+                    const checkpoints = [];
+                    data.routes[0].steps.forEach((step) => {
+                        orders.forEach((order) => {
+                            if(order.getDataValue('id') === step.id){
+                                if(step.type !== 'start'){
+                                    const isPickup = step.type === 'pickup';
+                                    checkpoints.push({
+                                        location: {
+                                            address:
+                                                `${order.getDataValue( isPickup ? 'pickup_street' : 'street')} ${order
+                                                    .getDataValue(isPickup ? 'pickup_house_number': 'house_number')}`,
+                                            city: order.getDataValue(isPickup ? 'pickup_city': 'city'),
+                                            postal_code: order.getDataValue(isPickup ? 'pickup_postal_code': 'postal_code'),
+                                            country: order.getDataValue(isPickup ? 'pickup_country' : 'country')
+                                        },
+                                        type: step.type,
+                                        order_id: step.id,
+                                        duration: step.duration
+                                    });
+                                    }
+                                }
+                            });
+                     });
+
+                    res.render("dashboard/courier/overview", {
+                        title: "Overzicht - Dashboard",
+                        checkpoints,
+                        orders,
+                        user: req.user,
+                        total_duration: data.duration
+                    });
+                }).catch((err) => {
+                res.status(500).json(err);
+            })
+        }).catch((err) => {
+        console.error(`Failed to retrieve orders from database. Errormessage: ${err}`)
+    })
 });
 
 router.get(
-  "/overview",
+  "/shop_owner/overview",
   auth(true),
   pagination([25, 50, 100]),
   ordering("id", "desc"),
@@ -51,9 +140,7 @@ router.get(
     });
 
     // Render the page, pass on the order array
-    res.render(req.user.role === 'COURIER' ?
-        "dashboard/courier/overview" :
-        "dashboard/overview", {
+    res.render("dashboard/overview", {
       title: "Overzicht - Dashboard",
       orders,
       sort: req.sort,
