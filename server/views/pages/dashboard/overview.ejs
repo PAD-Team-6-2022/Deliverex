@@ -18,32 +18,34 @@
 }) %>
     <div class="flex">
         <%- include("../../partials/dashboard/sidebar") %>
-        <div class="max-w-7xl mx-auto px-4 mt-16 flex-1 overflow-hidden">
+        <div class="p-10 flex-1 overflow-hidden space-y-10">
             <%- include("../../partials/breadcrumb", { links: [{
                 name: "Overview"
             }] }) %>
-    <div class="my-10 text-center sm:text-left">
+    <div class="text-center sm:text-left space-y-3">
         <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Welcome back, <%= user.username %>!</h1>
-        <p class="text-lg sm:text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block">See how your business is doing by looking at the statistics below</p>
+        <p class="text-lg sm:text-xl font-medium text-slate-500 max-w-sm inline-block">See how your business is doing by looking at the statistics below</p>
     </div>
-    <h2 class="font-medium text-2xl text-slate-800 mb-5">Statistics</h2>
-    <div class="flex gap-3 flex-col sm:flex-row">
-        <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
-            <h1 class="font-bold text-4xl text-slate-800"><%= ordersAmount %></h1>
-            <p class="font-medium text-slate-500 text-xl mt-2">Orders</p>
-        </div>
-        <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
-            <h1 class="font-bold text-4xl text-slate-800"><%= deliverdAmount %></h1>
-            <p class="font-medium text-slate-500 text-xl mt-2">Delivered</p>
-        </div>
-        <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
-            <h1 class="font-bold text-4xl text-slate-800">€ <span class="animate-pulse">---</span></h1>
-            <p class="font-medium text-slate-500 text-xl mt-2">Money raised</p>
+    <div class="space-y-3">
+        <h2 class="font-medium text-2xl text-slate-800">Statistics</h2>
+        <div class="flex gap-3 flex-col sm:flex-row">
+            <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
+                <h1 class="font-bold text-4xl text-slate-800"><%= ordersAmount %></h1>
+                <p class="font-medium text-slate-500 text-xl mt-2">Orders</p>
+            </div>
+            <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
+                <h1 class="font-bold text-4xl text-slate-800"><%= deliverdAmount %></h1>
+                <p class="font-medium text-slate-500 text-xl mt-2">Delivered</p>
+            </div>
+            <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
+                <h1 class="font-bold text-4xl text-slate-800">€ <span class="animate-pulse">---</span></h1>
+                <p class="font-medium text-slate-500 text-xl mt-2">Money raised</p>
+            </div>
         </div>
     </div>
 
     <%# order overview %>
-    <form class="flex flex-col bg-white rounded-md border border-slate-200 my-16 overflow-hidden p-8" data-pagination-enabled data-ordering-enabled>
+    <form class="flex flex-col bg-white rounded-md border border-slate-200 overflow-hidden p-8" data-pagination-enabled data-ordering-enabled>
 
         <%# Hidden inputs for column sorting and pagination %>
         <input type="hidden" name="sort" value="<%= sort %>">
