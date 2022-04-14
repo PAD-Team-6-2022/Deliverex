@@ -5,15 +5,22 @@ const formatInputs = document.querySelector("#formatForm").querySelectorAll("inp
 /**
  * Handle the format submit button and try to save the inputs
  */
-document.getElementById("saveFormat").addEventListener("click", async (event) => {
+document.getElementById("formatForm").addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const values = {};
-    
-    // add all input values and names to the values object
-    formatInputs.forEach(input => {
-        values[input.name] = input.value;
-    });
+
+    const data = new FormData(event.target);
+
+    const name= data.get("name")
+    const height= data.get("height")
+    const width= data.get("width")
+    const length= data.get("length")
+
+
+
+
+
+
 
     // needs validation
     await fetch(`/api/orders/setting`, {
@@ -21,7 +28,7 @@ document.getElementById("saveFormat").addEventListener("click", async (event) =>
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({name, width, height, length})
     }).then((response) => {
         if(response.status === 200) {
             location.reload();
