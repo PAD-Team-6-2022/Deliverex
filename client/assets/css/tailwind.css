@@ -2180,6 +2180,10 @@ input[type=number]::-webkit-outer-spin-button {
     width: auto;
   }
 
+  .md\:w-2\/4 {
+    width: 50%;
+  }
+
   .md\:flex-1 {
     flex: 1 1 0%;
   }
