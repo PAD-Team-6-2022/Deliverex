@@ -13,12 +13,40 @@ document
     event.preventDefault();
 
     const values = {};
+      const formatname1= document.getElementById("name").value
+      const height= document.getElementById("height").value
+      const width= document.getElementById("width").value
+      const length= document.getElementById("length").value
 
-    // add all input values and names to the values object
+
+      if (formatname1===""){
+          document.getElementById("error2").innerHTML="Format name cant be empty"
+          return false;
+      }
+      if (length===""){
+          document.getElementById("error3").innerHTML="Length cant be empty"
+          return false;
+      }
+      if (width===""){
+          document.getElementById("error4").innerHTML="Width cant be empty"
+          return false;
+      }
+
+      if (height===""){
+          document.getElementById("error5").innerHTML="Height cant be empty"
+          return false;
+      }
+      if (height===""){
+          document.getElementById("error5").innerHTML="Height cant be empty"
+          return false;
+      }
+
+
+
+      // add all input values and names to the values object
     formatInputs.forEach((input) => {
       values[input.name] = input.value;
     });
-
     // needs validation
     await fetch(`/api/orders/setting`, {
       method: "POST",
@@ -41,7 +69,6 @@ document
 document.querySelectorAll("[data-format-code]").forEach((format) => {
   const id = format.getAttribute("data-format-code");
 
-  console.log(id);
 
   format
     .querySelector("[data-format-delete]")
