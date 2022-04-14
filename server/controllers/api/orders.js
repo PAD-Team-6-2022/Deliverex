@@ -129,6 +129,26 @@ router.post("/edit", (req, res) => {
     })
 })
 
+router.put("/editFormat/:id", (req, res) => {
+
+  Format.update({
+        height: req.body.height,
+        length: req.body.length,
+        width: req.body.width,
+        nameformat: req.body.nameformat,
+      },
+      { where: { id: req.params.id } })
+      .then((affectedRows) => {
+        res.status(200).json({
+          message: `${affectedRows} rows updated`
+        });
+      })
+      .catch((err) => {
+        res.status(500).json(err);
+      })
+})
+
+
 router.post("/setting", auth(true), (req, res) => {
     Format.create({
         length: req.body.length,

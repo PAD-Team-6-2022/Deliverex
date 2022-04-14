@@ -8,14 +8,12 @@ router.get("/", auth(true), (req, res) => {
   res.render("dashboard/orders/list", { title: "Orders - Dashboard" });
 });
 
-router.get("/editFormat", auth(true), async (req, res) => {
+router.get("/editFormat/:id", auth(true), async (req, res) => {
 
-  const formats = await Format.findAll({
-    where: { userId: req.user.id }
-  });
+  const format = await Format.findByPk(req.params.id);
 
   res.render("dashboard/orders/editFormat", { title: "Edit Page- Formats",
-    formats });
+    format });
 
 });
 

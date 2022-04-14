@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-slate-50">
 <head>
-    <%- include("../../../partials/head", {js: "dashboard/orders/settings"}) %>
+    <%- include("../../../partials/head", {js: "dashboard/formats/edit"}) %>
 </head>
 <body>
 <div class="flex">
@@ -11,23 +11,22 @@
         "Settings", href: "/dashboard/settings" }, {
         name: "Format",
         href: "/dashboard/orders"
-        }, { name: `Edit format #${formats.name}` }] }) %>
+        }, { name: `Edit format #${format.nameformat}` }] }) %>
         <div class="mt-10 bg-white rounded-xl border border-slate-200 p-8">
-            <h1 class="block text-gray-800 text-2xl font-bold mb-6">Edit Format #<%= formats.name %></h1>
-            <form name="name" id="editFormat" action="/api/orders/editFormat" method="POST">
-                <input type="hidden" name="id" value="<%= formats.id %>">
+            <h1 class="block text-gray-800 text-2xl font-bold mb-6">Edit Format <%= format.nameformat %></h1>
+            <form name="name" id="editFormat" data-format-id="<%= format.id%>">
+                <input type="hidden" name="id" value="<%= format.nameformat %>">
                 <div class="flex flex-col mb-4 mx-2">
                     <label
                             class="mb-2 font-bold text-sm text-slate-900"
-                            for="email"
+                            for="name"
                     >Name Format</label
                     >
                     <input
                             class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                            type="text"
-                            name="email"
-                            id="email"
-                            value="<%= formats.nameformat %>"
+                            type="nameformat"
+                            id="nameformat"
+                            value="<%= format.nameformat %>"
                     />
                     <p
                             class="text-red-500 text-sm"
@@ -45,9 +44,9 @@
                     <input
                             class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                             type="number"
-                            name="country"
-                            id="country"
-                            value="<%= formats.length %>"
+                            name="length"
+                            id="length"
+                            value="<%= format.length %>"
                     />
                     <p
                             class="text-red-500 text-sm"
@@ -60,14 +59,14 @@
                     <label
                             class="mb-2 font-bold text-sm text-slate-900"
                             for="country"
-                    >Weight</label
+                    >Width</label
                     >
                     <input
                             class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                             type="number"
-                            name="country"
-                            id="country"
-                            value="<%= formats.length %>"
+                            name="width"
+                            id="width"
+                            value="<%= format.width %>"
                     />
                     <p
                             class="text-red-500 text-sm"
@@ -85,9 +84,9 @@
                     <input
                             class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                             type="number"
-                            name="country"
-                            id="country"
-                            value="<%= formats.height %>"
+                            name="height"
+                            id="height"
+                            value="<%= format.height %>"
                     />
                     <p
                             class="text-red-500 text-sm"
@@ -100,7 +99,7 @@
                     <button
                             class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-4 w-1/4 rounded-xl transition-colors"
                             type="button"
-                            id="submitButton1"
+                            id="saveFormat"
                     >
                         Save
                     </button>

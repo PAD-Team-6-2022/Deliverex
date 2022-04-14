@@ -1,4 +1,4 @@
-import { openModal } from "../../../modal.js";
+import { openModal } from "../../modal.js";
 // get all form inputs
 const formatInputs = document.querySelector("#formatForm").querySelectorAll("input");;
 
@@ -54,3 +54,4 @@ document.querySelectorAll("[data-format-code]").forEach((format) => {
             });
         });
 });
+
