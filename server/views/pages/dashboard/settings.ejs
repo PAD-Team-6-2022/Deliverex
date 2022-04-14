@@ -21,7 +21,7 @@
             </h2>
             <ul class="max-h-72 divide-y divide-slate-200 w-3.4 text-slate-500 overflow-auto">
               <% formats.forEach(format => { %>
-              <li data-format-code="<% format.id %>" class="p-4 flex justify-between">
+              <li data-format-code="<%= format.id %>" class="p-4 flex justify-between">
                 <h2><%= format.nameformat %></h2>
                 <p class="text-sm font-medium text-slate-900" id="optie">
                   <%= format.length %> x <%= format.width %> x <%= format.height %>
