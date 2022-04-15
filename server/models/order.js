@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, ENUM} = require("sequelize");
 const sequelize = require("../db/connection");
 
 const Order = sequelize.define(
@@ -36,6 +36,17 @@ const Order = sequelize.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
+    delivery_date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false
+    },
+    time_period: {
+        type: ENUM('MORNING', 'AFTERNOON', 'EVENING'),
+        allowNull: true,
+        validate: {
+            hasTimePeriod: true
+        }
+    },
     street: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -57,13 +68,35 @@ const Order = sequelize.define(
         allowNull: false,
     },
     coordinates: {
-      type: DataTypes.JSON,
-        allowNull: false
+        type: DataTypes.GEOMETRY('POINT')
     },
     is_pickup: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+      pickup_street: {
+          type: DataTypes.STRING,
+          allowNull: false,
+      },
+      pickup_house_number: {
+          type: DataTypes.STRING,
+          allowNull: false,
+      },
+      pickup_postal_code: {
+          type: DataTypes.STRING,
+          allowNull: false,
+      },
+      pickup_city: {
+          type: DataTypes.STRING,
+          allowNull: false,
+      },
+      pickup_country: {
+          type: DataTypes.STRING,
+          allowNull: false,
+      },
+      pickup_coordinates: {
+          type: DataTypes.GEOMETRY('POINT')
+      },
     courier_id: {
         type: DataTypes.INTEGER,
         allowNull: true
