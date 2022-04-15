@@ -8,8 +8,7 @@ const ordering = require("../../middleware/ordering");
 const convert = require("convert-units");
 const searching = require("../../middleware/searching");
 const { searchQueryToWhereClause,
-    convertOrdersToShipments,
-    convertUsersToVehicles} = require("../../util");
+    convertOrdersToShipments} = require("../../util");
 const moment = require("moment");
 const fetch = require("node-fetch");
 
@@ -27,12 +26,12 @@ router.get("/courier/overview", auth(true), (req, res) => {
     Order.findAll({where: {courier_id: req.user.id}})
         .then((orders) => {
 
+            //TODO: The data directly below is largely hardcoded and has to be
+            // replaced by various factors from the database. See
+            // 'utils.js' for further explanation.
             const shipments = convertOrdersToShipments(orders);
-
-            const USER_START_COORDINATES = [4.9377803248666865, 52.39922180769369]; //Placeholder. Moet nog  op een of andere manier worden opgehaald
-            const working_hours = [28800, 72000] //placeholder. Moet nog per-order worden opgehaald uit de database.
-
-            //Note:  capacity, main center coordinates & working_hours nog aan te passen
+            const USER_START_COORDINATES = [4.9377803248666865, 52.39922180769369];
+            const working_hours = [28800, 72000]
             const vehicle = {
                 id: req.user.id,
                 profile: "cycling-regular",
@@ -57,7 +56,6 @@ router.get("/courier/overview", auth(true), (req, res) => {
                     orders.forEach((order) => {
                         //converteer het gewicht van elke order naar de beste maat
                         let value = convert(order.weight).from("g").toBest();
-
                         order.weight = `${Math.round(value.val)} ${value.unit}`;
 
                         // Format the created_at date
@@ -81,13 +79,12 @@ router.get("/courier/overview", auth(true), (req, res) => {
                                         },
                                         type: step.type,
                                         order_id: step.id,
-                                        duration: step.duration
+                                        time: moment(step.arrival * 1000).format("HH:mm:ss")
                                     });
                                     }
                                 }
                             });
                      });
-
                     res.render("dashboard/courier/overview", {
                         title: "Overzicht - Dashboard",
                         checkpoints,

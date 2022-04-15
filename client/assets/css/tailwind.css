@@ -816,11 +816,6 @@ select {
   margin-right: 0.5rem;
 }
 
-.my-8 {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-
 .mt-6 {
   margin-top: 1.5rem;
 }
@@ -937,6 +932,14 @@ select {
   margin-top: -0.5rem;
 }
 
+.mr-8 {
+  margin-right: 2rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
 .block {
   display: block;
 }
@@ -1011,10 +1014,6 @@ select {
 
 .h-px {
   height: 1px;
-}
-
-.h-60 {
-  height: 15rem;
 }
 
 .max-h-64 {
@@ -1531,11 +1530,6 @@ select {
   background-color: transparent;
 }
 
-.bg-gray-300 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
-}
-
 .bg-opacity-30 {
   --tw-bg-opacity: 0.3;
 }
@@ -1875,11 +1869,6 @@ select {
 .underline {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;
-}
-
-.line-through {
-  -webkit-text-decoration-line: line-through;
-          text-decoration-line: line-through;
 }
 
 .opacity-0 {

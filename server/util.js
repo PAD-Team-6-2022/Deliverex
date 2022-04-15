@@ -10,10 +10,10 @@ const searchQueryToWhereClause = (query, fields) => {
   };
 };
 
-
 /**
  * Takes a list of orders and uses it to produce
- * a list of orders in shipment-format
+ * a list of orders in shipment-format. To be fed to
+ * the ORS route optimization endpoint.
  *
  * @param orders array of orders
  * @returns shipments array of shipments
@@ -22,22 +22,16 @@ const convertOrdersToShipments = (orders) => {
 
   const shipments = [];
   orders.forEach((order) => {
+
+    //TODO:
+    // -change the way pickup coordinates should be retrieved (retrieve it from the company)
+    // -check & account for the time period the order is planned for (morning, afternoon, evening)
+    // -calculate the 'amount' either based on the order's weight and format, or the actual amount of packages
+
     const id = order.getDataValue("id");
 
-    //const coordinates = order.getDataValue("coordinates").coordinates;
-
-    const pickUpCoordinates = order.getDataValue('pickup_coordinates').coordinates; //[4.899824084791778, 52.37902398071498]; //<-- placeholder. Dit moet worden gedefinieerd per order!
+    const pickUpCoordinates = order.getDataValue('pickup_coordinates').coordinates;
     const deliveryCoordinates = order.getDataValue("coordinates").coordinates;
-
-    //Check what time period the order is planned for. Use this to map it to a
-    //time-frame which can be used in the order calculation. There needs to be a
-    //timeframe for morning, afternoon and evening
-    /*
-    const timePeriod = order.getDataValue('time_period').hasTimePeriod ?
-        order.getDataValue('time_period') :
-    */
-
-    //amount moet ook kunnen veranderen! Dit is dus als je meerdere pakketten hebt in 1 order
 
     shipments.push({
       amount: [1],
@@ -59,7 +53,8 @@ const convertOrdersToShipments = (orders) => {
 
 /**
  * Takes a list of users and uses it to produce
- * a list of users in vehicle-format
+ * a list of users in vehicle-format. To be fed to
+ * the ORS route optimization endpoint.
  *
  * @param users array of orders
  * @returns shipments array of shipments
@@ -67,16 +62,20 @@ const convertOrdersToShipments = (orders) => {
 const convertUsersToVehicles = (users) => {
   const vehicles = [];
 
-  const USER_START_COORDINATES = [4.9377803248666865, 52.39922180769369]; //deze moeten worden op een of andere manier worden opgehaald
-
   users.forEach((user) => {
+
+    //TODO:
+    // -retrieve & utilize working hours of this user
+    // -retrieve & utilize the users starting coordinates
+    // -retrieve & utilize the vehicle profile of the user from database
+    // -calculate the users capacity (based on his vehicle profile or some other factor(s))
+
+    //Coordinates representing Buikslotermeerplein shopping center. Hardcoded placeholder value.
+    const USER_START_COORDINATES = [4.9377803248666865, 52.39922180769369];
+
     const id = user.getDataValue("id");
-    const working_hours = [28800, 72000] //user.getDataValue("working_hours"), moet nog aangepast worden
+    const working_hours = [28800, 72000]
 
-    //Vergeet niet dat 'driving car' ook als profile zou kunnen worden toegevoegd
-
-    //'capacity' moet zich vertalen naar 'max-aantal-bezorgingen'. Dit moet voor beide fietskoriers & bestelbusjes
-    //kunnen worden ingesteld
     vehicles.push({
       id,
       profile: "cycling-regular",
