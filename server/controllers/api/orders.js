@@ -170,16 +170,14 @@ router.post("/setting", auth(true), (req, res) => {
 /**
  * Retrieves the order associated with a given ID. Since it is assumed that
  * request will come from the scanning page, the server will check whether
- * this order has already been taken by another courier and/or whether it is
- * in it's READY state so that it may be transported.
+ * this order is being scanned by the right courier for safety sake.
  */
-router.get("/:id/scan", async (req, res) => {
+router.get("/:id/scan", auth(true), async (req, res) => {
   const {id} = req.params;
 
   await Order.findByPk(id).then((order) => {
-    res.json({order: order, isAlreadyAssigned:
-          (order.getDataValue('courier_id') !== null) ||
-          (order.getDataValue('status') !== 'READY')});
+    res.json({order: order, isNotAuthorized:
+          (order.getDataValue('courier_id') !== req.user.id)});
   }).catch((error) => {
     res.status(404).json(`Could not find order with ID ${id}. Error: ${error}`);
   });
@@ -188,11 +186,21 @@ router.get("/:id/scan", async (req, res) => {
 /**
  * Updates the 'courier_id' attribute of an order to the given ID of the courier.
  * In case the order could not be found or another error was caught, the server
- * will respond with the appropiate error messages.
+ * will respond with the appropriate error messages.
  */
 router.put("/:id/scan", auth(true), (req, res) => {
+
   Order.findByPk(req.body.id).then((order) => {
-    Order.update({courier_id: req.user.id, status: 'TRANSIT'}, {where: {id: req.body.id}}).then((data) => {
+
+    let newStatus;
+    if(order.status === 'SORTING')
+      newStatus = 'READY';
+    else if(order.status === 'READY')
+      newStatus = 'TRANSIT';
+    else if(order.status === 'TRANSIT')
+      newStatus = 'DELIVERED';
+
+    Order.update({status: newStatus}, {where: {id: req.body.id}}).then((data) => {
       res.sendStatus(200);
     }).catch((error) => {
       console.error(`Could not assign order to courier. Error message: ${error}`)

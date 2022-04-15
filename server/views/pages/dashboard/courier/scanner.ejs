@@ -4,18 +4,18 @@
     <%- include("../../../partials/head", { js: "courier/scanner" }) %>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
-<body class="bg-slate-200">
-    <div id="content" class="px-8 py-4 flex items-center flex-col">
+<body class="bg-slate-200 flex justify-center">
+    <div id="content" class="px-8 py-4 flex flex-col max-w-md">
         <h1 class="mb-4 text-2xl font-medium text-slate-800">Scan a new order</h1>
         <div id="qrcode-container" class="rounded-2xl max-w-md overflow-hidden"></div>
         <h1 id="no-camera-message" class="text-sm text-red-800 hidden">No camera's were detected on this device.</h1>
-        <h3 id="instruction-msg" class="my-4">Face the camera towards a QR code to scan a new order.</h3>
+        <h3 id="instruction-msg" class="my-4">Face the camera towards a QR code to scan an order.</h3>
         <div id="not-found-message" class="bg-red-100 border border-red-500 px-4 py-2 mt-4 rounded-md hidden">
             <h1>Database error. The order could not be found.</h1>
         </div>
         <div id="loaded-order" class="hidden">
             <div id="occupied-order-message" class="bg-yellow-100 border border-yellow-500 px-4 py-2 mt-4 rounded-md hidden">
-                <p>This order is either not yet ready for delivery or has already been assigned to another courier.<br>
+                <p>You are not authorized to update the status of this order as this order's shipment has been assigned to another courier.
                     If you believe this was a mistake, please consult with the managing administrator using the following
                     order details:<br><br></p>
                 <h1>Order ID: <span id="order-id-container-occupied"></span></h1>
@@ -41,10 +41,10 @@
                 <h1>Phone number: <span id="customer-phone-number-container"></span></h1>
             </div>
         </div>
-        <div id="button-container" class="mt-4 flex flex-row justify-between hidden">
-            <button id="add-order-button" type="button" class="bg-cyan-500 hover:bg-cyan-700 text-lg text-white font-medium py-2 px-4 rounded-lg flex transition-colors">
+        <div id="button-container" class="mt-4 flex flex-row flex-wrap justify-between hidden">
+            <button id="update-order-button" type="button" class="bg-cyan-500 hover:bg-cyan-700 text-lg text-white font-medium py-2 px-4 rounded-lg flex transition-colors">
               <span class="md:inline">
-                Add this order
+                Update this order
               </span>
             </button>
             <button id="scan-again-button" type="button" class="bg-cyan-500 hover:bg-cyan-700 text-lg text-white font-medium py-2 px-4 rounded-lg flex transition-colors">

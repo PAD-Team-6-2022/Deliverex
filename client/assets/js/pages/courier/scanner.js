@@ -35,7 +35,7 @@ Html5Qrcode.getCameras().then((cameras) => {
                         //Hide the 'add order' button and center the 'scan again' button
                         document.querySelector("#button-container").classList
                             .replace("justify-between", "justify-center");
-                        document.querySelector("#add-order-button").classList.add("hidden");
+                        document.querySelector("#update-order-button").classList.add("hidden");
                     }
                     else {
                         const order = await response.json();
@@ -44,7 +44,8 @@ Html5Qrcode.getCameras().then((cameras) => {
                         document.querySelector("#instruction-msg").classList.add("hidden");
 
                         //In case this order is already assigned to a certain user, show the extra information
-                        if (order.isAlreadyAssigned){
+                        if (order.isNotAuthorized){
+                            console.log(order.isNotAuthorized)
                             document.querySelector("#occupied-order-message").classList.remove("hidden");
                             document.querySelector("#order-id-container-occupied").textContent = order.order.id;
                             document.querySelector("#order-status-container").textContent = order.order.status;
@@ -53,7 +54,7 @@ Html5Qrcode.getCameras().then((cameras) => {
                             //Hide the 'add order' button and center the 'scan again' button
                             document.querySelector("#button-container").classList
                                 .replace("justify-between", "justify-center");
-                            document.querySelector("#add-order-button").classList.add("hidden");
+                            document.querySelector("#update-order-button").classList.add("hidden");
                         }
 
                         document.querySelector("#button-container").classList.remove("hidden");
@@ -103,12 +104,12 @@ Html5Qrcode.getCameras().then((cameras) => {
 });
 
 /**
- * Defines the actions that are taken once the user presses the 'add order'
+ * Defines the actions that are taken once the user presses the 'post order'
  * button. The client will send a PUT request to the server carrying the ID
  * of the scanned order. If it receives an 'OK' status back, it will redirect
  * to the courier dashboard. Otherwise, an error message will be shown.
  */
-document.querySelector("#add-order-button")
+document.querySelector("#update-order-button")
     .addEventListener("click", async () => {
 
     const id = document.querySelector("#order-id-container").textContent;
