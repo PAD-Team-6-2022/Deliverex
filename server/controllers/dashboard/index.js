@@ -30,8 +30,18 @@ router.get("/courier/overview", auth(true), (req, res) => {
             // replaced by various factors from the database. See
             // 'utils.js' for further explanation.
             const shipments = convertOrdersToShipments(orders);
-            const USER_START_COORDINATES = [4.9377803248666865, 52.39922180769369];
-            const working_hours = [28800, 72000]
+            const USER_START_COORDINATES = [4.937771, 52.399239];
+
+            const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
+            const start = clamp(28800, );
+
+            //const current_time
+            //const min_starting_time (start of working hours)
+            //const max_end_time (end of working hours)
+            //const max_time_before_fail (max possible end time)
+
+            const working_hours = [30600, 72000];
             const vehicle = {
                 id: req.user.id,
                 profile: "cycling-regular",
@@ -52,7 +62,6 @@ router.get("/courier/overview", auth(true), (req, res) => {
                     '"vehicles": ' + JSON.stringify([vehicle]) + '}'
             }).then(response => response.json())
                 .then((data) => {
-                    //console.log(data.routes[0].steps);
                     orders.forEach((order) => {
                         //converteer het gewicht van elke order naar de beste maat
                         let value = convert(order.weight).from("g").toBest();
@@ -63,6 +72,7 @@ router.get("/courier/overview", auth(true), (req, res) => {
                     });
 
                     const checkpoints = [];
+                    if(data.routes)
                     data.routes[0].steps.forEach((step) => {
                         orders.forEach((order) => {
                             if(order.getDataValue('id') === step.id){
@@ -79,7 +89,7 @@ router.get("/courier/overview", auth(true), (req, res) => {
                                         },
                                         type: step.type,
                                         order_id: step.id,
-                                        time: moment(step.arrival * 1000).format("HH:mm:ss"),
+                                        time: moment((step.arrival - 3600) * 1000).format("hh:mm:ss"),
                                         hasCompleted: isPickup ?
                                             ((order.getDataValue('status') === 'TRANSIT' ||
                                                 (order.getDataValue('status') === 'DELIVERED'))) :
@@ -97,6 +107,7 @@ router.get("/courier/overview", auth(true), (req, res) => {
                         total_duration: data.duration
                     });
                 }).catch((err) => {
+                    console.log(err);
                 res.status(500).json(err);
             })
         }).catch((err) => {

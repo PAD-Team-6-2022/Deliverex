@@ -8,6 +8,13 @@ const {convertOrdersToShipments, convertUsersToVehicles} = require("../../util")
 
 //TODO: GeoCode endpoint of address-finding to be placed here
 
+//TODO: Make a cronjob that fires at the end of the day and
+// checks whether all shipments of today are finished. If a
+// shipment could not be delivered today, adjust its status
+// to 'FAILED'. Also adjust the morning cronjob to set
+// overdue/failed orders to 'READY' again and include them
+// in todays scheduled deliveries.
+
 //The time at which new orders will be assigned. To be retrieved
 // from database. Currently hardcoded to 8:30.
 const SCHEDULING_TIME = "0 30 8";

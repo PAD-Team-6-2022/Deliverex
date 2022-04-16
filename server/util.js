@@ -43,7 +43,7 @@ const convertOrdersToShipments = (orders) => {
       },
       delivery: {
         id,
-        service: 90,
+        service: 60,
         location: deliveryCoordinates
       }
     });
@@ -74,7 +74,7 @@ const convertUsersToVehicles = (users) => {
     const USER_START_COORDINATES = [4.9377803248666865, 52.39922180769369];
 
     const id = user.getDataValue("id");
-    const working_hours = [28800, 72000]
+    const working_hours = [20600, 62000]
 
     vehicles.push({
       id,
