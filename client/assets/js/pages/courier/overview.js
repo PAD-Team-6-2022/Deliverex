@@ -4,20 +4,6 @@
  */
 document.addEventListener("DOMContentLoaded", () => {
 
-    //First gather all the location data
-    const addresses = [];
-    document.querySelectorAll(".addressContainer").forEach((container) => {
-        addresses.push(container.textContent);
-    });
-    const postalCodes = [];
-    document.querySelectorAll(".postalCodeContainer").forEach((container) => {
-        postalCodes.push(container.textContent);
-    });
-    const cities = [];
-    document.querySelectorAll(".cityContainer").forEach((container) => {
-        cities.push(container.textContent);
-    });
-
     //Temporarily hard-coded. In the future, the travelmode should be
     //obtained from the back-end as the page loads.
     const travelMode = 'bicycling';
@@ -25,14 +11,30 @@ document.addEventListener("DOMContentLoaded", () => {
     //Creates a string representing all the locations from the first to
     //second-to-last
     let waypoints = '';
-    for (let i = 0; i < addresses.length - 1; i++) {
-        waypoints += `${addresses[i]},${postalCodes[i]},${cities[i]}|`;
-    }
+    const checkpoints = document.querySelectorAll(".checkpoint");
+    checkpoints.forEach((checkpoint, index) => {
+        if(!checkpoint.classList.contains('hasCompleted') && index !== (checkpoints.length-1)){
+            const address = checkpoint.querySelector(".addressContainer").textContent;
+            const postalCode = checkpoint.querySelector(".postalCodeContainer").textContent;
+            const city = checkpoint.querySelector(".cityContainer").textContent;
+
+            waypoints += `${address},${postalCode},${city}|`;
+        }
+    });
+
+    //Retrieve the location data from the last checkpoint
+    const lastCheckpoint = checkpoints[checkpoints.length-1];
+    lastCheckpoint.location = {
+        address: lastCheckpoint.querySelector(".addressContainer").textContent,
+        postal_code: lastCheckpoint.querySelector(".postalCodeContainer").textContent,
+        city: lastCheckpoint.querySelector(".cityContainer").textContent
+    };
 
     //Destination. This is simply the last checkpoint. To be potentially changed later to a defined end location.
-    const destination = `${addresses[addresses.length - 1]},${postalCodes[addresses.length - 1]},${cities[addresses.length - 1]}`;
+    const destination = `${lastCheckpoint.location.address},${lastCheckpoint.location.postal_code},${lastCheckpoint.location.city}`;
     const url = encodeURI(`https://www.google.com/maps/dir/?api=1&travelmode=${travelMode}&waypoints=${waypoints}&destination=${destination}`
         .replaceAll(',', '+'));
+    console.log(url);
 
     //Adds a click event to a button that opens the google maps url in a new window
     document.querySelector("#viewRouteButton").addEventListener("click", () => {

@@ -811,11 +811,6 @@ select {
   margin-right: 0.5rem;
 }
 
-.my-10 {
-  margin-top: 2.5rem;
-  margin-bottom: 2.5rem;
-}
-
 .mt-6 {
   margin-top: 1.5rem;
 }
@@ -926,6 +921,10 @@ select {
 
 .-mt-2 {
   margin-top: -0.5rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
 }
 
 .mr-8 {
@@ -1872,6 +1871,11 @@ select {
 .underline {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;
+}
+
+.line-through {
+  -webkit-text-decoration-line: line-through;
+          text-decoration-line: line-through;
 }
 
 .opacity-0 {

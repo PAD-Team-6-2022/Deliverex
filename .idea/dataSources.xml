@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:mysql://localhost:3306/hva_pad_team6</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="PAD Database Cloud" uuid="ce8ec631-b759-42e2-849b-6ddb811723d5">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://db.hbo-ict.cloud:3306/pad_rit_6_thomas</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

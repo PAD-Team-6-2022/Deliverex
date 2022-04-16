@@ -79,7 +79,11 @@ router.get("/courier/overview", auth(true), (req, res) => {
                                         },
                                         type: step.type,
                                         order_id: step.id,
-                                        time: moment(step.arrival * 1000).format("HH:mm:ss")
+                                        time: moment(step.arrival * 1000).format("HH:mm:ss"),
+                                        hasCompleted: isPickup ?
+                                            ((order.getDataValue('status') === 'TRANSIT' ||
+                                                (order.getDataValue('status') === 'DELIVERED'))) :
+                                            (order.getDataValue('status') === 'DELIVERED')
                                     });
                                     }
                                 }

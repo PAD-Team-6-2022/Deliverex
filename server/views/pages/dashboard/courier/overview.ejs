@@ -6,12 +6,12 @@
 <body>
 <div class="flex">
     <div class="max-w-7xl mx-auto px-4 mt-16 flex-1 overflow-hidden">
-        <div class="my-10 text-center sm:text-left">
+        <div class="text-center sm:text-left">
             <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Shipments overview</h1>
             <p class="text-lg sm:text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block">View today's travel route, or update an order's status using the QR code scanner.</p>
         </div>
 
-        <div id="button-container" class="flex flex-row flex-wrap justify-left">
+        <div id="button-container" class="flex flex-row flex-wrap justify-left mt-8 mb-4">
             <a>
                 <button id="viewRouteButton" type="button" class="mr-8 bg-cyan-500 hover:bg-cyan-700 text-white text-xl font-normal py-2 px-4 rounded-lg flex transition-colors">
                     <?xml version="1.0" encoding="utf-8"?>
@@ -115,49 +115,55 @@
                         </thead>
                         <tbody id="checkpointsTable" class="bg-white divide-y divide-slate-200">
                         <% checkpoints.forEach((checkpoint, index) => { %>
-                            <tr class="order text-slate-500 hover:bg-slate-100">
+                            <tr class="order checkpoint <%= checkpoint.hasCompleted ? 'hasCompleted' : '' %> text-slate-500 hover:bg-slate-100">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="text-sm font-medium text-slate-900">
+                                    <div class="text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
                                         <%= (index+1) %>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="text-sm font-medium text-slate-900">
+                                    <div class="text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
                                         <%= checkpoint.type %>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="addressContainer text-sm font-medium text-slate-900"><%= checkpoint.location.address %></div>
+                                    <div class="addressContainer text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
+                                    <%= checkpoint.location.address %></div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="postalCodeContainer text-sm font-medium text-slate-900"><%= checkpoint.location.postal_code %></div>
+                                    <div class="postalCodeContainer text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
+                                    <%= checkpoint.location.postal_code %></div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="cityContainer text-sm font-medium text-slate-900"><%= checkpoint.location.city %></div>
+                                    <div class="cityContainer text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
+                                    <%= checkpoint.location.city %></div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="text-sm font-medium text-slate-900"><%= checkpoint.location.country %></div>
+                                    <div class="text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
+                                    <%= checkpoint.location.country %></div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="text-sm font-medium text-slate-900"><%= checkpoint.order_id %></div>
+                                    <div class="text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
+                                    <%= checkpoint.order_id %></div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="text-sm font-medium text-slate-900"><%= checkpoint.time %></div>
+                                    <div class="text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
+                                    <%= checkpoint.time %></div>
                                 </div>
                             </td>
                         <% }); %>
@@ -220,7 +226,7 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-slate-200">
                         <% orders.forEach((order) => { %>
-                            <tr class="order text-slate-500 bg-slate-100">
+                            <tr class="order text-slate-500 bg-white">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="text-sm font-medium text-slate-900"><%= order.id %></div>
