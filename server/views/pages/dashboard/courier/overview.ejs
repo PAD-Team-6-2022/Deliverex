@@ -2,6 +2,58 @@
 <html lang="en" class="bg-slate-50">
 <head>
     <%- include("../../../partials/head", { js: "courier/overview" }) %>
+    <template id="checkpoint-row">
+        <tr class="order checkpoint text-slate-500 hover:bg-slate-100">
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <div class="indexContainer text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <div class="typeContainer text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <div class="addressContainer text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <div class="postalCodeContainer text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <div class="cityContainer text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <div class="countryContainer text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <div class="orderIdContainer text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <div class="timeContainer text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </template>
 </head>
 <body>
 <div class="flex">
@@ -119,59 +171,6 @@
                         </tr>
                         </thead>
                         <tbody id="checkpointsTable" class="bg-white divide-y divide-slate-200">
-                        <% checkpoints.forEach((checkpoint, index) => { %>
-                            <tr class="order checkpoint <%= checkpoint.hasCompleted ? 'hasCompleted' : '' %> text-slate-500 hover:bg-slate-100">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
-                                        <%= (index+1) %>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
-                                        <%= checkpoint.type %>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="addressContainer text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
-                                    <%= checkpoint.location.address %></div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="postalCodeContainer text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
-                                    <%= checkpoint.location.postal_code %></div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="cityContainer text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
-                                    <%= checkpoint.location.city %></div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
-                                    <%= checkpoint.location.country %></div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
-                                    <%= checkpoint.order_id %></div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="text-sm font-medium text-slate-900 <%= checkpoint.hasCompleted ? 'line-through' : '' %>">
-                                    <%= checkpoint.time %></div>
-                                </div>
-                            </td>
-                        <% }); %>
                         </tbody>
                     </table>
                 </div>
