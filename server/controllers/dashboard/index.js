@@ -32,15 +32,6 @@ router.get("/courier/overview", auth(true), (req, res) => {
             const shipments = convertOrdersToShipments(orders);
             const USER_START_COORDINATES = [4.937771, 52.399239];
 
-            const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-
-            const start = clamp(28800, );
-
-            //const current_time
-            //const min_starting_time (start of working hours)
-            //const max_end_time (end of working hours)
-            //const max_time_before_fail (max possible end time)
-
             const working_hours = [30600, 72000];
             const vehicle = {
                 id: req.user.id,
