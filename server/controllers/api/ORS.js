@@ -22,6 +22,8 @@ const moment = require("moment");
 const SCHEDULING_TIME = "0 30 8";
 
 
+//TODO: Replace below solution to one that uses
+// moment and is more reliable
 /**
  * Gets the current date and convert it to the same format
  * as the database returns its dates in.
@@ -115,7 +117,14 @@ router.get('/:longitude/:latitude', (req, res) => {
             const shipments = convertOrdersToShipments(orders);
             const userCoordinates = [Number(req.params.longitude), Number(req.params.latitude)];
 
-            const working_hours = [30600, 72000];
+            //TODO: Currently hardcoded as 8:30 to 18:00 both here and in utils.js. To
+            // be replaced with values from admin panel.
+            const beginWorkDay = 30600;
+            const endWorkDay = 64800;
+
+            const currentTimeInSeconds = moment().diff(moment().startOf('day'), 'seconds');
+
+            const working_hours = [Math.max(beginWorkDay, currentTimeInSeconds), endWorkDay];
             const vehicle = {
                 id: req.user.id,
                 profile: "cycling-regular",
@@ -163,7 +172,7 @@ router.get('/:longitude/:latitude', (req, res) => {
                                             },
                                             type: step.type,
                                             order_id: step.id,
-                                            time: moment((step.arrival - 3600) * 1000).format("hh:mm:ss"),
+                                            time: moment((step.arrival - 3600) * 1000).format("HH:mm:ss"),
                                             hasCompleted: isPickup ?
                                                 ((order.getDataValue('status') === 'TRANSIT' ||
                                                     (order.getDataValue('status') === 'DELIVERED'))) :
