@@ -11,17 +11,20 @@ module.exports = {
       keyframes: {
         from_right: {
           "0%": {
-            transform: "translateX(100vw)",
+            transform: "translateX(100vh)",
             opacity: 0,
           },
-          "100%": {
+          "50%": {
             transform: "translateX(0)",
             opacity: 1,
+          },
+          "100%": {
+            opacity: 0,
           },
         },
       },
       animation: {
-        from_right: "from_right 0.8s ease-in-out",
+        from_right: "from_right 1s ease-in-out infinite",
       },
     },
   },

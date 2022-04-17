@@ -120,7 +120,7 @@ router.get('/:longitude/:latitude', (req, res) => {
             //TODO: Currently hardcoded as 8:30 to 18:00 both here and in utils.js. To
             // be replaced with values from admin panel.
             const beginWorkDay = 30600;
-            const endWorkDay = 64800;
+            const endWorkDay = 90000;
 
             const currentTimeInSeconds = moment().diff(moment().startOf('day'), 'seconds');
 

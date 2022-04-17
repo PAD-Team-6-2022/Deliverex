@@ -16,11 +16,14 @@ navigator.geolocation.getCurrentPosition((success) => {
             if(data.checkpoints.length === 0)
                 return;
 
+            document.querySelector("#button-container").classList.remove("hidden");
+
             const tableContainer = document.querySelector("#checkpointsTable");
+            tableContainer.classList.remove("animate-pulse");
+            tableContainer.classList.replace("bg-slate-100", "bg-white");
             data.checkpoints.forEach((checkpointData, index) => {
-                tableContainer.appendChild(document.querySelector
-                ("#checkpoint-row").content.cloneNode(true));
                 const checkpointElement = tableContainer.children[index];
+                checkpointElement.classList.remove("bg-slate-300");
 
                 const checkpointIndex = checkpointElement.querySelector(".indexContainer");
                 checkpointIndex.textContent = index+1;
