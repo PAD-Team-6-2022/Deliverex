@@ -4,6 +4,8 @@ const Package = require("./package");
 const Receiver = require("./receiver");
 const Session = require("./session");
 const User = require("./user");
+const Company = require("./company");
+const Location = require("./location");
 
 User.hasMany(Format);
 Format.belongsTo(User);
@@ -21,4 +23,6 @@ module.exports = {
     Receiver,
     Session,
     User,
+    Company,
+    Location,
 };
