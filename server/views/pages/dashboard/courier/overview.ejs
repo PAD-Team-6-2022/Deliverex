@@ -64,10 +64,10 @@
         </h2>
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <div class="overflow-hidden border-b border-slate-200">
-                    <table class="min-w-full divide-y divide-slate-200">
+                <div class="border border-slate-200 rounded-lg">
+                    <table class="min-w-full divide-y divide-slate-200 overflow-hidden rounded-lg">
                         <thead>
-                        <tr class="bg-slate-200">
+                        <tr class="bg-slate-100">
                             <th data-order-toggle="id" scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                                 <span class="flex items-center">
@@ -118,64 +118,72 @@
                             </th>
                         </tr>
                         </thead>
-                        <tbody id="checkpointsTable" class="bg-slate-100 divide-y divide-slate-200 animate-pulse">
+                        <tbody id="checkpointsTable" class="bg-slate-100 divide-y divide-slate-200">
                         <%for(let i = 0; i < (orders.length*2); i++){%>
-                            <tr class="order checkpoint text-slate-500 bg-slate-300">
+                            <tr class="order checkpoint text-slate-500 bg-white">
                                 <td class="px-6 py-4 whitespace-nowrap ">
-                                    <div class="flex items-center ">
+                                    <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
+                                    <!-- <div class="flex items-center ">
                                         <div class="indexContainer text-sm font-medium text-slate-900 inline-block">
-                                            <br>
+
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
+                                    <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
+                                    <!-- <div class="flex items-center">
                                         <div class="typeContainer text-sm font-medium text-slate-900">
 
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
+                                    <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
+                                    <!-- <div class="flex items-center">
                                         <div class="addressContainer text-sm font-medium text-slate-900">
 
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
+                                    <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
+                                    <!-- <div class="flex items-center">
                                         <div class="postalCodeContainer text-sm font-medium text-slate-900">
 
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
+                                    <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
+                                    <!-- <div class="flex items-center">
                                         <div class="cityContainer text-sm font-medium text-slate-900">
 
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
+                                    <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
+                                    <!-- <div class="flex items-center">
                                         <div class="countryContainer text-sm font-medium text-slate-900">
 
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
+                                    <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
+                                    <!-- <div class="flex items-center">
                                         <div class="orderIdContainer text-sm font-medium text-slate-900">
 
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
+                                    <div class="animate-pulse rounded-full bg-slate-200 h-5 w-full"></div>
+                                    <!-- <div class="flex items-center">
                                         <div class="timeContainer text-sm font-medium text-slate-900">
 
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </td>
                             </tr>
                         <%}%>
