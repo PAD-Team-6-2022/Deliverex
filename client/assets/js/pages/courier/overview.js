@@ -24,6 +24,9 @@ navigator.geolocation.getCurrentPosition((success) => {
             data.checkpoints.forEach((checkpointData, index) => {
                 const checkpointElement = tableContainer.children[index];
                 checkpointElement.classList.remove("bg-slate-300");
+                console.log(checkpointElement.querySelector(".loading-pulse"));
+                checkpointElement.querySelectorAll(".loading-pulse")
+                    .forEach(loadingPulse => loadingPulse.remove());
 
                 const checkpointIndex = checkpointElement.querySelector(".indexContainer");
                 checkpointIndex.textContent = index+1;
