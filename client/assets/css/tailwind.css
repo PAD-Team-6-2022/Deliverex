@@ -1209,8 +1209,8 @@ select {
 }
 
 .animate-from_right {
-  -webkit-animation: from_right 1s ease-in-out infinite;
-          animation: from_right 1s ease-in-out infinite;
+  -webkit-animation: from_right 1s ease-in-out;
+          animation: from_right 1s ease-in-out;
 }
 
 .cursor-pointer {
@@ -1664,6 +1664,10 @@ select {
   padding-left: 1rem;
 }
 
+.pr-5 {
+  padding-right: 1.25rem;
+}
+
 .pt-1 {
   padding-top: 0.25rem;
 }
@@ -1678,14 +1682,6 @@ select {
 
 .pl-10 {
   padding-left: 2.5rem;
-}
-
-.pr-5 {
-  padding-right: 1.25rem;
-}
-
-.pr-10 {
-  padding-right: 2.5rem;
 }
 
 .text-left {
