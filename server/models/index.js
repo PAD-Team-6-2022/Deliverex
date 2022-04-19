@@ -16,6 +16,8 @@ Order.belongsTo(Format);
 User.hasMany(Order);
 Order.belongsTo(User);
 
+// Location.belongsTo(Company)
+
 module.exports = {
     Format,
     Order,

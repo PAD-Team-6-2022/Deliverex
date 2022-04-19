@@ -10,7 +10,7 @@
     <div class="p-10 flex-1 overflow-hidden">
         <%- include("../../partials/breadcrumb", { links: [{ name: "Overview", href: "/dashboard/overview" }, { name: "Settings", href: "/dashboard/" }] }) %>
         <div class="flex flex-col-reverse md:flex-row mt-10 bg-white rounded-xl border border-slate-200 p-8">
-            <div class="w-full md:w-2/4">
+            <div class="w-full md:w-2/4 pr-5">
                 <h2 class="font-medium text-2xl text-slate-800 mb-4 flex">
                     <svg class="-mt-3" viewBox="-2 -4 24 24" width="24" fill="currentColor">
                         <path
@@ -70,6 +70,8 @@
                             <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full"
                                    id="length" type="number" name="length" placeholder="Enter length"/>
                             <p class="text-red-500  text sm " id="error3"></p>
+                            <p class="text-gray-600 text-xs italic">Enter values in CM *</p>
+
                         </div>
                         <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-slate-700 text-xs font-bold mb-2"
@@ -88,6 +90,7 @@
                             <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full"
                                    id="height" type="number" placeholder="Enter height" name="height"/>
                             <p class="text-red-500  text sm " id="error5"></p>
+
                         </div>
                     </div>
                     <button class="bg-cyan-500 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex my-4 float-right transition-colors"
@@ -102,7 +105,7 @@
         </div>
         <div class="flex flex-col-reverse md:flex-row mt-10 bg-white rounded-xl border border-slate-200 p-8">
             <div class="w-full">
-                <form action="/api/orders/setting" method="POST">
+                <form id="formGoal">
                     <h2 class="font-medium text-2xl text-slate-800 mb-4 flex">
                         <svg class="-mt-2 mr-2" viewBox="0 -2 24 24" width="24" fill="currentColor">
                             <path d="M9 12V1a1 1 0 1 1 2 0v11h1a1 1 0 0 1 0 2h-1v1a1 1 0 0 1-2 0v-1H8a1 1 0 0 1 0-2h1zm7-10V1a1 1 0 0 1 2 0v1h1a1 1 0 0 1 0 2h-1v11a1 1 0 0 1-2 0V4h-1a1 1 0 0 1 0-2h1zM4 5h1a1 1 0 1 1 0 2H4v8a1 1 0 0 1-2 0V7H1a1 1 0 1 1 0-2h1V1a1 1 0 1 1 2 0v4z"></path>
@@ -124,7 +127,7 @@
                             <p>Precentage: <span id="rangeDoelInfo"></span></p>
                         </div>
                     </div>
-                    <button class="bg-cyan-500 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex my-4 float-right transition-colors"
+                    <button class="bg-cyan-500 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex my-4 float-right transition-colors" name="saveGoal" id="saveGoal"
                             type="submit">
                         Save
                         <svg viewBox="-4.5 -4.5 24 24" width="24" fill="currentColor">
@@ -136,7 +139,7 @@
         </div>
         <div class="flex flex-col-reverse md:flex-row mt-10 bg-white rounded-xl border border-slate-200 p-8">
             <div class="w-full">
-                <form action="/api/orders/setting" method="POST">
+                <form id="formAccount">
                     <h2 class="font-medium text-2xl text-slate-800 mb-4 flex">
                         <svg class="-mt-2 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -4 24 24" width="24"
                              fill="currentColor">
@@ -149,7 +152,7 @@
                         <div class="flex flex-col mb-4 grow w-2/4 mx-2 min-w-min">
                             <label class="mb-2 font-bold text-sm text-slate-900" for="account-username">Username</label>
                             <input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="text" name="account-usernam" id="account-username"
+                                   type="text" name="accountUsername" id="account-username"
                                    value="<%= user.username %>"/>
                             <p class="text-red-500 text-sm" id="postal_code_p"></p>
                         </div>
@@ -157,14 +160,14 @@
                             <label class="mb-2 font-bold text-sm text-slate-900" for="acount-old-password">Old
                                 password</label>
                             <input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="password" name="acount-old-password" id="acount-old-password" required/>
+                                   type="password" name="acount-old-password" id="acount-old-password"/>
                         </div>
                     </div>
                     <div class="flex flex-row flex-wrap justify-between grow">
                         <div class="flex flex-col mb-4 grow w-2/4 mx-2 min-w-min">
                             <label class="mb-2 font-bold text-sm text-slate-900" for="acount-email">Email</label>
                             <input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="email" name="acount-email" id="acount-email" value="<%= user.email %>"/>
+                                   type="email" name="acountEmail" id="acount-email" value="<%= user.email %>"/>
                         </div>
                         <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
                             <label class="mb-2 font-bold text-sm text-slate-900" for="acount-new-password">New
@@ -184,7 +187,7 @@
                         </div>
                     </div>
                     <button class="bg-cyan-500 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex my-4 float-right transition-colors"
-                            type="submit">
+                            type="submit" id="saveAccount">
                         Save
                         <svg viewBox="-4.5 -4.5 24 24" width="24" fill="currentColor">
                             <path d="M8.9 6.9v-5a1 1 0 1 0-2 0v5h-5a1 1 0 1 0 0 2h5v5a1 1 0 1 0 2 0v-5h5a1 1 0 1 0 0-2h-5z"></path>
@@ -195,7 +198,7 @@
         </div>
         <div class="flex flex-col-reverse md:flex-row mt-10 bg-white rounded-xl border border-slate-200 p-8">
             <div class="w-full">
-                <form action="/api/orders/setting" method="POST">
+                <form id="formStore">
                     <h2 class="font-medium text-2xl text-slate-800 mb-4 flex">
                         <svg class="-mt-2 mr-2" viewBox="0 -2 24 25" width="28" fill="currentColor">
                             <path d="M6 2H3a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2zM3.01 8v9.965H5V13a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4.965h6.013V8H15c-.768 0-1.47-.289-2-.764A2.989 2.989 0 0 1 11 8H9c-.768 0-1.47-.289-2-.764A2.989 2.989 0 0 1 5 8H3.01zm-2-.754A2.993 2.993 0 0 1 0 5V3a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v2c0 .882-.38 1.676-.987 2.225v10.74a2 2 0 0 1-2 2h-7.64A2.01 2.01 0 0 1 9 20H7a2.01 2.01 0 0 1-.373-.035H3.011a2 2 0 0 1-2-2V7.245zM9 17.966V13H7v4.965h2zM12 2H8v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2zm2 0v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-3zm0 9h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1z"></path>
@@ -254,7 +257,7 @@
                         </div>
                     </div>
                     <button class="bg-cyan-500 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex my-4 float-right transition-colors"
-                            type="submit">
+                            type="submit" id="saveStore">
                         Save
                         <svg viewBox="-4.5 -4.5 24 24" width="24" fill="currentColor">
                             <path d="M8.9 6.9v-5a1 1 0 1 0-2 0v5h-5a1 1 0 1 0 0 2h5v5a1 1 0 1 0 2 0v-5h5a1 1 0 1 0 0-2h-5z"></path>
