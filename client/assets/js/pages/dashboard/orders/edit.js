@@ -1,5 +1,7 @@
 import { delay } from "../../../util.js";
 
+const API_KEY = "5b3ce3597851110001cf62482d328da4ad724df196a3e2f0af3e15f3";
+
 const id = document.querySelector('[name="id"]').value;
 const emailInput = document.getElementById("email");
 const postalCodeInput = document.getElementById("postal_code");
@@ -100,7 +102,7 @@ addressInput.addEventListener("keyup", delay((e) => {
 
     if(addressInput.value === "") return;
 
-    fetch(`https://api.openrouteservice.org/geocode/search?api_key=${process.env.ORS_API_KEY}&text=${addressInput.value}&boundary.country=NL`)
+    fetch(`https://api.openrouteservice.org/geocode/search?api_key=${API_KEY}&text=${addressInput.value}&boundary.country=NL`)
         .then(res => res.json())
         .then(data => {
 
