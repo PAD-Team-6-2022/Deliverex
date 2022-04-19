@@ -38,7 +38,7 @@ const Order = sequelize.define(
     },
     delivery_date: {
         type: DataTypes.DATEONLY,
-        allowNull: false
+        allowNull: true,
     },
     time_period: {
         type: ENUM('MORNING', 'AFTERNOON', 'EVENING'),
@@ -76,23 +76,23 @@ const Order = sequelize.define(
     },
       pickup_street: {
           type: DataTypes.STRING,
-          allowNull: false,
+          allowNull: true,
       },
       pickup_house_number: {
           type: DataTypes.STRING,
-          allowNull: false,
+          allowNull: true,
       },
       pickup_postal_code: {
           type: DataTypes.STRING,
-          allowNull: false,
+          allowNull: true,
       },
       pickup_city: {
           type: DataTypes.STRING,
-          allowNull: false,
+          allowNull: true,
       },
       pickup_country: {
           type: DataTypes.STRING,
-          allowNull: false,
+          allowNull: true,
       },
       pickup_coordinates: {
           type: DataTypes.GEOMETRY('POINT')

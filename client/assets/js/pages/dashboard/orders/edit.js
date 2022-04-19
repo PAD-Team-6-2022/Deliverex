@@ -13,6 +13,7 @@ const countryInput = document.getElementById("country");
 const weightInput = document.getElementById("weight");
 const sizeFormatInput = document.getElementById("sizeFormat");
 const pickupInput = document.getElementById("is_pickup");
+const statusInput = document.getElementById("status");
 
 let coordinates = [];
 
@@ -46,6 +47,7 @@ document.getElementById("submitButton").addEventListener("click", async () => {
             country: countryInput.value,
             format_id: sizeFormatInput.value,
             is_pickup: pickupInput.value,
+            status: statusInput.value,
             coordinates : JSON.stringify(coordinates)
         }
 

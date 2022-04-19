@@ -85,10 +85,10 @@ router.post("/", (req, res) => {
     postal_code: req.body.postal_code,
     city: req.body.city,
     country: req.body.country,
-    format_id: req.body.sizeFormat,
+    format_id: req.body.format_id,
     is_pickup: pickup_status,
-    updated_at: Date.now(),
-    coordinates: req.body.coordinates
+    updated_at: Date.now()
+    // coordinates: req.body.coordinates
   })
     .then((order) => {
       sendEmail(order.id);
@@ -112,11 +112,11 @@ router.post("/edit", (req, res) => {
     house_number: req.body.house_number,
     postal_code: req.body.postal_code,
     city: req.body.city,
-    formatId: req.body.sizeFormat,
-    is_pickup: pickup_status,
-    updated_at: Date.now(),
+    formatId: req.body.format_id,
     status: req.body.status,
-    coordinates: req.body.coordinates
+    is_pickup: pickup_status,
+    updated_at: Date.now()
+    // coordinates: req.body.coordinates
     },
     { where: { id: req.body.id } })
     .then((affectedRows) => {
