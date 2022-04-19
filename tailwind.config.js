@@ -24,7 +24,7 @@ module.exports = {
         },
       },
       animation: {
-        from_right: "from_right 1s ease-in-out infinite",
+        from_right: "from_right 1s ease-in-out",
       },
     },
   },
