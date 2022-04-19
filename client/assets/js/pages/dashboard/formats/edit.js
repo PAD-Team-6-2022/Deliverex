@@ -24,10 +24,10 @@ document.querySelector("#saveFormat").addEventListener("click", async (event) =>
         return false;
     }
                 const values= {
-                    width: document.querySelector("#width").value,
-                    height: document.querySelector("#height").value,
-                    length: document.querySelector("#length").value,
-                    nameformat: document.querySelector("#nameformat").value,
+                    width: document.querySelector("#width2").value,
+                    height: document.querySelector("#height2").value,
+                    length: document.querySelector("#length2").value,
+                    nameformat: document.querySelector("#nameformat2").value,
 
                 }
                 await fetch(`/api/orders/editFormat/${id}`, {
