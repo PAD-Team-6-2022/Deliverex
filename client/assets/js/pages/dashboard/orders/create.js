@@ -27,7 +27,7 @@ document.getElementById("submitButton").addEventListener("click", async (event) 
             "border-red-500");
         if(input.id !== "address" && input.type !== "checkbox") {
             document.getElementById(`${input.id}_p`).innerHTML = "";
-            if(input.value === "" || input.value.includes(" ")) {
+            if(input.value === "") {
                 wrongInputs.push(input);
             }
         }

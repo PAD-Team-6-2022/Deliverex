@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const {Order, Format, User, Company, Location} = require("../../models");
+const { Order, Format } = require("../../models");
 const auth = require("../../middleware/auth");
 const fetch = require("node-fetch");
 const ejs = require("ejs");
@@ -75,58 +75,58 @@ router.post("/", (req, res) => {
 
     let pickup_status = req.body.is_pickup != null;
 
-    Order.create({
-        status: 'SORTING',
-        email: req.body.email,
-        weight: req.body.weight,
-        created_at: Date.now(),
-        street: req.body.street,
-        house_number: req.body.house_number,
-        postal_code: req.body.postal_code,
-        city: req.body.city,
-        country: req.body.country,
-        format_id: req.body.sizeFormat,
-        is_pickup: pickup_status,
-        updated_at: Date.now(),
-        coordinates: req.body.coordinates
+  Order.create({
+    status: 'SORTING',
+    email: req.body.email,
+    weight: req.body.weight,
+    created_at: Date.now(),
+    street: req.body.street,
+    house_number: req.body.house_number,
+    postal_code: req.body.postal_code,
+    city: req.body.city,
+    country: req.body.country,
+    format_id: req.body.format_id,
+    is_pickup: pickup_status,
+    updated_at: Date.now()
+    // coordinates: req.body.coordinates
+  })
+    .then((order) => {
+      sendEmail(order.id);
+      res.status(200).json({
+        order,
+        message: `order ${order.id} created`
+      });
     })
-        .then((order) => {
-            sendEmail(order.id);
-            res.status(200).json({
-                order,
-                message: `order ${order.id} created`
-            });
-        })
-        .catch((err) => {
-            res.status(500).json(err);
-        });
+    .catch((err) => {
+      res.status(500).json(err);
+    });
 });
 
 router.post("/edit", (req, res) => {
     let pickup_status = req.body.is_pickup != null;
 
-    Order.update({
-            weight: req.body.weight,
-            email: req.body.email,
-            street: req.body.street,
-            house_number: req.body.house_number,
-            postal_code: req.body.postal_code,
-            city: req.body.city,
-            formatId: req.body.sizeFormat,
-            is_pickup: pickup_status,
-            updated_at: Date.now(),
-            status: req.body.status,
-            coordinates: req.body.coordinates
-        },
-        {where: {id: req.body.id}})
-        .then((affectedRows) => {
-            res.status(200).json({
-                message: `${affectedRows} rows updated`
-            });
-        })
-        .catch((err) => {
-            res.status(500).json(err);
-        })
+  Order.update({
+    weight: req.body.weight,
+    email: req.body.email,
+    street: req.body.street,
+    house_number: req.body.house_number,
+    postal_code: req.body.postal_code,
+    city: req.body.city,
+    formatId: req.body.format_id,
+    status: req.body.status,
+    is_pickup: pickup_status,
+    updated_at: Date.now()
+    // coordinates: req.body.coordinates
+    },
+    { where: { id: req.body.id } })
+    .then((affectedRows) => {
+      res.status(200).json({
+        message: `${affectedRows} rows updated`
+      });
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    })
 })
 
 router.put("/editFormat/:id", (req, res) => {
