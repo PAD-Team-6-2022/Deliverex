@@ -28,7 +28,7 @@ document.getElementById("submitButton").addEventListener("click", async () => {
             "border-red-500");
         if(input.id !== "address" && input.type !== "checkbox" && input.type !== "hidden") {
             document.getElementById(`${input.id}_p`).innerHTML = "";
-            if(input.value === "" || input.value.includes(" ")) {
+            if(input.value === "") {
                 wrongInputs.push(input);
             }
         }
