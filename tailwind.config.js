@@ -9,22 +9,19 @@ module.exports = {
         sans: ["Inter var", ...defaultTheme.fontFamily.sans],
       },
       keyframes: {
-        from_right: {
+        toaster: {
           "0%": {
             transform: "translateX(100vh)",
             opacity: 0,
           },
-          "50%": {
+          "100%": {
             transform: "translateX(0)",
             opacity: 1,
-          },
-          "100%": {
-            opacity: 0,
           },
         },
       },
       animation: {
-        from_right: "from_right 1s ease-in-out",
+        toaster: "toaster 1s ease-in-out",
       },
     },
   },
