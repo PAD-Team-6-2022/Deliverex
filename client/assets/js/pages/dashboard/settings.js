@@ -106,24 +106,24 @@ document
 
 
         if (formatname1 === "") {
-            document.getElementById("error2").innerHTML = "Format name cant be empty"
+            document.getElementById("error2").innerHTML = "Format name can't be empty"
             return false;
         }
         if (length === "") {
-            document.getElementById("error3").innerHTML = "Length cant be empty"
+            document.getElementById("error3").innerHTML = "Length can't be empty"
             return false;
         }
         if (width === "") {
-            document.getElementById("error4").innerHTML = "Width cant be empty"
+            document.getElementById("error4").innerHTML = "Width can't be empty"
             return false;
         }
 
         if (height === "") {
-            document.getElementById("error5").innerHTML = "Height cant be empty"
+            document.getElementById("error5").innerHTML = "Height can't be empty"
             return false;
         }
         if (height === "") {
-            document.getElementById("error5").innerHTML = "Height cant be empty"
+            document.getElementById("error5").innerHTML = "Height can't be empty"
             return false;
         }
 
