@@ -37,26 +37,6 @@
                 </div>
 
                 <div class="flex flex-col mb-4 mx-2">
-                  <label
-                    class="mb-2 font-bold text-sm text-slate-900"
-                    for="country"
-                    >Country/Origin</label
-                  >
-                  <input
-                    class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                    type="text"
-                    name="country"
-                    id="country"
-                    value="<%= order.country %>"
-                  />
-                  <p
-                  class="text-red-500 text-sm"
-                  id="country_p"
-                  ></p
-                  >
-                </div>
-
-                <div class="flex flex-col mb-4 mx-2">
                   <label class="mb-2 font-bold text-sm text-slate-900" for="country"
                     >Address</label
                   >
@@ -80,6 +60,26 @@
                     <tbody id="addresses">
                     </tbody>
                   </table>
+                </div>
+
+                <div class="flex flex-col mb-4 mx-2">
+                  <label
+                    class="mb-2 font-bold text-sm text-slate-900"
+                    for="country"
+                    >Country/Origin</label
+                  >
+                  <input
+                    class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                    type="text"
+                    name="country"
+                    id="country"
+                    value="<%= order.country %>"
+                  />
+                  <p
+                  class="text-red-500 text-sm"
+                  id="country_p"
+                  ></p
+                  >
                 </div>
 
                 <div class="flex flex-row flex-wrap justify-between grow">
