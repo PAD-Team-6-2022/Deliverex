@@ -1,3 +1,4 @@
+
 navigator.geolocation.getCurrentPosition((success) => {
 
     //TODO: Use the 'pending' state of the fetch request
@@ -24,7 +25,6 @@ navigator.geolocation.getCurrentPosition((success) => {
             data.checkpoints.forEach((checkpointData, index) => {
                 const checkpointElement = tableContainer.children[index];
                 checkpointElement.classList.remove("bg-slate-300");
-                console.log(checkpointElement.querySelector(".loading-pulse"));
                 checkpointElement.querySelectorAll(".loading-pulse")
                     .forEach(loadingPulse => loadingPulse.remove());
 
@@ -83,8 +83,6 @@ navigator.geolocation.getCurrentPosition((success) => {
                 }
             });
 
-            console.log(checkpoints);
-
             //Retrieve the location data from the last checkpoint
             const lastCheckpoint = checkpoints[checkpoints.length-1];
             lastCheckpoint.location = {
@@ -97,7 +95,6 @@ navigator.geolocation.getCurrentPosition((success) => {
             const destination = `${lastCheckpoint.location.address},${lastCheckpoint.location.postal_code},${lastCheckpoint.location.city}`;
             const url = encodeURI(`https://www.google.com/maps/dir/?api=1&travelmode=${travelMode}&waypoints=${waypoints}&destination=${destination}`
                 .replaceAll(',', '+'));
-            console.log(url);
 
             //Adds a click event to a button that opens the google maps url in a new window
             document.querySelector("#viewRouteButton").addEventListener("click", () => {
@@ -113,3 +110,73 @@ navigator.geolocation.getCurrentPosition((success) => {
 }, (error) => {
     console.log(`Caught error while trying to get position. Error message: ${error}`);
 });
+
+const publicVapidKey = 'BLxVvjwWFJLXU0nqPOxRB_cZZiDMMTeD6c-7gTDvatl3gak50_jM9AhpWMwmn3sOkd8Ga-xhnzhq-zYpVqueOnI';
+
+if('serviceWorker' in navigator){
+    console.log('serviceworker is here');
+
+    navigator.serviceWorker.register('../assets/js/pages/courier/sw.js', {
+        scope: "../assets/js/pages/courier/",
+        //type: "Content-Type: application/javascript; charset=UTF-8"
+    }).then(async (registerObject) => {
+        console.log(registerObject);
+
+        console.log('registering the service worker');
+
+        //const currentSubscription = await registerObject.pushManager.getSubscription();
+        //if(!currentSubscription)
+        registerObject.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+        }).then(async (subscriptionObject) => {
+
+            console.log('Subscribed the register object');
+            console.log(subscriptionObject);
+
+            console.log('Expiration time: ')
+            console.log(subscriptionObject.expirationTime);
+
+            await fetch('/api/ORS/subscribe', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(subscriptionObject)
+            }).then((response) => response.json())
+                .then((data) => {
+                    console.log('Response data: ' + data)
+                }).catch((err) => console.error(`Fetch error: ${err}`));
+
+        }).catch((err) => console.error(`Error: could not
+         subscribe service worker. Error message: ${err}`));
+
+    }).catch((err) => console.error(`Error: could not
+         register service worker. Error message: ${err}`));
+}
+
+//Converts an base64 string to an unsigned 8 bit array
+//Source: https://github.com/bradtraversy/node_push_notifications/blob/master/client/client.js
+function urlBase64ToUint8Array(base64String) {
+    const padding = "=".repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, "+")
+        .replace(/_/g, "/");
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,5 @@
 const { Op } = require("sequelize");
+const EventEmitter = require('events');
 
 const searchQueryToWhereClause = (query, fields) => {
   return {
@@ -88,4 +89,19 @@ const convertUsersToVehicles = (users) => {
   return vehicles;
 }
 
-module.exports = { searchQueryToWhereClause, convertOrdersToShipments, convertUsersToVehicles};
+const sameDayDeliveryEvent = new EventEmitter();
+
+const addOrderToDeliveryQueue = (id) => {
+  sameDayDeliveryEvent.emit('sameDayDelivery', id);
+}
+const onSameDayDelivery = (handlerCallBack) => {
+  sameDayDeliveryEvent.on('sameDayDelivery', handlerCallBack);
+}
+
+module.exports = {
+  searchQueryToWhereClause,
+  convertOrdersToShipments,
+  convertUsersToVehicles,
+  addOrderToDeliveryQueue,
+  onSameDayDelivery
+};
