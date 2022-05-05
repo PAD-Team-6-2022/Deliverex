@@ -1,3 +1,4 @@
+
 navigator.geolocation.getCurrentPosition((success) => {
 
     //TODO: Use the 'pending' state of the fetch request
@@ -24,7 +25,6 @@ navigator.geolocation.getCurrentPosition((success) => {
             data.checkpoints.forEach((checkpointData, index) => {
                 const checkpointElement = tableContainer.children[index];
                 checkpointElement.classList.remove("bg-slate-300");
-                console.log(checkpointElement.querySelector(".loading-pulse"));
                 checkpointElement.querySelectorAll(".loading-pulse")
                     .forEach(loadingPulse => loadingPulse.remove());
 
@@ -83,8 +83,6 @@ navigator.geolocation.getCurrentPosition((success) => {
                 }
             });
 
-            console.log(checkpoints);
-
             //Retrieve the location data from the last checkpoint
             const lastCheckpoint = checkpoints[checkpoints.length-1];
             lastCheckpoint.location = {
@@ -97,7 +95,6 @@ navigator.geolocation.getCurrentPosition((success) => {
             const destination = `${lastCheckpoint.location.address},${lastCheckpoint.location.postal_code},${lastCheckpoint.location.city}`;
             const url = encodeURI(`https://www.google.com/maps/dir/?api=1&travelmode=${travelMode}&waypoints=${waypoints}&destination=${destination}`
                 .replaceAll(',', '+'));
-            console.log(url);
 
             //Adds a click event to a button that opens the google maps url in a new window
             document.querySelector("#viewRouteButton").addEventListener("click", () => {
@@ -108,8 +105,25 @@ navigator.geolocation.getCurrentPosition((success) => {
             console.log(`Fetch error: could not retrieve routing
              data from the server. Errormessage: ${err}`);
             //TODO: Display the error in the UI
-        })
+        });
 
 }, (error) => {
     console.log(`Caught error while trying to get position. Error message: ${error}`);
+    console.log(error);
 });
+
+//Register the serviceWorker
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('../assets/js/pages/courier/sw.js', {
+        scope: "../assets/js/pages/courier/"
+    }).catch((err) => console.error(`Error: could not
+         register service worker. Error message: ${err}`));
+}
+
+
+
+
+
+
+
+

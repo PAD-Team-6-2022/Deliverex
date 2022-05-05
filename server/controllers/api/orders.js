@@ -4,6 +4,7 @@ const auth = require("../../middleware/auth");
 const fetch = require("node-fetch");
 const ejs = require("ejs");
 const path = require('path')
+const {addOrderToDeliveryQueue}  = require("../../util");
 
 router.delete("/:id", (req, res) => {
     Order.destroy({where: {id: req.params.id}})
@@ -91,6 +92,9 @@ router.post("/", (req, res) => {
     // coordinates: req.body.coordinates
   })
     .then((order) => {
+      //if(req.body.delivery_date === today)
+          addOrderToDeliveryQueue(order.getDataValue('id'));
+
       sendEmail(order.id);
       res.status(200).json({
         order,
