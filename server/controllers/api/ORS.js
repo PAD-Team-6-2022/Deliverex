@@ -171,9 +171,8 @@ router.post("/subscribe",auth(true),(req, res) => {
  * the available active couriers in the right order
  */
 const initiateOrderRequestCycle = (orderId) => {
-
     //TODO: rewrite below query to use conventional sequalize methods
-    Order.sequelize.query("SELECT COUNT(*) AS 'count', courier_id FROM orders GROUP BY courier_id")
+    Order.sequelize.query("SELECT users.id AS courier_id, COUNT(orders.id) AS count FROM users LEFT JOIN orders ON users.id = orders.courier_id WHERE users.role = 'COURIER' GROUP BY users.id;")
         .then((data) => {
             const courierLoads = data[0];
 
