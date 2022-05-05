@@ -222,7 +222,7 @@ const initiateOrderRequestCycle = (orderId) => {
                 });
 
                 //The expiration time of the order request in seconds
-                const requestExpirationTime = 15;
+                const requestExpirationTime = 90;
 
                 //TODO: Fill in the (correct) pickup credentials here
                 //TODO: Fill in the kilometers/time here
