@@ -43,7 +43,7 @@ self.addEventListener('activate', () => {
          subscribe service worker. Error message: ${err}`));
 })
 
-self.addEventListener('push', (event) => {
+self.addEventListener('push', async (event) => {
     const data = event.data.json();
 
     let notificationOptions = {
@@ -55,7 +55,7 @@ self.addEventListener('push', (event) => {
             userHasInteracted: false,
             eventData: data
         },
-        //icon: 'iets.png'
+        icon: '../../../../favicon.ico'
     };
 
     if(data.type === 'deliveryRequest'){
@@ -68,27 +68,30 @@ self.addEventListener('push', (event) => {
 
     self.registration.showNotification(data.title, notificationOptions)
         .then(() => {
-            //do nothing
+            //Have the notification close itself after a set amount of seconds
+            if(data.type === 'deliveryRequest'){
+                self.registration.getNotifications().then((notifications) => {
+                    const newNotification = notifications[notifications.length-1];
+
+                    activeRequestNotifications.push(newNotification);
+                    const order_id = newNotification.data.order.id;
+
+                    setTimeout(() => {
+                        activeRequestNotifications.forEach((not, index) => {
+                            if(not.data.order.id === order_id){
+                                console.log('Info about the notification that is being cronned:');
+                                console.log(not);
+                                if(!not.data.userHasInteracted)
+                                    submitAnswerToServer('denied', not.data.eventData);
+                                activeRequestNotifications.splice(index, 1);
+                                not.close();
+                            }
+                        })
+                    }, data.expirationTime*1000);
+                });
+            }
         }).catch((err) => console.error(
         `Could not show notification: ${err}`));
-
-    //Have the notification close itself after a set amount of seconds
-    if(data.type === 'deliveryRequest'){
-        self.registration.getNotifications().then((notifications) => {
-            const newNotification = notifications[notifications.length-1];
-
-            activeRequestNotifications.push(newNotification);
-            const index = activeRequestNotifications.length-1;
-
-            setTimeout(() => {
-                const currentNotification = activeRequestNotifications[index];
-                if(!currentNotification.data.userHasInteracted)
-                    submitAnswerToServer('denied', currentNotification.data.eventData);
-                activeRequestNotifications.splice(index, 1);
-                currentNotification.close();
-            }, data.expirationTime*1000);
-        });
-    }
 });
 
 self.addEventListener('notificationclick',  (event) => {
