@@ -6,6 +6,7 @@ const Session = require("./session");
 const User = require("./user");
 const Company = require("./company");
 const Location = require("./location");
+const Goal = require("./goal");
 
 User.hasMany(Format);
 Format.belongsTo(User);
@@ -27,4 +28,5 @@ module.exports = {
     User,
     Company,
     Location,
+    Goal,
 };
