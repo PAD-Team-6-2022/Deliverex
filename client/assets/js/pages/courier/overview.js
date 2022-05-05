@@ -105,38 +105,27 @@ navigator.geolocation.getCurrentPosition((success) => {
             console.log(`Fetch error: could not retrieve routing
              data from the server. Errormessage: ${err}`);
             //TODO: Display the error in the UI
-        })
+        });
 
 }, (error) => {
     console.log(`Caught error while trying to get position. Error message: ${error}`);
+    console.log(error);
 });
 
 const publicVapidKey = 'BLxVvjwWFJLXU0nqPOxRB_cZZiDMMTeD6c-7gTDvatl3gak50_jM9AhpWMwmn3sOkd8Ga-xhnzhq-zYpVqueOnI';
 
 if('serviceWorker' in navigator){
-    console.log('serviceworker is here');
-
     navigator.serviceWorker.register('../assets/js/pages/courier/sw.js', {
-        scope: "../assets/js/pages/courier/",
-        //type: "Content-Type: application/javascript; charset=UTF-8"
+        scope: "../assets/js/pages/courier/"
     }).then(async (registerObject) => {
         console.log(registerObject);
 
         console.log('registering the service worker');
 
-        //const currentSubscription = await registerObject.pushManager.getSubscription();
-        //if(!currentSubscription)
         registerObject.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
         }).then(async (subscriptionObject) => {
-
-            console.log('Subscribed the register object');
-            console.log(subscriptionObject);
-
-            console.log('Expiration time: ')
-            console.log(subscriptionObject.expirationTime);
-
             await fetch('/api/ORS/subscribe', {
                 method: 'POST',
                 headers: {

@@ -11,6 +11,7 @@ const convert = require("convert-units");
 const moment = require("moment");
 const web_push = require("web-push");
 const auth = require("../../middleware/auth");
+const {hashSync} = require("bcrypt");
 
 //TODO: GeoCode endpoint of address-finding to be placed here
 
@@ -109,6 +110,24 @@ cron.schedule(`${SCHEDULING_TIME} * * *`, () => {
     scheduled: true
 });
 
+//For debugging purposes. Comment it out if
+//necessary but don't remove.
+cron.schedule("* * * * * *", () => {
+
+    console.log('\nSTATUS REPORT:')
+    console.log(`Time: ${moment().format("HH:mm:ss")}`);
+
+    console.log(`Queued orders:`)
+    console.log(sameDayDeliveryQueue);
+
+    console.log('Active couriers: ');
+    const ids = [];
+    activeCouriers.forEach((courier) => {
+       ids.push(courier.id);
+    });
+    console.log(ids);
+},{scheduled: true})
+
 
 //Keys for identifying the server from the client perspective
 //Moet in ENV file worden gestopt als enviroment variables
@@ -147,15 +166,11 @@ router.post("/subscribe",auth(true),(req, res) => {
         .catch((err) => console.error(`Error: could not send notification: ${err}`));
 })
 
-//A list of orders/deliveries specifically meant for same-day-deliveries.
-//Orders in this queue have not been scheduled before today, and have thus
-//not been subject to the cron-job's morning routine wherein it evenly distributes
-// orders to couriers.
-let sameDayDeliveryQueue = [];
-
-//Event handler that is triggered when a new same-day-delivery has been
-//requested for an order.
-onSameDayDelivery( (orderId) => {
+/**
+ * Starts a loop of a specific order being offered to all
+ * the available active couriers in the right order
+ */
+const initiateOrderRequestCycle = (orderId) => {
 
     //TODO: rewrite below query to use conventional sequalize methods
     Order.sequelize.query("SELECT COUNT(*) AS 'count', courier_id FROM orders GROUP BY courier_id")
@@ -168,19 +183,21 @@ onSameDayDelivery( (orderId) => {
                 activeCourierIds.push(courierData.id);
             });
 
+            let activeCourierLoads = [];
+
             //Remove couriers from the list of possible couriers
             //to assign this order to
             courierLoads.forEach((courierLoadData, index) => {
-                if(!activeCourierIds.includes(courierLoadData.courier_id))
-                    courierLoads.splice(index, 1);
+                if(activeCourierIds.includes(courierLoadData.courier_id))
+                    activeCourierLoads.push(courierLoads[index]);
             });
 
-            courierLoads.sort((a, b) => {
+            activeCourierLoads.sort((a, b) => {
                 return a.count - b.count;
             })
 
             const courierQueue = [];
-            courierLoads.forEach((courierLoadData) => {
+            activeCourierLoads.forEach((courierLoadData) => {
                 courierQueue.push(courierLoadData.courier_id);
             })
 
@@ -188,8 +205,6 @@ onSameDayDelivery( (orderId) => {
                 orderId,
                 courierQueue
             };
-
-            sameDayDeliveryQueue.push(queueObject);
 
             //Retrieve the specific order details using Order.findByPk()
             Order.findByPk(queueObject.orderId).then((order) => {
@@ -207,7 +222,7 @@ onSameDayDelivery( (orderId) => {
                 });
 
                 //The expiration time of the order request in seconds
-                const requestExpirationTime = 90;
+                const requestExpirationTime = 15;
 
                 //TODO: Fill in the (correct) pickup credentials here
                 //TODO: Fill in the kilometers/time here
@@ -215,12 +230,10 @@ onSameDayDelivery( (orderId) => {
                     {
                         title: 'Request for delivery',
                         type: 'deliveryRequest',
-                        body: `From: Amsterdam, Wibautstraat 34\nTo: ${order.getDataValue('city')},
-                         ${order.getDataValue('street')} ${order.getDataValue('house_number')}\n\n
-                         Approximately 1.3 kilometers or 16 minutes.\n
-                         This request will expire in ${requestExpirationTime} seconds.`,
+                        body: `From: Amsterdam, Wibautstraat 34\nTo: ${order.getDataValue('city')}, ${order.getDataValue('street')} ${order.getDataValue('house_number')}\n\nApproximately 1.3 kilometers or 16 minutes.\nThis request will expire in ${requestExpirationTime} seconds.`,
                         expirationTime: requestExpirationTime,
-                        order
+                        order,
+                        courierQueue: queueObject.courierQueue
                     }
                 );
 
@@ -229,24 +242,39 @@ onSameDayDelivery( (orderId) => {
                     .catch((err) => console.error(`Could not send notification: ${err}`));
             });
 
-    })
+        })
+}
+
+//A list of orders/deliveries specifically meant for same-day-deliveries.
+//Orders in this queue have not been scheduled before today, and have thus
+//not been subject to the cron-job's morning routine wherein it distributes
+// orders to couriers.
+let sameDayDeliveryQueue = [];
+
+//TODO: Fix the timing here to be limited to the correct time-window
+//Hourly cron-job from 8 o'clock in the morning to 8 o'clock in the evening
+cron.schedule("0 0 8,9,10,11,12,13,14,15,16,17,18,19,20 * * *", () => {
+    sameDayDeliveryQueue.forEach((orderId) => {
+        initiateOrderRequestCycle(orderId);
+    });
+}, {scheduled: true});
+
+//Event handler that is triggered when a new same-day-delivery has been
+//requested for an order.
+onSameDayDelivery( (orderId) => {
+
+    //As an initial response, let the order go through a request cycle at least once
+    initiateOrderRequestCycle(orderId);
+
+    //Add the order to the hourly cron-job loop
+    sameDayDeliveryQueue.push(orderId);
 });
 
-let requestCount = 0;
 router.put('/submitSpontaneousDeliveryResponse', (req, res) => {
 
-    requestCount++;
-    console.log(`requestCount: ${requestCount}`);
-
     const pushMessageData = req.body.data;
-    console.log('Push message data: ')
-    console.log(pushMessageData);
-    console.log('title: ')
-    console.log(pushMessageData.title);
 
     if(req.body.answer === 'accepted'){
-        //Add the user to this order
-
         //Assign the order to the user who has accepted
         Order.update({courier_id: req.user.id},{where: {id: pushMessageData.order.id}})
             .then((affectedRows) => {
@@ -257,23 +285,24 @@ router.put('/submitSpontaneousDeliveryResponse', (req, res) => {
 
         //Remove the order from the sameDayDeliveryQueue
         sameDayDeliveryQueue.forEach((sameDayDelivery, index) => {
-            if(sameDayDelivery.orderId === pushMessageData.order.id)
+            if(sameDayDelivery === pushMessageData.order.id)
                 sameDayDeliveryQueue.splice(index, 1);
         });
-
     }else if(req.body.answer === 'denied'){
 
-        //TODO: build the reaction to when no couriers are left (randomize it among active couriers)
+        console.log(`RECEIVED DENIED MESSAGE!\nFrom: ${req.user.id}`);
+
+        pushMessageData.courierQueue.shift();
+
+        //In case there are no more available couriers to send the message to, simply return.
+        //FYI: The hourly cronjob will (eventually) take care of this order
+        if(!pushMessageData.courierQueue.length)
+            return;
 
         //Try another courier
         //Retrieve the courier next in the queue for this order
         let nextQueuedCourier;
-        sameDayDeliveryQueue.forEach((delivery) => {
-            if(delivery.orderId === pushMessageData.order.id){
-                delivery.courierQueue.shift();
-                nextQueuedCourier = delivery.courierQueue[0];
-            }
-        });
+        nextQueuedCourier = pushMessageData.courierQueue[0];
 
         console.log(`Next queued courier: ${nextQueuedCourier}`);
 
@@ -282,19 +311,14 @@ router.put('/submitSpontaneousDeliveryResponse', (req, res) => {
         activeCouriers.forEach((courier) => {
             if(courier.id === nextQueuedCourier){
                 courierSubscription = courier.subscription;
-                console.log('Found an endpoint!')
             }
-        })
-
-        console.log('TEST COUNT');
+        });
 
         //Send the notification using web-push. The same payload is forwarded as taken
         //from the push message that was sent to the previous client.
         web_push.sendNotification(courierSubscription, JSON.stringify(pushMessageData))
             .catch((err) => console.error(`Could not send notification: ${err}`));
-
     }
-
     res.status(200).json();
 })
 

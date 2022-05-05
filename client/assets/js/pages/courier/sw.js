@@ -1,15 +1,11 @@
 console.log('service worker loaded');
 
+//Array that stores incoming order request notifications
+//to keep track of them across events
+const activeRequestNotifications = [];
+
 self.addEventListener('push', (event) => {
-    console.log('received a push! Event:');
-    console.log(event);
-
-    console.log(event.data.json());
-
     const data = event.data.json();
-
-    console.log('Event data:')
-    console.log(event.data.json());
 
     let notificationOptions = {
         body: data.body,
@@ -34,35 +30,42 @@ self.addEventListener('push', (event) => {
     self.registration.showNotification(data.title, notificationOptions)
         .then(() => {
             //do nothing
-            console.log('succeeded in showing the notification!')
         }).catch((err) => console.error(
         `Could not show notification: ${err}`));
 
     //Have the notification close itself after a set amount of seconds
-    if(data.type === 'deliveryRequest')
-    self.registration.getNotifications().then((notifications) => {
-        const currentNotification = notifications[notifications.length-1];
-        setTimeout(() => {
-            if(!currentNotification.data.userHasInteracted)
-                submitAnswerToServer('denied', currentNotification.data.eventData);
-            currentNotification.close();
-        }, data.expirationTime*1000);
-    });
+    if(data.type === 'deliveryRequest'){
+        self.registration.getNotifications().then((notifications) => {
+            const newNotification = notifications[notifications.length-1];
 
-})
+            activeRequestNotifications.push(newNotification);
+            const index = activeRequestNotifications.length-1;
 
-//Als je 'accept' clickt, of de notification aanklikt, terwijl de 60 seconden al
-//verstreken zijn, laat dan een nieuwe notification zien die de gebruiker informeert
-//dat het niet kan.
+            setTimeout(() => {
+                const currentNotification = activeRequestNotifications[index];
+                if(!currentNotification.data.userHasInteracted)
+                    submitAnswerToServer('denied', currentNotification.data.eventData);
+                activeRequestNotifications.splice(index, 1);
+                currentNotification.close();
+            }, data.expirationTime*1000);
+        });
+    }
+});
 
-//"Click or press 'accept' to accept this order."
-
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick',  (event) => {
     const notification = event.notification;
-    notification.data.userHasInteracted = true;
 
     if(notification.data.type !== 'deliveryRequest')
         return;
+
+    console.log('CLICKED THE ORDER REQUEST!');
+
+    //Signify to the global object the user has interacted with this notification
+    activeRequestNotifications.forEach((activeNotification, index) => {
+        if(activeNotification.data.order.id === notification.data.order.id){
+            activeNotification.data.userHasInteracted = true;
+        }
+    });
 
     let action = event.action;
 
@@ -76,22 +79,28 @@ self.addEventListener('notificationclick', (event) => {
         if(action !== denied)
             clients.openWindow('http://localhost:3000/dashboard/overview');
     });
+
     notification.close();
 })
 
 self.addEventListener('notificationclose', (event) => {
 
     const notification = event.notification;
-    notification.data.userHasInteracted = true;
 
     if(notification.data.type !== 'deliveryRequest')
         return;
 
+    //Signify to the global object the user has interacted with this notification
+    activeRequestNotifications.forEach((activeNotification, index) => {
+        if(activeNotification.data.order.id === notification.data.order.id){
+            activeNotification.data.userHasInteracted = true;
+        }
+    });
+
     submitAnswerToServer('denied', notification.data.eventData).then(() => {
         //Do nothing
-    })
-
-})
+    });
+});
 
 const submitAnswerToServer = (userResponse, orderRequestData) => {
     return fetch('/api/ORS/submitSpontaneousDeliveryResponse', {
@@ -104,12 +113,6 @@ const submitAnswerToServer = (userResponse, orderRequestData) => {
         if(response.status !== 200)
             console.error(`The server responded with an
              unexpected status code: ${response.status}`);
-
-        //TODO: Hier de reactie programmeren van wat er gedaan moet
-        // worden indien de tijd verstreken is! Denk er aan om te voorkomen
-        // dat de client geen window opent als hij een 'forbidden' status
-        // code terugkrijgt!
-
     }).catch((err) => console.error(`Fetch error: could not
      submit the response to a spontaneous delivery. Error message: ${err}`));
 }
