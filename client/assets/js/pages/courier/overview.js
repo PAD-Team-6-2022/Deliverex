@@ -112,55 +112,13 @@ navigator.geolocation.getCurrentPosition((success) => {
     console.log(error);
 });
 
-const publicVapidKey = 'BLxVvjwWFJLXU0nqPOxRB_cZZiDMMTeD6c-7gTDvatl3gak50_jM9AhpWMwmn3sOkd8Ga-xhnzhq-zYpVqueOnI';
-
+//Register the serviceWorker
 if('serviceWorker' in navigator){
     navigator.serviceWorker.register('../assets/js/pages/courier/sw.js', {
         scope: "../assets/js/pages/courier/"
-    }).then(async (registerObject) => {
-        console.log(registerObject);
-
-        console.log('registering the service worker');
-
-        registerObject.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
-        }).then(async (subscriptionObject) => {
-            await fetch('/api/ORS/subscribe', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(subscriptionObject)
-            }).then((response) => response.json())
-                .then((data) => {
-                    console.log('Response data: ' + data)
-                }).catch((err) => console.error(`Fetch error: ${err}`));
-
-        }).catch((err) => console.error(`Error: could not
-         subscribe service worker. Error message: ${err}`));
-
     }).catch((err) => console.error(`Error: could not
          register service worker. Error message: ${err}`));
 }
-
-//Converts an base64 string to an unsigned 8 bit array
-//Source: https://github.com/bradtraversy/node_push_notifications/blob/master/client/client.js
-function urlBase64ToUint8Array(base64String) {
-    const padding = "=".repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-        .replace(/\-/g, "+")
-        .replace(/_/g, "/");
-
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
-
 
 
 

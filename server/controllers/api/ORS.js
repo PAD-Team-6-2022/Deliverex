@@ -206,7 +206,6 @@ const initiateOrderRequestCycle = (orderId) => {
                 courierQueue
             };
 
-            //Retrieve the specific order details using Order.findByPk()
             Order.findByPk(queueObject.orderId).then((order) => {
 
                 //Loop through the active couriers to find whichever one corresponds to
