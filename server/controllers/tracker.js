@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Order, Format } = require("../models/");
+const { Order, Format, Vote, Goal } = require("../models/");
 const convert = require("convert-units");
 
 /**
@@ -22,7 +22,7 @@ router.get("/track/:postal_code/:id", async (req, res) => {
         id,
         postal_code
       },
-      include: Format
+      include: [Format, Vote]
     },
   );
 
@@ -44,10 +44,33 @@ router.get("/track/:postal_code/:id", async (req, res) => {
     return;
   }
 
+  // Get the current goal(the goal that's being collected for)
+  const currentGoal = await Goal.findOne({
+    where: {
+      status: "CURRENT"
+    }
+  });
+
+  // Get the acive goals(the goal that's being voted on)
+  const activeGoals = await Goal.findAll({
+    limit: 2,
+    where: {
+      status: "ACTIVE"
+    }
+  });
+
+  // the goal that is voted on
+  const votedGoal = await Vote.findOne({
+    where: {
+      orderId: id,
+    },
+    include: [Goal],
+  })
+
   const convertedWeight = convert(order.weight).from("g").toBest();
   order.weight = `${Math.round(convertedWeight.val)} ${convertedWeight.unit}`;
   
-  res.render("tracker", { title: "Track & Trace", order });
+  res.render("tracker", { title: "Track & Trace", order, currentGoal, activeGoals, votedGoal });
 });
 
 module.exports = router;
