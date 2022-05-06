@@ -15,5 +15,6 @@ router.post("/signin", (req, res) => {
 router.use("/orders", require("./orders"));
 router.use("/users", require("./users"));
 router.use("/ORS", require("./ORS"));
+router.use("/goals", require('./goals'))
 
 module.exports = router;

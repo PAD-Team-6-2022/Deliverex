@@ -30,7 +30,7 @@ const Goal = sequelize.define(
           },
         status: {
             type: DataTypes.ENUM,
-            values: ["ACTIVE", "INACTIVE", "SUGGESTION"],
+            values: ["COMPLETED", "CURRENT", "ACTIVE", "INACTIVE", "SUGGESTION"],
             allowNull: false,
         }
     },

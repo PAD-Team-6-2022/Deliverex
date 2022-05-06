@@ -128,21 +128,33 @@
                     </div>
                 </div>
                 <div class="flex-1 ml-0 md:ml-3 text-slate-600">
-                    <h2 class="text-gray-800 font-bold text-4xl mb-2">$2.04 🎉</h2>
-                    <p>
-                        Thank you! A small part of your order will be used to fund the community chosen goal.
-                        <br><br>
-                        <span class="flex">
-                            <p class="inline">Read more about it below</p>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="inline" viewBox="-5 -4.5 24 24" width="24" fill="currentColor"><path d="M8 11.243l3.95-3.95a1 1 0 1 1 1.414 1.414l-5.657 5.657a.997.997 0 0 1-1.414 0L.636 8.707A1 1 0 1 1 2.05 7.293L6 11.243V1.657a1 1 0 1 1 2 0v9.586z"></path></svg>
-                        </span>
-                    </p>
+                    <% if (currentGoal) { %>
+                        <h2 class="text-gray-800 font-bold text-4xl mb-2">$2.04 🎉</h2>
+                        <p>
+                            Thank you! A small part of your order will be used to fund the community chosen goal.
+                            <br><br>
+                            <span class="flex">
+                                <p class="inline">Read more about it below</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="inline" viewBox="-5 -4.5 24 24" width="24" fill="currentColor"><path d="M8 11.243l3.95-3.95a1 1 0 1 1 1.414 1.414l-5.657 5.657a.997.997 0 0 1-1.414 0L.636 8.707A1 1 0 1 1 2.05 7.293L6 11.243V1.657a1 1 0 1 1 2 0v9.586z"></path></svg>
+                            </span>
+                        </p>
+                    <% } else { %>
+                        <h2 class="text-gray-800 font-bold text-4xl mb-2">Suggest a goal</h2>
+                        <p>
+                            Know of a way to help out the community? 
+                            <br><br>
+                            <span class="flex">
+                                <p class="inline">Write your suggestion down below!</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="inline" viewBox="-5 -4.5 24 24" width="24" fill="currentColor"><path d="M8 11.243l3.95-3.95a1 1 0 1 1 1.414 1.414l-5.657 5.657a.997.997 0 0 1-1.414 0L.636 8.707A1 1 0 1 1 2.05 7.293L6 11.243V1.657a1 1 0 1 1 2 0v9.586z"></path></svg>
+                            </span>
+                        </p>
+                    <% } %>
                 </div>
             </div>
 
             <hr class="my-6">
 
-            <%- include("../partials/voting", { allowVoting: true, goal: 250.00, collected: 150.00 }) %>
+            <%- include("../partials/voting", { allowVoting: true, collected: 80.00, currentGoal, activeGoals }) %>
         </div>
     </div>
   </body>

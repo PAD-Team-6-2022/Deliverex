@@ -1,54 +1,48 @@
 <section>
     <h3 class="font-medium text-slate-800 text-2xl w-full">Community goals</h3>
     <p class="text-slate-500 mb-6">Vote on ideas to help improve your local community</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-        <div class="flex items-center mb-12 md:mb-0">
-            <div>
-                <h4 class="text-xl text-slate-800 font-medium">Chosen goal title</h4>
-                <p class="text-slate-500 mb-4">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odio delectus
-                    sed debitis excepturi, provident quia sint? Officia itaque possimus voluptates odio repellendus,
-                    sint illo maiores incidunt similique dolorem excepturi vitae?</p>
-                    <div class="">
+    <% if (currentGoal) { %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+            <div class="flex mb-4 md:mb-0">
+                <div>
+                    <h4 class="text-xl text-slate-800 font-medium"><%= currentGoal.title %></h4>
+                    <p class="text-slate-500 mb-4"><%= currentGoal.description %> </p>
+                    <div>
                         <div class="flex justify-between mb-1">
                             <span class="text-base font-medium text-cyan-500">$<%= collected %></span>
-                            <span class="text-base font-medium text-cyan-500">$<%= goal %></span>
+                            <span class="text-base font-medium text-cyan-500">$<%= currentGoal.amount %></span>
                         </div>
                         <div class="w-full bg-slate-200 rounded-full h-2.5">
-                            <div class="bg-cyan-500 h-2.5 rounded-full" style="width: <%- (100 / goal * collected) %>%"></div>
+                            <div class="bg-cyan-500 h-2.5 rounded-full max-w-full" style="width: <%- (100 / currentGoal.amount * collected) %>%"></div>
                         </div>
                     </div>
+                </div>
             </div>
-        </div>
-        <div>
-            <canvas id="myChart" class="w-full max-h-80"></canvas>
-        </div>
-    </div>
 
-    <% if (allowVoting) { %>
-        <h3 class="font-medium text-slate-800 text-xl w-full mb-4">Vote for next goal</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-fr">
-            <div class="border border-slate-200 rounded-lg p-4 flex flex-col items-start">
-                <h4 class="text-xl font-medium text-slate-800">Goal one</h4>
-                <p class="text-slate-500 flex-1 mb-4">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odio
-                    delectus sed debitis excepturi, provident quia sint? Officia itaque possimus voluptates odio
-                    repellendus, sint illo maiores incidunt similique dolorem excepturi vitae?</p>
-                <button
-                    class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-6 rounded-xl transition-colors"
-                    type="button">
-                    Vote
-                </button>
+            <div>
+                <canvas id="myChart" class="w-full max-h-80"></canvas>
             </div>
-            <div class="border border-slate-200 rounded-lg p-4 flex flex-col items-start">
-                <h4 class="text-xl font-medium text-slate-800">Goal two</h4>
-                <p class="text-slate-500 flex-1  mb-4">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odio
-                    delectus sed debitis excepturi, provident quia sint? Officia itaque possimus</p>
-                <button
-                    class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-6 rounded-xl transition-colors"
-                    type="button">
-                    Vote
-                </button>
-            </div>
+
         </div>
+    <% } %>
+    <% if (allowVoting) { %>
+        <% if (activeGoals.length !== 0 ) { %>
+            <h3 class="font-medium text-slate-800 text-xl w-full mb-4">Vote for the next goal</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-fr">
+            <% activeGoals.forEach(goal => { %>
+                <div class="border border-slate-200 rounded-lg p-4 flex flex-col items-start">
+                    <h4 class="text-xl font-medium text-slate-800"><%= goal.title %> </h4>
+                    <p class="text-slate-500 flex-1 mb-4"><%= goal.description %></p>
+                    <button
+                        class="block bg-cyan-500 hover:bg-cyan-700 text-white text-sm py-3 px-6 rounded-xl transition-colors"
+                        type="button">
+                        Vote
+                    </button>
+                </div>
+            <% }) %>
+            </div>   
+        <% } %>
+        
         <button type="button" data-modal-toggle="voting-modal" class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mt-4 transition-colors">
             <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" fill="currentColor"><path d="M16.907 4.44l-7.655 7.655c.227.325.42.676.575 1.048l1.91 4.599 5.17-13.303zm-9.002 6.308l7.656-7.656-13.303 5.17 4.599 1.911a5.51 5.51 0 0 1 1.048.575zm11.618-7.862l-6.027 15.506c-.38.98-1.477 1.483-2.449 1.124a1.831 1.831 0 0 1-1.057-1.017L8.08 13.9a3.662 3.662 0 0 0-1.98-1.98l-4.6-1.91C.546 9.613.11 8.51.528 7.544a1.95 1.95 0 0 1 1.08-1.04L17.114.475a1.852 1.852 0 0 1 2.41 2.41z"></path></svg>
             Suggest a goal
@@ -70,12 +64,21 @@
                                 <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="johndoe@mail.com" required>
                             </div>
                             <div>
-                                <label for="goal" class="block mb-2 text-sm font-medium text-gray-900">Goal title*</label>
+                                <label for="title" class="block mb-2 text-sm font-medium text-gray-900">Goal title*</label>
                                 <input type="text" name="title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" placeholder="Really good idea" required>
                             </div>
                             <div>  
-                                <label for="goal" class="block mb-2 text-sm font-medium text-gray-900">Your idea*</label>
-                                <textarea id="goal" name="goal" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-cyan-500 focus:border-cyan-500" placeholder="..." required></textarea>
+                                <label for="description" class="block mb-2 text-sm font-medium text-gray-900">Your idea*</label>
+                                <textarea id="description" name="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-cyan-500 focus:border-cyan-500" placeholder="..." required></textarea>
+                            </div>
+                            <div>
+                                <label for="amount" class="block mb-2 text-sm font-medium text-slate-900">Estimated funding*</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-3 text-sm text-slate-900 bg-slate-100 border border-r-0 border-slate-300 rounded-l-md">
+                                        €
+                                    </span>
+                                    <input type="number" name="amount" id="amount" class="rounded-none rounded-r-lg bg-slate-50 border border-slate-300 text-slate-900 focus:ring-cyan-500 focus:border-cyan-500 block flex-1 min-w-0 w-full text-sm p-2.5" placeholder="200.00" required>
+                                </div>
                             </div>
                             <button type="submit" class="w-full text-white bg-cyan-500 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">Send suggestion</button>
                         </form>
@@ -86,32 +89,37 @@
     <% } %>
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
-<script>
-    const goal = <%- goal %>;
-    const collected = <%- collected %>;
 
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Amount raised', 'Amount left'],
-            datasets: [{
-                label: 'Goal collection',
-                data: [collected, (goal - collected)],
-                backgroundColor: [
-                    'rgba(6, 182, 212, 0.4)',
-                    'rgba(226, 232, 240, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(6, 182, 212)',
-                    'rgba(226, 232, 240, 1)',
-                ],
-                borderWidth: 1
-            }]
-        },
-    });
-</script>
+<% if (currentGoal) { %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
+
+    <script>
+        const goal = <%- currentGoal.amount %>;
+        const collected = <%- collected %>;
+    
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Amount raised', 'Amount left'],
+                datasets: [{
+                    label: 'Goal collection',
+                    data: [collected, (goal - collected)],
+                    backgroundColor: [
+                        'rgba(6, 182, 212, 0.4)',
+                        'rgba(226, 232, 240, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(6, 182, 212)',
+                        'rgba(226, 232, 240, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+        });
+    </script>
+<% } %>
+
 <% if (allowVoting) { %>
 <script src="/assets/js/voting.js"></script>
 <% } %>
