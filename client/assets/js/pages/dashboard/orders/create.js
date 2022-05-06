@@ -11,6 +11,7 @@ const addressInput = document.getElementById("address");
 const countryInput = document.getElementById("country");
 const weightInput = document.getElementById("weight");
 const sizeFormatInput = document.getElementById("sizeFormat");
+const priceInput = document.getElementById("price");
 const pickupInput = document.getElementById("is_pickup");
 
 let coordinates = [];
@@ -44,6 +45,7 @@ document.getElementById("submitButton").addEventListener("click", async (event) 
             country: countryInput.value,
             format_id: sizeFormatInput.value,
             is_pickup: pickupInput.value,
+            price: priceInput.value,
             coordinates : JSON.stringify(coordinates)
         }
 

@@ -88,7 +88,8 @@ router.post("/", (req, res) => {
     country: req.body.country,
     format_id: req.body.format_id,
     is_pickup: pickup_status,
-    updated_at: Date.now()
+    updated_at: Date.now(),
+    price: req.body.price,
     // coordinates: req.body.coordinates
   })
     .then((order) => {
@@ -110,17 +111,18 @@ router.post("/edit", (req, res) => {
     let pickup_status = req.body.is_pickup != null;
 
   Order.update({
-    weight: req.body.weight,
-    email: req.body.email,
-    street: req.body.street,
-    house_number: req.body.house_number,
-    postal_code: req.body.postal_code,
-    city: req.body.city,
-    formatId: req.body.format_id,
-    status: req.body.status,
-    is_pickup: pickup_status,
-    updated_at: Date.now()
-    // coordinates: req.body.coordinates
+        weight: req.body.weight,
+        email: req.body.email,
+        street: req.body.street,
+        house_number: req.body.house_number,
+        postal_code: req.body.postal_code,
+        city: req.body.city,
+        formatId: req.body.format_id,
+        status: req.body.status,
+        is_pickup: pickup_status,
+        updated_at: Date.now(),
+        price: req.body.price,
+        // coordinates: req.body.coordinates
     },
     { where: { id: req.body.id } })
     .then((affectedRows) => {
