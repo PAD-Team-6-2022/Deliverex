@@ -26,11 +26,11 @@
         </div>
     <% } %>
     <% if (allowVoting) { %>
-        <% if (activeGoals.length !== 0 ) { %>
+        <% if (activeGoals.length !== 0 && !votedGoal ) { %>
             <h3 class="font-medium text-slate-800 text-xl w-full mb-4">Vote for the next goal</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-fr">
             <% activeGoals.forEach(goal => { %>
-                <div class="border border-slate-200 rounded-lg p-4 flex flex-col items-start">
+                <div data-goal="<%= goal.id %>" class="border border-slate-200 rounded-lg p-4 flex flex-col items-start">
                     <h4 class="text-xl font-medium text-slate-800"><%= goal.title %> </h4>
                     <p class="text-slate-500 flex-1 mb-4"><%= goal.description %></p>
                     <button
@@ -41,12 +41,24 @@
                 </div>
             <% }) %>
             </div>   
+        <% } else if(votedGoal) { %>
+            <hr class="my-6">
+
+            <h3 class="font-medium text-slate-800 text-xl w-full text-center">Thank you for voting 🙌</h3>
+            <p class="text-slate-500 mb-6 text-center">You voted on</p>
+
+            <div class="max-w-lg border border-slate-200 rounded-lg p-4 flex flex-col items-start mx-auto">
+                <h4 class="text-xl font-medium text-slate-800"><%= votedGoal.goal.title %> </h4>
+                <p class="text-slate-500 flex-1 mb-4"><%= votedGoal.goal.description %></p>
+            </div>
         <% } %>
         
-        <button type="button" data-modal-toggle="voting-modal" class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mt-4 transition-colors">
-            <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" fill="currentColor"><path d="M16.907 4.44l-7.655 7.655c.227.325.42.676.575 1.048l1.91 4.599 5.17-13.303zm-9.002 6.308l7.656-7.656-13.303 5.17 4.599 1.911a5.51 5.51 0 0 1 1.048.575zm11.618-7.862l-6.027 15.506c-.38.98-1.477 1.483-2.449 1.124a1.831 1.831 0 0 1-1.057-1.017L8.08 13.9a3.662 3.662 0 0 0-1.98-1.98l-4.6-1.91C.546 9.613.11 8.51.528 7.544a1.95 1.95 0 0 1 1.08-1.04L17.114.475a1.852 1.852 0 0 1 2.41 2.41z"></path></svg>
-            Suggest a goal
-        </button>
+        <div class="<%- (votedGoal) ? "text-center" : "" %>" >
+            <button type="button" data-modal-toggle="voting-modal" class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mt-4 transition-colors">
+                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" fill="currentColor"><path d="M16.907 4.44l-7.655 7.655c.227.325.42.676.575 1.048l1.91 4.599 5.17-13.303zm-9.002 6.308l7.656-7.656-13.303 5.17 4.599 1.911a5.51 5.51 0 0 1 1.048.575zm11.618-7.862l-6.027 15.506c-.38.98-1.477 1.483-2.449 1.124a1.831 1.831 0 0 1-1.057-1.017L8.08 13.9a3.662 3.662 0 0 0-1.98-1.98l-4.6-1.91C.546 9.613.11 8.51.528 7.544a1.95 1.95 0 0 1 1.08-1.04L17.114.475a1.852 1.852 0 0 1 2.41 2.41z"></path></svg>
+                Suggest a goal
+            </button>
+        </div>
 
         <!-- Main modal -->
         <div id="voting-modal" tabindex="-1" aria-hidden="true" class="hidden fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-full bg-slate-900 bg-opacity-60">
@@ -121,5 +133,5 @@
 <% } %>
 
 <% if (allowVoting) { %>
-<script src="/assets/js/voting.js"></script>
+    <script src="/assets/js/voting.js"></script>
 <% } %>

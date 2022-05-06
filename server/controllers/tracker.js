@@ -59,10 +59,18 @@ router.get("/track/:postal_code/:id", async (req, res) => {
     }
   });
 
+  // the goal that is voted on
+  const votedGoal = await Vote.findOne({
+    where: {
+      orderId: id,
+    },
+    include: [Goal],
+  })
+
   const convertedWeight = convert(order.weight).from("g").toBest();
   order.weight = `${Math.round(convertedWeight.val)} ${convertedWeight.unit}`;
   
-  res.render("tracker", { title: "Track & Trace", order, currentGoal, activeGoals });
+  res.render("tracker", { title: "Track & Trace", order, currentGoal, activeGoals, votedGoal });
 });
 
 module.exports = router;

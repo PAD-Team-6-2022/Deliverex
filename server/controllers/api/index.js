@@ -16,5 +16,6 @@ router.use("/orders", require("./orders"));
 router.use("/users", require("./users"));
 router.use("/ORS", require("./ORS"));
 router.use("/goals", require('./goals'))
+router.use("/votes", require('./votes'))
 
 module.exports = router;
