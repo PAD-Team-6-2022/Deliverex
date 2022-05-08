@@ -8,6 +8,7 @@ const Company = require("./company");
 const Location = require("./location");
 const Goal = require("./goal");
 const Vote = require("./vote");
+const Donation = require("./donation");
 
 User.hasMany(Format);
 Format.belongsTo(User);
@@ -19,9 +20,16 @@ User.hasMany(Order);
 Order.belongsTo(User);
 
 Goal.hasMany(Vote);
+Vote.belongsTo(Goal);
+
 Order.hasOne(Vote);
 Vote.belongsTo(Order);
-Vote.belongsTo(Goal);
+
+Goal.hasMany(Donation);
+Donation.belongsTo(Goal);
+
+Order.hasOne(Donation);
+Donation.belongsTo(Order);
 
 // Location.belongsTo(Company)
 
@@ -36,4 +44,5 @@ module.exports = {
     Location,
     Goal,
     Vote,
+    Donation,
 };
