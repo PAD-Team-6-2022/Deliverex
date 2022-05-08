@@ -1,3 +1,14 @@
+<%
+    const collected = (currentGoal.donations && currentGoal.donations.length !== 0) ? currentGoal.donations[0].dataValues.total : 0;
+    const collectedPrice = new Intl.NumberFormat('en-EN', {
+            style: 'currency',
+            currency: 'EUR',
+        }).format(collected);
+    const currentGoalPrice = new Intl.NumberFormat('en-EN', {
+            style: 'currency',
+            currency: 'EUR',
+        }).format(currentGoal.amount);
+%> 
 <section>
     <h3 class="font-medium text-slate-800 text-2xl w-full">Community goals</h3>
     <p class="text-slate-500 mb-6">Vote on ideas to help improve your local community</p>
@@ -9,8 +20,8 @@
                     <p class="text-slate-500 mb-4"><%= currentGoal.description %> </p>
                     <div>
                         <div class="flex justify-between mb-1">
-                            <span class="text-base font-medium text-cyan-500">$<%= collected %></span>
-                            <span class="text-base font-medium text-cyan-500">$<%= currentGoal.amount %></span>
+                            <span class="text-base font-medium text-cyan-500"><%= collectedPrice %></span>
+                            <span class="text-base font-medium text-cyan-500"><%= currentGoalPrice %></span>
                         </div>
                         <div class="w-full bg-slate-200 rounded-full h-2.5">
                             <div class="bg-cyan-500 h-2.5 rounded-full max-w-full" style="width: <%- (100 / currentGoal.amount * collected) %>%"></div>
