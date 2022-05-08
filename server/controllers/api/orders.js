@@ -1,10 +1,14 @@
 const router = require("express").Router();
 const { Order, Format, User, Location, Company } = require("../../models");
+const Organisation = require("../../models/organisation")
+const WeekSchedule = require("../../models/week_schedule");
 const auth = require("../../middleware/auth");
+const moment = require("moment");
 const fetch = require("node-fetch");
 const ejs = require("ejs");
 const path = require('path')
 const {addOrderToDeliveryQueue}  = require("../../util");
+const {DataTypes} = require("sequelize");
 
 router.delete("/:id", (req, res) => {
     Order.destroy({where: {id: req.params.id}})
@@ -76,7 +80,10 @@ router.post("/", (req, res) => {
 
     let pickup_status = req.body.is_pickup != null;
 
-  Order.create({
+    //TODO: Remove this hard-coded deliveryDate with one sent by the front-end
+    req.body.deliveryDate = moment().format("YYYY-MM-DD");
+
+    Order.create({
     status: 'SORTING',
     email: req.body.email,
     weight: req.body.weight,
@@ -88,12 +95,39 @@ router.post("/", (req, res) => {
     country: req.body.country,
     format_id: req.body.format_id,
     is_pickup: pickup_status,
-    updated_at: Date.now()
-    // coordinates: req.body.coordinates
+    updated_at: Date.now(),
+    created_by: req.user.id,
+    coordinates: { type: 'Point', coordinates: Object.values(JSON.parse(req.body.coordinates)).reverse()},
+    delivery_date: req.body.deliveryDate
   })
     .then((order) => {
-      //if(req.body.delivery_date === today)
-          addOrderToDeliveryQueue(order.getDataValue('id'));
+
+        console.log(req.user.id);
+
+        //Handle the way this order should be treated based on whether the 'freelanceMode'
+        //option is currently being used.
+        Organisation.findOne().then((organisation) => {
+            const freelanceMode = organisation.getDataValue('freelanceMode');
+            if(freelanceMode)
+                addOrderToDeliveryQueue(order.getDataValue('id'));
+            else{
+                //Planned mode
+                if(order.getDataValue('delivery_date') !== moment().format("YYYY-MM-DD"))
+                    return;
+
+                WeekSchedule.findOne({where: {id: organisation.getDataValue('operating_schedule_id')}})
+                    .then((organisationSchedule) => {
+
+                        const currentDay = moment().format('dddd').toLowerCase();
+                        const todaySchedule = organisationSchedule.getDataValue(currentDay);
+
+                        //In case the morning cron-job has already fired, add it to the same-day-delivery queue
+                        if(moment().isAfter(moment(todaySchedule.start, 'HH:mm:ss'))){
+                            addOrderToDeliveryQueue(order.getDataValue('id'));
+                        }
+                    });
+                }
+        });
 
       sendEmail(order.id);
       res.status(200).json({
@@ -103,6 +137,7 @@ router.post("/", (req, res) => {
     })
     .catch((err) => {
       res.status(500).json(err);
+      console.log(err);
     });
 });
 
@@ -226,6 +261,65 @@ router.put("/editStore/:id", (req, res) => {
             country: req.body.country,
         },
         {where: {location_id: req.params.id}})
+
+});
+
+router.get("/deliveryDates", (req, res) => {
+
+    Organisation.findOne().then((organisation) => {
+
+        const freelanceMode = organisation.getDataValue('freelanceMode');
+
+        WeekSchedule.findOne({where: {id: organisation.getDataValue('operating_schedule_id')}})
+            .then((organisationSchedule) => {
+
+                const currentDay = moment().format('dddd').toLowerCase();
+                const todaySchedule = organisationSchedule.getDataValue(currentDay);
+
+                const sameDayDeliverable = moment().isBefore(moment(todaySchedule.end, 'HH:mm:ss'));
+
+                const availableDays = {
+                    monday: organisationSchedule.getDataValue('monday') !== null,
+                    tuesday: organisationSchedule.getDataValue('tuesday') !== null,
+                    wednesday: organisationSchedule.getDataValue('wednesday') !== null,
+                    thursday: organisationSchedule.getDataValue('thursday') !== null,
+                    friday: organisationSchedule.getDataValue('friday') !== null,
+                    saturday: organisationSchedule.getDataValue('saturday') !== null,
+                    sunday: organisationSchedule.getDataValue('sunday') !== null
+                }
+
+                if(freelanceMode){
+                    let deliveryMessage;
+                    if(sameDayDeliverable)
+                        deliveryMessage = `The order is expected to be delivered today.`;
+                    else {
+                        //Bereken wat de eerstvolgende dag is waarop het kan worden afgeleverd, en informeer de
+                        //gebruiker daarvan.
+                        let availableDaysEntries = Object.entries(availableDays);
+                        const daysBefore = availableDaysEntries.slice(0, Object.keys(availableDays).indexOf(currentDay));
+                        availableDaysEntries.splice(0, Object.keys(availableDays).indexOf(currentDay)+1);
+                        availableDaysEntries = availableDaysEntries.concat(daysBefore);
+
+                        for (let i = 0; i < availableDaysEntries.length; i++) {
+                            if(availableDaysEntries[i][1] !== false){
+                                deliveryMessage = `The order is expected to be delivered on ${availableDaysEntries[i][0]}`;
+                                break;
+                            }
+                        }
+                    }
+                    res.status(200).json({schedulable: false, deliveryMessage});
+                }else{
+                    //Note: if the current day is marked 'true' in 'availabledays', it does not
+                    //mean the same as a same day delivery being possible. You have to specifically
+                    //use the 'sameDayDelivery' boolean to read out whether it's possible.
+                    const schedulingData = {
+                        sameDayDelivery: sameDayDeliverable,
+                        availableDays
+                    }
+                    res.status(200).json({schedulable: true, schedulingData})
+                }
+            });
+    });
 
 })
 

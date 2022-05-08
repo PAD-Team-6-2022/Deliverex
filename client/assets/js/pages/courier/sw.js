@@ -1,28 +1,11 @@
 console.log('service worker loaded');
 
-const publicVapidKey = 'BLxVvjwWFJLXU0nqPOxRB_cZZiDMMTeD6c-7gTDvatl3gak50_jM9AhpWMwmn3sOkd8Ga-xhnzhq-zYpVqueOnI';
-
-//Converts an base64 string to an unsigned 8 bit array
-//Source: https://github.com/bradtraversy/node_push_notifications/blob/master/client/client.js
-function urlBase64ToUint8Array(base64String) {
-    const padding = "=".repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-        .replace(/\-/g, "+")
-        .replace(/_/g, "/");
-
-    const rawData = self.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
-
 //Array that stores incoming order request notifications
 //to keep track of them across events
 const activeRequestNotifications = [];
 
+//TODO: Try to find a use for the (below) activate event later
+/*
 self.addEventListener('activate', () => {
     self.registration.pushManager.subscribe({
         userVisibleOnly: true,
@@ -41,7 +24,7 @@ self.addEventListener('activate', () => {
 
     }).catch((err) => console.error(`Error: could not
          subscribe service worker. Error message: ${err}`));
-})
+})*/
 
 self.addEventListener('push', async (event) => {
     const data = event.data.json();
@@ -94,7 +77,7 @@ self.addEventListener('push', async (event) => {
         `Could not show notification: ${err}`));
 });
 
-self.addEventListener('notificationclick',  (event) => {
+self.addEventListener('notificationclick',  async (event) => {
     const notification = event.notification;
 
     if(notification.data.type !== 'deliveryRequest')
@@ -116,11 +99,15 @@ self.addEventListener('notificationclick',  (event) => {
     if(action.length === 0)
         action = 'accepted';
 
+
+    event.waitUntil(submitAnswerToServer(action, notification.data.eventData)
+        .catch((err) => console.error(`Error: could not submit request
+         answer to server. Errormessage: ${err}`)));
+
     //TODO: Change this to the live-deployed domain link
-    submitAnswerToServer(action, notification.data.eventData).then(() => {
-        if(action !== denied)
-            clients.openWindow('http://localhost:3000/dashboard/overview');
-    });
+    if(action !== 'denied')
+        clients.openWindow('http://192.168.0.100:3000/dashboard/overview')
+            .catch((err) => console.error(`Could not open new window: ${err}`));
 
     notification.close();
 })

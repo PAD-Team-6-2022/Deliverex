@@ -112,12 +112,65 @@ navigator.geolocation.getCurrentPosition((success) => {
     console.log(error);
 });
 
+const publicVapidKey = 'BLxVvjwWFJLXU0nqPOxRB_cZZiDMMTeD6c-7gTDvatl3gak50_jM9AhpWMwmn3sOkd8Ga-xhnzhq-zYpVqueOnI';
+
+//Converts an base64 string to an unsigned 8 bit array
+//Source: https://github.com/bradtraversy/node_push_notifications/blob/master/client/client.js
+function urlBase64ToUint8Array(base64String) {
+    const padding = "=".repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, "+")
+        .replace(/_/g, "/");
+
+    const rawData = self.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
 //Register the serviceWorker
 if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('../assets/js/pages/courier/sw.js', {
+    await navigator.serviceWorker.register('../assets/js/pages/courier/sw.js', {
         scope: "../assets/js/pages/courier/"
-    }).catch((err) => console.error(`Error: could not
-         register service worker. Error message: ${err}`));
+    }).then(async (registrationObject) => {
+
+        const currentSubscription = await registrationObject.pushManager.getSubscription();
+        if(currentSubscription !== null)
+            return;
+
+        const subscribeButtonContainer = document.querySelector("#subscribeButtonContainer");
+        const subscribeButton = document.querySelector("#subscribeButton");
+
+        subscribeButtonContainer.classList.remove("hidden");
+        subscribeButton.addEventListener("click", () => {
+            console.log(registrationObject);
+            registrationObject.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+            }).then(async (subscriptionObject) => {
+                await fetch('/api/ORS/subscribe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(subscriptionObject)
+                }).then((response) => response.json())
+                    .then((data) => {
+                        console.log('Response data: ' + data);
+                        subscribeButtonContainer.classList.add("hidden");
+                    }).catch((err) => console.error(`Fetch error: ${err}`));
+
+            }).catch((err) => console.error(`Error: could not
+         subscribe service worker. Error message: ${err}`));
+        })
+    }).catch((err) => {
+        console.error(`Error: could not
+         register service worker. Error message: ${err}`);
+        return;
+    });
 }
 
 

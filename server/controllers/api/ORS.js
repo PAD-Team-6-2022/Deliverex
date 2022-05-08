@@ -2,6 +2,9 @@ const router = require("express").Router();
 const fetch = require('node-fetch');
 const Order = require("../../models/order");
 const User = require("../../models/user");
+const Organisation = require("../../models/organisation");
+const WeekSchedule = require("../../models/week_schedule");
+const Location = require("../../models/location");
 const API_KEY = process.env.ORS_API_KEY;
 const cron = require("node-cron");
 const {convertOrdersToShipments,
@@ -12,6 +15,8 @@ const moment = require("moment");
 const web_push = require("web-push");
 const auth = require("../../middleware/auth");
 const {hashSync} = require("bcrypt");
+const {or, QueryTypes} = require("sequelize");
+const {Company} = require("../../models");
 
 //TODO: GeoCode endpoint of address-finding to be placed here
 
@@ -22,97 +27,9 @@ const {hashSync} = require("bcrypt");
 // overdue/failed orders to 'READY' again and include them
 // in todays scheduled deliveries.
 
-//The time at which new orders will be assigned. To be retrieved
-// from database. Currently hardcoded to 8:30.
-const SCHEDULING_TIME = "0 30 8";
-
-//TODO: Replace below solution to one that uses
-// moment and is more reliable
-/**
- * Gets the current date and convert it to the same format
- * as the database returns its dates in.
- *
- * @returns {string}
- */
-const getFormattedDate = () => {
-    const today = new Date();
-    const todayMonth = (today.getMonth() + 1) < 10 ?
-        `0${(today.getMonth() + 1)}` :
-        (today.getMonth() + 1);
-    const todayDate = today.getDate() < 10 ?
-        `0${today.getDate()}` : today.getDate();
-    return `${today.getFullYear()}-${todayMonth}-${todayDate}`;
-}
-
-//Is called every day at a specified time
-cron.schedule(`${SCHEDULING_TIME} * * *`, () => {
-
-    //TODO: Retrieve begin & end-time working
-    // hours from the database and use it to check
-    // which couriers are available for the day
-    const BEGIN_TIME = 0;
-    const END_TIME = 342424;
-
-    const todayConverted = getFormattedDate();
-
-    Order.findAll({
-        where: {
-            status: 'READY',
-            courier_id: null, delivery_date: todayConverted
-        }
-    })
-        .then((orders) => {
-            console.log(`Assigning all unassigned orders of ${todayConverted}`);
-
-            if (!orders.length)
-                return;
-
-            const shipments = convertOrdersToShipments(orders);
-
-            //TODO: check whether the user works between 'BEGIN_TIME' and 'END_TIME' of today
-            User.findAll({where: {role: 'COURIER'}})
-                .then((users) => {
-                    const vehicles = convertUsersToVehicles(users);
-
-                    fetch('https://api.openrouteservice.org/optimization', {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
-                            'Authorization': API_KEY,
-                            'Content-Type': 'application/json; charset=utf-8'
-                        },
-                        body: '{"shipments": ' + JSON.stringify(shipments) + ',' + '"vehicles": ' + JSON.stringify(vehicles) + '}'
-                    }).then(response => response.json())
-                        .then((data) => {
-                            //Loop through every order of every route to assign the right orders to the right couriers
-                            data.routes.forEach((route) => {
-                                for (let i = 0; i < route.steps.length; i++) {
-                                    //To prevent updating the same order twice, we ignore steps of type 'start' and 'delivery'
-                                    if (route.steps[i].type === 'pickup')
-                                        Order.update({status: 'TRANSIT', courier_id: route.vehicle},
-                                            {where: {id: route.steps[i].id}}).then((rowsAffected) => {
-                                            console.log(`Updated order ${route.steps[i].id}. ${rowsAffected} rows affected.`)
-                                        }).catch((err) => {
-                                            console.log(`Could not update order ${route.steps[i].id}. Error message: ${err}`)
-                                        });
-                                }
-                            })
-                        }).catch((err) => {
-                        console.error(err);
-                    });
-                }).catch((err) => {
-                console.error(`Failed to retrieve couriers from database. Errormessage: ${err}`)
-            })
-        }).catch((err) => {
-        console.error(`Failed to retrieve orders from database. Errormessage: ${err}`)
-    });
-}, {
-    scheduled: true
-});
-
 //For debugging purposes. Comment it out if
 //necessary but don't remove.
-cron.schedule("* * * * * *", () => {
+/*cron.schedule("* * * * * *", () => {
 
     console.log('\nSTATUS REPORT:')
     console.log(`Time: ${moment().format("HH:mm:ss")}`);
@@ -126,7 +43,7 @@ cron.schedule("* * * * * *", () => {
        ids.push(courier.id);
     });
     console.log(ids);
-},{scheduled: true})
+},{scheduled: true})*/
 
 
 //Keys for identifying the server from the client perspective
@@ -139,7 +56,6 @@ web_push.setVapidDetails('mailto:test@test.com', publicVapidKey, privateVapidKey
 let activeCouriers = [];
 
 router.post("/subscribe",auth(true),(req, res) => {
-
     //If there is already a subscription active of this user, remove the old
     //subscription before it can be replaced with this new one.
     for (let i = 0; i < activeCouriers.length; i++) {
@@ -164,7 +80,7 @@ router.post("/subscribe",auth(true),(req, res) => {
     res.status(200).json({});
     web_push.sendNotification(activeCouriers[activeCouriers.length-1].subscription, notificationPayload)
         .catch((err) => console.error(`Error: could not send notification: ${err}`));
-})
+});
 
 /**
  * Starts a loop of a specific order being offered to all
@@ -174,14 +90,13 @@ const initiateOrderRequestCycle = (orderId) => {
     //TODO: rewrite below query to use conventional sequalize methods
     Order.sequelize.query("SELECT users.id AS courier_id, COUNT(orders.id) AS count FROM users LEFT JOIN orders ON users.id = orders.courier_id WHERE users.role = 'COURIER' GROUP BY users.id;")
         .then((data) => {
-            const courierLoads = data[0];
 
+            const courierLoads = data[0];
             //Helper array that narrows couriers down to their ID's
             let activeCourierIds = [];
             activeCouriers.forEach((courierData) => {
                 activeCourierIds.push(courierData.id);
             });
-
             let activeCourierLoads = [];
 
             //Remove couriers from the list of possible couriers
@@ -190,7 +105,6 @@ const initiateOrderRequestCycle = (orderId) => {
                 if(activeCourierIds.includes(courierLoadData.courier_id))
                     activeCourierLoads.push(courierLoads[index]);
             });
-
             activeCourierLoads.sort((a, b) => {
                 return a.count - b.count;
             })
@@ -199,7 +113,6 @@ const initiateOrderRequestCycle = (orderId) => {
             activeCourierLoads.forEach((courierLoadData) => {
                 courierQueue.push(courierLoadData.courier_id);
             })
-
             const queueObject = {
                 orderId,
                 courierQueue
@@ -222,22 +135,81 @@ const initiateOrderRequestCycle = (orderId) => {
                 //The expiration time of the order request in seconds
                 const requestExpirationTime = 90;
 
-                //TODO: Fill in the (correct) pickup credentials here
-                //TODO: Fill in the kilometers/time here
-                const notificationPayload = JSON.stringify(
-                    {
-                        title: 'Request for delivery',
-                        type: 'deliveryRequest',
-                        body: `From: Amsterdam, Wibautstraat 34\nTo: ${order.getDataValue('city')}, ${order.getDataValue('street')} ${order.getDataValue('house_number')}\n\nApproximately 1.3 kilometers or 16 minutes.\nThis request will expire in ${requestExpirationTime} seconds.`,
-                        expirationTime: requestExpirationTime,
-                        order,
-                        courierQueue: queueObject.courierQueue
-                    }
-                );
+                //Welke company heeft deze order?
+                //Welke location heeft die company?
 
-                //Send the notification using web-push, along with the order details
-                web_push.sendNotification(courierSubscription, notificationPayload)
-                    .catch((err) => console.error(`Could not send notification: ${err}`));
+                //TODO: Replace this ridiculous query
+                Location.sequelize.query(`SELECT locations.* FROM orders
+                                            INNER JOIN users ON orders.created_by = users.id 
+                                            INNER JOIN companies ON users.company_id = companies.id 
+                                            INNER JOIN locations ON companies.location_id = locations.location_id 
+                                            WHERE orders.id = ${order.getDataValue('id')};`,
+                    {type: QueryTypes.SELECT, model: Location, mapToModel: true})
+                    .then((locationData) => {
+
+                        const pickupLocation = locationData[0];
+                        const orderId = order.getDataValue('id');
+
+                        const shipment = {
+                            amount: [1],
+                            skills: [1],
+                            pickup: {
+                                id: orderId,
+                                service: 60,
+                                location: pickupLocation.getDataValue("coordinates").coordinates
+                            },
+                            delivery: {
+                                id: orderId,
+                                service: 60,
+                                location: order.getDataValue("coordinates").coordinates
+                            }
+                        };
+
+                        const vehicleProfile = {
+                            id: orderId,
+                            profile: "cycling-regular",
+                            start: pickupLocation.getDataValue("coordinates").coordinates,
+                            capacity: [4],
+                            skills: [1],
+                            time_window: [0, 86400]
+                        }
+
+                        fetch('https://api.openrouteservice.org/optimization', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+                                'Authorization': API_KEY,
+                                'Content-Type': 'application/json; charset=utf-8'
+                            },
+                            body: '{"shipments": ' + JSON.stringify([shipment]) + ',' + '"vehicles": ' + JSON.stringify([vehicleProfile]) + ', "options":{"g":"true"}}'
+                        }).then(response => response.json())
+                            .then((data) => {
+
+                                //Traveltime, in minutes by default
+                                const travelTime = Math.round(moment.duration(data.routes[0].duration, 's').as('m'));
+
+                                const distance = (Math.round((data.routes[0].distance / 1000) * 10) / 10);
+
+                                const notificationPayload = JSON.stringify(
+                                    {
+                                        title: 'Request for delivery',
+                                        type: 'deliveryRequest',
+                                        body: `From: ${pickupLocation.getDataValue('city')}, ${pickupLocation.getDataValue('street')} ${pickupLocation.getDataValue('house_number')}\nTo: ${order.getDataValue('city')}, ${order.getDataValue('street')} ${order.getDataValue('house_number')}\n\nApproximately ${distance} kilometers or ${travelTime} minutes.\nThis request will expire in ${requestExpirationTime} seconds.`,
+                                        expirationTime: requestExpirationTime,
+                                        order,
+                                        courierQueue: queueObject.courierQueue
+                                    }
+                                );
+
+                                //Send the notification using web-push, along with the order details
+                                web_push.sendNotification(courierSubscription, notificationPayload)
+                                    .catch((err) => console.error(`Could not send notification: ${err}`));
+
+                            })
+                            .catch(() => {
+
+                            });
+                    })
             });
 
         })
@@ -249,13 +221,106 @@ const initiateOrderRequestCycle = (orderId) => {
 // orders to couriers.
 let sameDayDeliveryQueue = [];
 
-//TODO: Fix the timing here to be limited to the correct time-window
-//Hourly cron-job from 8 o'clock in the morning to 8 o'clock in the evening
-cron.schedule("0 0 8,9,10,11,12,13,14,15,16,17,18,19,20 * * *", () => {
-    sameDayDeliveryQueue.forEach((orderId) => {
-        initiateOrderRequestCycle(orderId);
+//We use 'findOne' as we naturally assume there is only one organisation
+Organisation.findOne().then((organisation) => {
+
+    const freelanceMode = organisation.getDataValue('freelanceMode');
+
+    //Get the time schedule
+    WeekSchedule.findOne({where: {id: organisation.getDataValue('operatingScheduleId')}})
+        .then((schedule) => {
+
+            //TODO: Use the actual daily time-window rather than just the one of monday for every day
+            const timeWindow = schedule.getDataValue('monday');
+
+            const hoursAmount = moment(timeWindow.end, "HH:mm:ss").diff(moment(timeWindow.start, "HH:mm:ss"), "h");
+            const formattedStartTime = moment(timeWindow.start, "HH:mm:ss").format("s m H");
+
+            let cronjobSchedule = formattedStartTime;
+            for (let i = 0; i < hoursAmount; i++) {
+                cronjobSchedule += `,${moment(timeWindow.start, "HH:mm:ss").add(i+1, 'h').format("H")}`;
+            }
+            cronjobSchedule += ' * * *';
+
+            //Sets the hourly cron-job
+            cron.schedule(cronjobSchedule, () => {
+                sameDayDeliveryQueue.forEach((orderId) => {
+                    initiateOrderRequestCycle(orderId);
+                });
+            }, {scheduled: true});
+
+            //The daily 'morning' cronjob for planned orders. Disabled in freelance mode.
+            if(!freelanceMode)
+                cron.schedule(`${formattedStartTime} * * *`, () => {
+
+                const today = moment().format("YYYY-MM-DD");
+
+                Order.findAll({
+                    where: {
+                        status: 'READY',
+                        courier_id: null,
+                        delivery_date: today
+                    }
+                }).then((orders) => {
+                        console.log(`Assigning all unassigned orders of ${today}`);
+
+                        if (!orders.length)
+                            return;
+
+                        //Checks if one or more of the orders are currently regarded
+                        //as 'same-day-deliveries' and then subsequently excludes those
+                        orders.forEach((order, index) => {
+                            if(sameDayDeliveryQueue.includes(order.getDataValue('id')))
+                                orders.splice(index, 1);
+                        });
+
+                        const shipments = convertOrdersToShipments(orders);
+
+                        //Takes the current day of the week and converts it to lowercase
+                        let dayOfTheWeek = moment().format('dddd').toLowerCase();
+
+                            User.sequelize.query(`SELECT users.*, week_schedules.${dayOfTheWeek} FROM users INNER JOIN week_schedules ON users.work_schedule = week_schedules.id WHERE role = 'COURIER' AND week_schedules.${dayOfTheWeek} IS NOT NULL;`,
+                                {type: QueryTypes.SELECT, model: User, mapToModel: true})
+                            .then((users) => {
+                                const vehicles = convertUsersToVehicles(users);
+
+                                fetch('https://api.openrouteservice.org/optimization', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+                                        'Authorization': API_KEY,
+                                        'Content-Type': 'application/json; charset=utf-8'
+                                    },
+                                    body: '{"shipments": ' + JSON.stringify(shipments) + ',' + '"vehicles": ' + JSON.stringify(vehicles) + '}'
+                                }).then(response => response.json())
+                                    .then((data) => {
+                                        //Loop through every order of every route to assign the right orders to the right couriers
+                                        data.routes.forEach((route) => {
+                                            for (let i = 0; i < route.steps.length; i++) {
+                                                //To prevent updating the same order twice, we ignore steps of type 'start' and 'delivery'
+                                                if (route.steps[i].type === 'pickup')
+                                                    Order.update({status: 'TRANSIT', courier_id: route.vehicle},
+                                                        {where: {id: route.steps[i].id}}).then((rowsAffected) => {
+                                                        console.log(`Updated order ${route.steps[i].id}. ${rowsAffected} rows affected.`)
+                                                    }).catch((err) => {
+                                                        console.log(`Could not update order ${route.steps[i].id}. Error message: ${err}`)
+                                                    });
+                                            }
+                                        })
+                                    }).catch((err) => {
+                                    console.error(err);
+                                });
+                            }).catch((err) => {
+                            console.error(`Failed to retrieve couriers from database. Errormessage: ${err}`)
+                        })
+                    }).catch((err) => {
+                    console.error(`Failed to retrieve orders from database. Errormessage: ${err}`)
+                });
+            }, {
+                scheduled: true
+            });
     });
-}, {scheduled: true});
+});
 
 //Event handler that is triggered when a new same-day-delivery has been
 //requested for an order.
@@ -318,12 +383,17 @@ router.put('/submitSpontaneousDeliveryResponse', (req, res) => {
             .catch((err) => console.error(`Could not send notification: ${err}`));
     }
     res.status(200).json();
-})
+});
 
 router.get('/:longitude/:latitude', (req, res) => {
 
-    Order.findAll({where: {courier_id: req.user.id, delivery_date: getFormattedDate()}})
+    //Pak alle orders van vandaag die bij deze koerier horen
+    Order.findAll({where: {courier_id: req.user.id, delivery_date: moment().format("YYYY-MM-DD")},
+        include: {model: User, as: 'userCreated', required: true,
+            include: [{model: Company, as: 'company', required: true,
+                include: [{model: Location, as: 'location', required: true}]}]}})
         .then((orders) => {
+
             //TODO: The data directly below is largely hardcoded and has to be
             // replaced by various factors from the database. See
             // 'utils.js' for further explanation.
@@ -332,7 +402,8 @@ router.get('/:longitude/:latitude', (req, res) => {
             const userCoordinates = [Number(req.params.longitude), Number(req.params.latitude)];
 
             //TODO: Currently hardcoded as 8:30 to 18:00 both here and in utils.js. To
-            // be replaced with values from admin panel.
+            // be replaced with values from admin panel. Keep in mind whether its
+            // freelance mode or not.
             const beginWorkDay = 30600;
             const endWorkDay = 90000;
 
@@ -359,6 +430,7 @@ router.get('/:longitude/:latitude', (req, res) => {
                     '"vehicles": ' + JSON.stringify([vehicle]) + '}'
             }).then(response => response.json())
                 .then((data) => {
+
                     orders.forEach((order) => {
                         //converteer het gewicht van elke order naar de beste maat
                         let value = convert(order.weight).from("g").toBest();
@@ -369,33 +441,44 @@ router.get('/:longitude/:latitude', (req, res) => {
                     });
 
                     const checkpoints = [];
-                    if (data.routes)
+                    if (data.routes){
                         data.routes[0].steps.forEach((step) => {
                             orders.forEach((order) => {
-                                if (order.getDataValue('id') === step.id) {
-                                    if (step.type !== 'start') {
-                                        const isPickup = step.type === 'pickup';
-                                        checkpoints.push({
-                                            location: {
-                                                address:
-                                                    `${order.getDataValue(isPickup ? 'pickup_street' : 'street')} ${order
-                                                        .getDataValue(isPickup ? 'pickup_house_number' : 'house_number')}`,
-                                                city: order.getDataValue(isPickup ? 'pickup_city' : 'city'),
-                                                postal_code: order.getDataValue(isPickup ? 'pickup_postal_code' : 'postal_code'),
-                                                country: order.getDataValue(isPickup ? 'pickup_country' : 'country')
-                                            },
-                                            type: step.type,
-                                            order_id: step.id,
-                                            time: moment((step.arrival - 3600) * 1000).format("HH:mm:ss"),
-                                            hasCompleted: isPickup ?
-                                                ((order.getDataValue('status') === 'TRANSIT' ||
-                                                    (order.getDataValue('status') === 'DELIVERED'))) :
-                                                (order.getDataValue('status') === 'DELIVERED')
-                                        });
-                                    }
+                                if (order.getDataValue('id') === step.id && step.type !== 'start') {
+                                    const isPickup = step.type === 'pickup';
+
+                                    //If its a pickup, add a location object with the company location data. Otherwise,
+                                    //add a location object with the order/destination location data.
+
+                                    let rawPickUpLocation = order.getDataValue('userCreated').company.location;
+
+                                    let checkpointLocation = isPickup ? {
+                                        address: `${rawPickUpLocation.street} ${rawPickUpLocation.house_number}`,
+                                        city: rawPickUpLocation.city,
+                                        postal_code: rawPickUpLocation.postal_code,
+                                        country: rawPickUpLocation.country
+                                    } : {
+                                        address: `${order.getDataValue('street')} ${order.getDataValue('house_number')}`,
+                                        city: order.getDataValue('city'),
+                                        postal_code: order.getDataValue('postal_code'),
+                                        country: order.getDataValue('country')
+                                    };
+
+                                    checkpoints.push({
+                                        location: checkpointLocation,
+                                        type: step.type,
+                                        order_id: step.id,
+                                        time: moment((step.arrival - 3600) * 1000).format("HH:mm:ss"),
+                                        hasCompleted: isPickup ?
+                                            ((order.getDataValue('status') === 'TRANSIT' ||
+                                                (order.getDataValue('status') === 'DELIVERED'))) :
+                                            (order.getDataValue('status') === 'DELIVERED')
+                                    });
                                 }
                             });
                         });
+                    }
+
                     res.status(200).json({
                         checkpoints,
                         user: req.user,

@@ -15,6 +15,11 @@
             <%}%>
         </div>
 
+        <div id="subscribeButtonContainer" class="flex mt-8 mb-4 flex-col items-center sm:items-start hidden border border-black">
+            <h2 class="text-center border border-black mb-0">You are currently offline. Turn on notifications to receive order requests.</h2>
+            <button id="subscribeButton" class="border border-black mt-0"><a class="text-blue-500" style="color: blue; text-decoration: underline;">Turn on notifications</a></button>
+        </div>
+
         <%if(orders.length > 0){ %>
         <div id="button-container" class="flex flex-wrap mt-8 mb-4 items-center flex-col sm:justify-start sm:flex-row hidden">
             <a>

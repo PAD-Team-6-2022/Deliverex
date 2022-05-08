@@ -74,8 +74,6 @@ document.getElementById("submitButton").addEventListener("click", async (event) 
 
 });
 
-
-
 postalCodeInput.addEventListener("keyup", delay((e) => {
     const postal_code_regex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
     postalCodeInput.classList.remove(
@@ -124,7 +122,7 @@ addressInput.addEventListener("keyup", delay((e) => {
                             cityInput.value = address.properties.locality;
                             countryInput.value = address.properties.country;
                             table.innerHTML = "";
-                            coordinates = {lat: address.geometry.coordinates[0], long: address.geometry.coordinates[1]};
+                            coordinates = {long: address.geometry.coordinates[1], lat: address.geometry.coordinates[0]};
                         });
                         let newAddress = document.createElement("td");
                         newAddress.innerHTML = address.properties.label;

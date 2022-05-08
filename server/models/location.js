@@ -10,7 +10,11 @@ const Location = sequelize.define(
             autoIncrement: true,
             primaryKey: true,
         },
-        streethouse_number: {
+        street: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        house_number: {
             type: DataTypes.STRING,
             allowNull: false,
         },
@@ -26,6 +30,9 @@ const Location = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        coordinates: {
+            type: DataTypes.GEOMETRY('POINT')
+        }
     },
     {
         underscored: true,
