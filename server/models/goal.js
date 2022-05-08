@@ -18,7 +18,7 @@ const Goal = sequelize.define(
             allowNull: false,
         },
         amount: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL(10,2),
             allowNull: false,
         },
         suggested_by: {
