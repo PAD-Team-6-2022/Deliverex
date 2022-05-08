@@ -37,21 +37,23 @@ document.querySelectorAll("[data-order-code]").forEach((order) => {
   });
 });
 const ctx = document.getElementById('myChart').getContext('2d');
+const ordersAmount= document.getElementById("ordersAmount").innerText
+const deliveredAmount= document.getElementById("deliveredAmount").innerText
 const myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050],
+        labels: ["Dag 1", "Dag 2", "Dag 3"],
         datasets: [
             {
 
                 label: 'Dataset 1',
-                data: [86,114,106,106,107,111,133,221,783,2478],
+                data: [ordersAmount, ordersAmount],
                 borderColor: '#4dc9f6',
                 backgroundColor: '#f67019',
             },
             {
                 label: 'Dataset 2',
-                data: [86,114,106,106,107,111,133,221,783,2478],
+                data: [deliveredAmount, deliveredAmount],
                 borderColor: '#4dc9f6',
                 backgroundColor: '#f67019',
             }

@@ -80,7 +80,11 @@ const Order = sequelize.define(
     courier_id: {
         type: DataTypes.INTEGER,
         allowNull: true
-    }
+    },
+    price: {
+        type: DataTypes.DECIMAL(10,2),
+        allowNull: false
+    },
   },
   {
     underscored: true,

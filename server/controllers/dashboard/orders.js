@@ -66,6 +66,9 @@ router.get("/:id", auth(true), async (req, res) => {
   const convertedWeight = convert(order.weight).from("g").toBest();
   order.weight = `${Math.round(convertedWeight.val)} ${convertedWeight.unit}`;
 
+  // convert price int to euro
+  order.price = new Intl.NumberFormat('en-EN', { style: 'currency', currency: 'EUR' }).format(order.price);
+
   res.render("dashboard/orders/detail", {
     title: `Order #${id} - Dashboard`,
     id,

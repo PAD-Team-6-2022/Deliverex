@@ -1,7 +1,5 @@
 const router = require("express").Router();
-const { Order, Format, User, Location, Company } = require("../../models");
-const Organisation = require("../../models/organisation")
-const WeekSchedule = require("../../models/week_schedule");
+const { Order, Format, User, Location, Company, Goal, Donation, Organisation, WeekSchedule } = require("../../models");
 const auth = require("../../middleware/auth");
 const moment = require("moment");
 const fetch = require("node-fetch");
@@ -78,6 +76,30 @@ router.post("/", (req, res) => {
         });
     }
 
+    /**
+     * donate the set comapany percentage of the order price to the current goal
+     * 
+     * @param {Object} order donation of the order
+     */
+    const donateMoney = async (order) => {
+        // Get the current goal(the goal that's being collected for)
+        const currentGoal = await Goal.findOne({
+            where: {
+              status: "CURRENT"
+            }
+        });
+
+        // TODO Get order -> user -> company to get the percentage
+        const PLACE_HOLDER_COMPANY_ID = 1;
+        const company = await Company.findByPk(PLACE_HOLDER_COMPANY_ID);
+        
+        await Donation.create({
+            amount: parseFloat((order.price / 100 * company.percentageToGoal).toFixed(2)),
+            goalId: currentGoal.id,
+            orderId: order.id,
+        });
+    }
+
     let pickup_status = req.body.is_pickup != null;
 
     //TODO: Remove this hard-coded deliveryDate with one sent by the front-end
@@ -96,6 +118,7 @@ router.post("/", (req, res) => {
     format_id: req.body.format_id,
     is_pickup: pickup_status,
     updated_at: Date.now(),
+    price: req.body.price,
     created_by: req.user.id,
     coordinates: { type: 'Point', coordinates: Object.values(JSON.parse(req.body.coordinates)).reverse()},
     delivery_date: req.body.deliveryDate
@@ -129,6 +152,8 @@ router.post("/", (req, res) => {
                 }
         });
 
+        await donateMoney(order);
+
       sendEmail(order.id);
       res.status(200).json({
         order,
@@ -141,24 +166,45 @@ router.post("/", (req, res) => {
     });
 });
 
-router.post("/edit", (req, res) => {
+router.post("/edit", async (req, res) => {
+    const updateDonation = async(orderId, orderPrice) => {
+        // TODO Get order -> user -> company to get the percentage
+        const PLACE_HOLDER_COMPANY_ID = 1;
+        const company = await Company.findByPk(PLACE_HOLDER_COMPANY_ID);
+
+        const donation = Donation.update(
+            {
+                amount: parseFloat((orderPrice / 100 * company.percentageToGoal).toFixed(2)),
+            },
+            {
+                where: {
+                    orderId,
+                }
+            }
+        )
+
+        return donation;
+    }
+
     let pickup_status = req.body.is_pickup != null;
 
   Order.update({
-    weight: req.body.weight,
-    email: req.body.email,
-    street: req.body.street,
-    house_number: req.body.house_number,
-    postal_code: req.body.postal_code,
-    city: req.body.city,
-    formatId: req.body.format_id,
-    status: req.body.status,
-    is_pickup: pickup_status,
-    updated_at: Date.now()
-    // coordinates: req.body.coordinates
+        weight: req.body.weight,
+        email: req.body.email,
+        street: req.body.street,
+        house_number: req.body.house_number,
+        postal_code: req.body.postal_code,
+        city: req.body.city,
+        formatId: req.body.format_id,
+        status: req.body.status,
+        is_pickup: pickup_status,
+        updated_at: Date.now(),
+        price: req.body.price,
+        // coordinates: req.body.coordinates
     },
     { where: { id: req.body.id } })
-    .then((affectedRows) => {
+    .then( async (affectedRows) => {
+        await updateDonation(req.body.id, req.body.price);
       res.status(200).json({
         message: `${affectedRows} rows updated`
       });
