@@ -1,12 +1,13 @@
 const router = require("express").Router();
-const { Order, Format, User, Location, Company, Goal, Donation, Organisation, WeekSchedule } = require("../../models");
+const { Order, Format, User, Location, Company, Goal, Donation } = require("../../models");
+const Organisation = require("../../models/organisation");
+const WeekSchedule = require("../../models/week_schedule");
 const auth = require("../../middleware/auth");
 const moment = require("moment");
 const fetch = require("node-fetch");
 const ejs = require("ejs");
 const path = require('path')
 const {addOrderToDeliveryQueue}  = require("../../util");
-const {DataTypes} = require("sequelize");
 
 router.delete("/:id", (req, res) => {
     Order.destroy({where: {id: req.params.id}})
@@ -123,7 +124,7 @@ router.post("/", (req, res) => {
     coordinates: { type: 'Point', coordinates: Object.values(JSON.parse(req.body.coordinates)).reverse()},
     delivery_date: req.body.deliveryDate
   })
-    .then((order) => {
+    .then(async (order) => {
 
         console.log(req.user.id);
 
