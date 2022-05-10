@@ -64,10 +64,13 @@ Html5Qrcode.getCameras().then((cameras) => {
                         const orderInfoContainer = document.querySelector("#order-info");
 
                         //Show the loaded order data to the user in the UI
+
+
+
                         orderInfoContainer.querySelector("#order-id-container")
                             .textContent = order.order.id || '[Unavailable]';
                         orderInfoContainer.querySelector("#order-format-container")
-                            .textContent = order.order.format || '[Unavailable]';
+                            .textContent = order.order.formatId || '[Unavailable]';
                         orderInfoContainer.querySelector("#order-weight-container")
                             .textContent = `${order.order.weight} grams` || '[Unavailable]';
                         orderInfoContainer.querySelector("#order-address-container")

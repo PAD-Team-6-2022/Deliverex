@@ -26,7 +26,7 @@ router.get(
         const orders =
             req.user.role === "COURIER"
                 ? await Order.findAll({
-                    where: {courier_id: req.user.getDataValue("id")},
+                    where: {courier_id: req.user.getDataValue("id"), delivery_date: moment().format("YYYY-MM-DD")},
                 })
                 : await Order.findAll({
                     offset: req.offset,

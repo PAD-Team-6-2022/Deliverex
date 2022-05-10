@@ -11,6 +11,7 @@ const addressInput = document.getElementById("address");
 const countryInput = document.getElementById("country");
 const weightInput = document.getElementById("weight");
 const sizeFormatInput = document.getElementById("sizeFormat");
+const priceInput = document.getElementById("price");
 const pickupInput = document.getElementById("is_pickup");
 
 let coordinates = [];
@@ -44,6 +45,7 @@ document.getElementById("submitButton").addEventListener("click", async (event) 
             country: countryInput.value,
             format_id: sizeFormatInput.value,
             is_pickup: pickupInput.value,
+            price: priceInput.value,
             coordinates : JSON.stringify(coordinates)
         }
 
@@ -73,8 +75,6 @@ document.getElementById("submitButton").addEventListener("click", async (event) 
     }
 
 });
-
-
 
 postalCodeInput.addEventListener("keyup", delay((e) => {
     const postal_code_regex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
@@ -124,7 +124,7 @@ addressInput.addEventListener("keyup", delay((e) => {
                             cityInput.value = address.properties.locality;
                             countryInput.value = address.properties.country;
                             table.innerHTML = "";
-                            coordinates = {lat: address.geometry.coordinates[0], long: address.geometry.coordinates[1]};
+                            coordinates = {long: address.geometry.coordinates[1], lat: address.geometry.coordinates[0]};
                         });
                         let newAddress = document.createElement("td");
                         newAddress.innerHTML = address.properties.label;

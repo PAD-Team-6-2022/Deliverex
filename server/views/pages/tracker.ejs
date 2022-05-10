@@ -1,10 +1,16 @@
+<%
+    const donationPrice = new Intl.NumberFormat('en-EN', {
+            style: 'currency',
+            currency: 'EUR',
+        }).format((order.donation !== null) ? order.donation.amount : 0);
+%> 
 <!DOCTYPE html>
 <html lang="en" class="bg-slate-50">    
   <head>
-    <%- include("../partials/head") %>
+      <%- include("../partials/head") %>
   </head>
   <body>
-    <div class="max-w-7xl mx-auto px-4 mt-16">
+    <div class="max-w-7xl mx-auto px-4 mt-16" data-order="<%= order.id %>">
         <h1 class="text-4xl font-bold text-slate-800 mb-4">Order #<%= order.id %> </h1>
         <div class="flex flex-col bg-white rounded-md border border-slate-200 mb-16 overflow-hidden p-8">
             <div class="mx-auto">
@@ -85,9 +91,9 @@
 
             <hr class="my-6">
 
-            <div class="flex flex-col md:flex-row">
+            <h3 class="font-medium text-2xl mb-6 w-full">Information</h3>
+                <div class="flex flex-col sm:flex-row">
                 <div class="flex-1 mr-3 flex flex-wrap max-h-fit">
-                    <h3 class="font-medium text-2xl mb-6 w-full">Information</h3>
                     <div class="mb-4 pr-0 lg:pr-3 w-full lg:w-1/2">
                         <span class="flex items-center font-semibold text-slate-600">
                             <svg class="mr-2 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="-5 -2 24 24" width="24" fill="currentColor"><path d="M12 7A5 5 0 1 0 2 7c0 1.726 1.66 5.031 5 9.653 3.34-4.622 5-7.927 5-9.653zM7 20C2.333 13.91 0 9.577 0 7a7 7 0 1 1 14 0c0 2.577-2.333 6.91-7 13zm0-9a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"></path></svg>
@@ -126,9 +132,42 @@
                         </span>
                         <p class="text-slate-500 ml-8"><%= order.created_at.toISOString().split("T")[0] %></p>
                     </div>
+                    <div class="mb-4 pr-0 lg:pr-3 w-full lg:w-1/2">
+                        <span class="flex items-center font-semibold text-slate-600">
+                            <svg class="mr-2 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" fill="currentColor"><path d="M9 13v-2a3 3 0 1 1 0-6V4a1 1 0 1 1 2 0v1h.022A2.978 2.978 0 0 1 14 7.978a1 1 0 0 1-2 0A.978.978 0 0 0 11.022 7H11v2a3 3 0 0 1 0 6v1a1 1 0 0 1-2 0v-1h-.051A2.949 2.949 0 0 1 6 12.051a1 1 0 1 1 2 0 .95.95 0 0 0 .949.949H9zm2 0a1 1 0 0 0 0-2v2zM9 7a1 1 0 1 0 0 2V7zm1 13C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"></path></svg>
+                            Price
+                        </span>
+                        <p class="text-slate-500 ml-8"><%= order.price %></p>
+                    </div>
                 </div>
-                <div class="flex-1 l ml-0 md:ml-3 bg-slate-100 rounded-md animate-pulse min-h-[20rem]"></div>
+                <div class="flex-1 ml-0 md:ml-3 text-slate-600">
+                    <% if (currentGoal) { %>
+                        <h2 class="text-gray-800 font-bold text-4xl mb-2"><%= donationPrice %> 🎉</h2>
+                        <p>
+                            Thank you! A small part of your order will be used to fund the community chosen goal.
+                            <br><br>
+                            <span class="flex">
+                                <p class="inline">Read more about it below</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="inline" viewBox="-5 -4.5 24 24" width="24" fill="currentColor"><path d="M8 11.243l3.95-3.95a1 1 0 1 1 1.414 1.414l-5.657 5.657a.997.997 0 0 1-1.414 0L.636 8.707A1 1 0 1 1 2.05 7.293L6 11.243V1.657a1 1 0 1 1 2 0v9.586z"></path></svg>
+                            </span>
+                        </p>
+                    <% } else { %>
+                        <h2 class="text-gray-800 font-bold text-4xl mb-2">Suggest a goal</h2>
+                        <p>
+                            Know of a way to help out the community? 
+                            <br><br>
+                            <span class="flex">
+                                <p class="inline">Write your suggestion down below!</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="inline" viewBox="-5 -4.5 24 24" width="24" fill="currentColor"><path d="M8 11.243l3.95-3.95a1 1 0 1 1 1.414 1.414l-5.657 5.657a.997.997 0 0 1-1.414 0L.636 8.707A1 1 0 1 1 2.05 7.293L6 11.243V1.657a1 1 0 1 1 2 0v9.586z"></path></svg>
+                            </span>
+                        </p>
+                    <% } %>
+                </div>
             </div>
+
+            <hr class="my-6">
+
+            <%- include("../partials/voting", { allowVoting: true, collected: 80.00, currentGoal, activeGoals }) %>
         </div>
     </div>
   </body>

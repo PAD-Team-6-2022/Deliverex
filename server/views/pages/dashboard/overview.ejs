@@ -28,13 +28,20 @@
     </div>
     <div class="space-y-3">
         <h2 class="font-medium text-2xl text-slate-800">Statistics</h2>
+        <div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+            <canvas id="myChart" class="w-full max-h-200"></canvas>
+        </div>
+
+
+
         <div class="flex gap-3 flex-col sm:flex-row">
             <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
-                <h1 class="font-bold text-4xl text-slate-800"><%= ordersAmount %></h1>
+                <h1 id="ordersAmount" class="font-bold text-4xl text-slate-800"><%= ordersAmount %></h1>
                 <p class="font-medium text-slate-500 text-xl mt-2">Orders</p>
             </div>
             <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
-                <h1 class="font-bold text-4xl text-slate-800"><%= deliverdAmount %></h1>
+                <h1 id="deliveredAmount" class="font-bold text-4xl text-slate-800"><%= deliverdAmount %></h1>
                 <p class="font-medium text-slate-500 text-xl mt-2">Delivered</p>
             </div>
             <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">

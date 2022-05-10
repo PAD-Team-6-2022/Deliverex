@@ -36,3 +36,41 @@ document.querySelectorAll("[data-order-code]").forEach((order) => {
     window.location.href = `/dashboard/orders/${id}`;
   });
 });
+const ctx = document.getElementById('myChart').getContext('2d');
+const ordersAmount= document.getElementById("ordersAmount").innerText
+const deliveredAmount= document.getElementById("deliveredAmount").innerText
+const myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ["Dag 1", "Dag 2", "Dag 3"],
+        datasets: [
+            {
+
+                label: 'Dataset 1',
+                data: [ordersAmount, ordersAmount],
+                borderColor: '#4dc9f6',
+                backgroundColor: '#f67019',
+            },
+            {
+                label: 'Dataset 2',
+                data: [deliveredAmount, deliveredAmount],
+                borderColor: '#4dc9f6',
+                backgroundColor: '#f67019',
+            }
+        ],
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Chart.js Line Chart'
+                }
+            }
+        },
+    }
+
+
+});

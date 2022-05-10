@@ -1,4 +1,6 @@
 const { Op } = require("sequelize");
+const EventEmitter = require('events');
+const moment = require("moment");
 
 const searchQueryToWhereClause = (query, fields) => {
   return {
@@ -30,7 +32,7 @@ const convertOrdersToShipments = (orders) => {
 
     const id = order.getDataValue("id");
 
-    const pickUpCoordinates = order.getDataValue('pickup_coordinates').coordinates;
+    const pickUpCoordinates = order.getDataValue('userCreated').company.location.coordinates.coordinates;
     const deliveryCoordinates = order.getDataValue("coordinates").coordinates;
 
     shipments.push({
@@ -74,7 +76,17 @@ const convertUsersToVehicles = (users) => {
     const USER_START_COORDINATES = [4.9377803248666865, 52.39922180769369];
 
     const id = user.getDataValue("id");
-    const working_hours = [20600, 62000]
+
+    const rawWorkingHours = user.getDataValue('todaySchedule');
+
+    const getTimestampInSeconds = (timestamp) => {
+        return moment(timestamp, "HH:mm:ss").diff(moment().startOf('day'), 's');
+    }
+
+    //Convert the working hour timestamps from 'HH:mm:ss' format to seconds since
+    //the day started. This is the format required by ORS.
+    const startingTime = getTimestampInSeconds(rawWorkingHours.start);
+    const endingTime = getTimestampInSeconds(rawWorkingHours.end);
 
     vehicles.push({
       id,
@@ -82,10 +94,25 @@ const convertUsersToVehicles = (users) => {
       start: USER_START_COORDINATES,
       capacity: [4],
       skills: [1],
-      time_window: working_hours
+      time_window: [startingTime, endingTime]
     });
   });
   return vehicles;
 }
 
-module.exports = { searchQueryToWhereClause, convertOrdersToShipments, convertUsersToVehicles};
+const sameDayDeliveryEvent = new EventEmitter();
+
+const addOrderToDeliveryQueue = (id) => {
+  sameDayDeliveryEvent.emit('sameDayDelivery', id);
+}
+const onSameDayDelivery = (handlerCallBack) => {
+  sameDayDeliveryEvent.on('sameDayDelivery', handlerCallBack);
+}
+
+module.exports = {
+  searchQueryToWhereClause,
+  convertOrdersToShipments,
+  convertUsersToVehicles,
+  addOrderToDeliveryQueue,
+  onSameDayDelivery
+};

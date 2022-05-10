@@ -37,26 +37,6 @@
                 </div>
 
                 <div class="flex flex-col mb-4 mx-2">
-                  <label
-                    class="mb-2 font-bold text-sm text-slate-900"
-                    for="country"
-                    >Country/Origin</label
-                  >
-                  <input
-                    class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                    type="text"
-                    name="country"
-                    id="country"
-                    value="<%= order.country %>"
-                  />
-                  <p
-                  class="text-red-500 text-sm"
-                  id="country_p"
-                  ></p
-                  >
-                </div>
-
-                <div class="flex flex-col mb-4 mx-2">
                   <label class="mb-2 font-bold text-sm text-slate-900" for="country"
                     >Address</label
                   >
@@ -80,6 +60,26 @@
                     <tbody id="addresses">
                     </tbody>
                   </table>
+                </div>
+
+                <div class="flex flex-col mb-4 mx-2">
+                  <label
+                    class="mb-2 font-bold text-sm text-slate-900"
+                    for="country"
+                    >Country/Origin</label
+                  >
+                  <input
+                    class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                    type="text"
+                    name="country"
+                    id="country"
+                    value="<%= order.country %>"
+                  />
+                  <p
+                  class="text-red-500 text-sm"
+                  id="country_p"
+                  ></p
+                  >
                 </div>
 
                 <div class="flex flex-row flex-wrap justify-between grow">
@@ -164,22 +164,40 @@
                   </div>
                 </div>
 
-                <div class="flex flex-col mb-4 mx-2">
-                  <label class="mb-2 font-bold text-sm text-slate-900" for="weight"
-                    >Weight in grams</label
-                  >
-                  <input
-                    class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                    type="number"
-                    name="weight"
-                    id="weight"
+                <div class="flex flex-row flex-wrap justify-between grow">
+                  <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
+                    <label class="mb-2 font-bold text-sm text-slate-900" for="weight">Weight in grams</label>
+                    <input
+                      class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                      type="number"
+                      name="weight"
+                      id="weight"
                       value="<%= order.weight %>"
-                  />
-                  <p
+                    />
+                      <p
                     class="text-red-500 text-sm"
                     id="weight_p"
                     ></p
                     >
+                  </div>
+                  <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
+                    <label
+                      class="mb-2 font-bold text-sm text-slate-900"
+                      for="price"
+                      >Price</label
+                    >
+                    <div class="flex">
+                      <span class="inline-flex items-center px-3 text-sm text-slate-900 bg-slate-100 border border-r-0 border-slate-300 rounded-l-md">
+                          €
+                      </span>
+                      <input type="number" name="price" id="price" class="rounded-none rounded-r-lg bg-slate-50 border border-slate-300 text-slate-900 focus:ring-cyan-500 focus:border-cyan-500 block flex-1 min-w-0 w-full text-sm p-2.5" placeholder="20.00" value="<%= order.price %>" required>
+                    </div>
+                    <p
+                    class="text-red-500 text-sm"
+                    id="price_p"
+                    ></p
+                    >
+                  </div>
                 </div>
 
                 <div class="flex flex-col mx-2 mb-4">

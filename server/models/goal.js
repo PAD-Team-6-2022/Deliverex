@@ -1,37 +1,37 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/connection");
 
-
-const Location = sequelize.define(
-    "location",
+const Goal = sequelize.define(
+    "goal",
     {
-        location_id: {
+        id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
         },
-        street: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        house_number: {
+        title: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        postal_code: {
+        description: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        city: {
-            type: DataTypes.STRING,
+        amount: {
+            type: DataTypes.DECIMAL(10,2),
             allowNull: false,
         },
-        country: {
+        suggested_by: {
             type: DataTypes.STRING,
             allowNull: false,
-        },
-        coordinates: {
-            type: DataTypes.GEOMETRY('POINT')
+            validate: {
+              isEmail: true,
+            },
+          },
+        status: {
+            type: DataTypes.ENUM,
+            values: ["COMPLETED", "CURRENT", "ACTIVE", "INACTIVE", "SUGGESTION"],
+            allowNull: false,
         }
     },
     {
@@ -39,4 +39,4 @@ const Location = sequelize.define(
     }
 );
 
-module.exports = Location;
+module.exports = Goal;
