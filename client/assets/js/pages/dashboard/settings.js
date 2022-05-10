@@ -1,4 +1,5 @@
 import {openModal} from "../../modal.js";
+import {User} from "../../../../../server/models";
 // get all form inputs
 const formatInputs = document
     .querySelector("#formatForm")
@@ -15,7 +16,7 @@ document.getElementById("saveGoal").addEventListener("click", async (event) => {
     };
     console.log(values)
     const id = 1
-    await fetch(`/api/orders/editDoelPercentage/${id}`, {
+    await fetch(`/api/orders/editDoelPercentage`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -32,7 +33,7 @@ document.getElementById("saveGoal").addEventListener("click", async (event) => {
 
 })
 
-document.getElementById("saveAccount").addEventListener("click", async (event) => {
+document.getElementById("saveAccount").addEventListener("click", async(req, res)  => {
     event.preventDefault();
 
     const values = {
@@ -43,7 +44,8 @@ document.getElementById("saveAccount").addEventListener("click", async (event) =
         acountConfirmNewPassword: document.getElementById("acount-confirm-new-password").value
     };
     console.log(values)
-    const id = 1
+    const id = req.user.id
+    console.log(id + "weeee")
     await fetch(`/api/orders/editAccount/${id}`, {
         method: "PUT",
         headers: {

@@ -15,10 +15,10 @@ const moment = require('moment');
 const fetch = require('node-fetch');
 const ejs = require('ejs');
 const path = require('path');
-const { addOrderToDeliveryQueue } = require('../../util');
+const {addOrderToDeliveryQueue} = require('../../util');
 
 router.delete('/:id', (req, res) => {
-    Order.destroy({ where: { id: req.params.id } })
+    Order.destroy({where: {id: req.params.id}})
         .then(() => {
             res.status(200).json({
                 message: 'Successfully deleted order',
@@ -32,7 +32,7 @@ router.delete('/:id', (req, res) => {
 });
 
 router.delete('/settings/:id', (req, res) => {
-    Format.destroy({ where: { id: req.params.id } })
+    Format.destroy({where: {id: req.params.id}})
         .then(() => {
             res.status(200).json({
                 message: 'Successfully deleted format',
@@ -263,7 +263,7 @@ router.post('/edit', async (req, res) => {
             price: req.body.price,
             // coordinates: req.body.coordinates
         },
-        { where: { id: req.body.id } },
+        {where: {id: req.body.id}},
     )
         .then(async (affectedRows) => {
             await updateDonation(req.body.id, req.body.price);
@@ -285,7 +285,7 @@ router.put('/editFormat/:id', (req, res) => {
             width: req.body.width,
             nameformat: req.body.nameformat,
         },
-        { where: { id: req.params.id } },
+        {where: {id: req.params.id}},
     )
         .then((affectedRows) => {
             res.status(200).json({
@@ -323,7 +323,7 @@ router.put('/editAccount/:id', (req, res) => {
             username: req.body.username,
             email: req.body.email,
         },
-        { where: { id: req.params.id } },
+        {where: {id: req.params.id}},
     )
         .then((affectedRows) => {
             res.status(200).json({
@@ -335,14 +335,17 @@ router.put('/editAccount/:id', (req, res) => {
         });
 });
 
-router.put('/editDoelPercentage/:id', (req, res) => {
+router.put('/editDoelPercentage', auth(true), (req, res) => {
+    console.log(req.user.id)
     Company.update(
         {
             percentageToGoal: req.body.percentage,
         },
-        { where: { id: req.params.id } },
+        {where: {id: req.user.id}},
+
     )
         .then((affectedRows) => {
+            console.log(req.user.id)
             res.status(200).json({
                 message: `${affectedRows} rows updated`,
             });
@@ -358,7 +361,7 @@ router.put('/editStore/:id', (req, res) => {
             name: req.body.name,
             email: req.body.email,
         },
-        { where: { id: req.params.id } },
+        {where: {id: req.params.id}},
     )
         .then((affectedRows) => {
             res.status(200).json({
@@ -376,7 +379,7 @@ router.put('/editStore/:id', (req, res) => {
             city: req.body.city,
             country: req.body.country,
         },
-        { where: { location_id: req.params.id } },
+        {where: {location_id: req.params.id}},
     );
 });
 
@@ -385,7 +388,7 @@ router.get('/deliveryDates', (req, res) => {
         const freelanceMode = organisation.getDataValue('freelanceMode');
 
         WeekSchedule.findOne({
-            where: { id: organisation.getDataValue('operating_schedule_id') },
+            where: {id: organisation.getDataValue('operating_schedule_id')},
         }).then((organisationSchedule) => {
             const currentDay = moment().format('dddd').toLowerCase();
             const todaySchedule = organisationSchedule.getDataValue(currentDay);
@@ -433,7 +436,7 @@ router.get('/deliveryDates', (req, res) => {
                         }
                     }
                 }
-                res.status(200).json({ schedulable: false, deliveryMessage });
+                res.status(200).json({schedulable: false, deliveryMessage});
             } else {
                 //Note: if the current day is marked 'true' in 'availabledays', it does not
                 //mean the same as a same day delivery being possible. You have to specifically
@@ -442,7 +445,7 @@ router.get('/deliveryDates', (req, res) => {
                     sameDayDelivery: sameDayDeliverable,
                     availableDays,
                 };
-                res.status(200).json({ schedulable: true, schedulingData });
+                res.status(200).json({schedulable: true, schedulingData});
             }
         });
     });
@@ -454,7 +457,7 @@ router.get('/deliveryDates', (req, res) => {
  * this order is being scanned by the right courier for safety sake.
  */
 router.get('/:id/scan', auth(true), async (req, res) => {
-    const { id } = req.params;
+    const {id} = req.params;
 
     await Order.findByPk(id)
         .then((order) => {
@@ -484,7 +487,7 @@ router.put('/:id/scan', auth(true), (req, res) => {
             else if (order.status === 'READY') newStatus = 'TRANSIT';
             else if (order.status === 'TRANSIT') newStatus = 'DELIVERED';
 
-            Order.update({ status: newStatus }, { where: { id: req.body.id } })
+            Order.update({status: newStatus}, {where: {id: req.body.id}})
                 .then((data) => {
                     res.sendStatus(200);
                 })
@@ -508,8 +511,8 @@ router.put('/:id/scan', auth(true), (req, res) => {
  */
 router.post('/:id/scan', async (req, res) => {
     Order.update(
-        { status: 'DELIVERED' },
-        { where: { id: req.body.selectedOrder } },
+        {status: 'DELIVERED'},
+        {where: {id: req.body.selectedOrder}},
     )
         .then(() => {
             res.redirect('/dashboard/overview');

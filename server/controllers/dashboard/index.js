@@ -110,8 +110,8 @@ router.get("/signout", auth(true), (req, res) => {
 router.get("/settings", async (req, res) => {
     const formats = await Format.findAll();
     const user = await User.findByPk(req.user.id);
-    const company = await Company.findByPk(1)
-    const location = await Location.findByPk(1)
+    const company = await Company.findByPk(req.user.companyId)
+    const location = await Location.findByPk(company.location_id)
 
     res.render("dashboard/settings", {
         title: "Package sizes",
