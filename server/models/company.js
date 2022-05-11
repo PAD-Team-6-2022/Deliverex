@@ -21,7 +21,7 @@ const Company = sequelize.define(
             },
         },
         location_id: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         logo: {

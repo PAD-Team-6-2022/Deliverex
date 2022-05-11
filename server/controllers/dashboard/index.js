@@ -27,7 +27,7 @@ router.get(
         const orders =
             req.user.role === "COURIER"
                 ? await Order.findAll({
-                    where: {courier_id: req.user.getDataValue("id")},
+                    where: {courier_id: req.user.getDataValue("id"), delivery_date: moment().format("YYYY-MM-DD")},
                 })
                 : await Order.findAll({
                     offset: req.offset,
@@ -109,7 +109,7 @@ router.get("/signout", auth(true), (req, res) => {
  */
 router.get("/settings", async (req, res) => {
     const formats = await Format.findAll();
-    const user = await User.findByPk(1);
+    const user = await User.findByPk(req.user.id);
     const company = await Company.findByPk(1)
     const location = await Location.findByPk(1)
 

@@ -11,6 +11,7 @@ const addressInput = document.getElementById("address");
 const countryInput = document.getElementById("country");
 const weightInput = document.getElementById("weight");
 const sizeFormatInput = document.getElementById("sizeFormat");
+const priceInput = document.getElementById("price");
 const pickupInput = document.getElementById("is_pickup");
 
 let coordinates = [];
@@ -33,48 +34,72 @@ document.getElementById("submitButton").addEventListener("click", async (event) 
         }
     });
 
-    if(wrongInputs.length === 0) {
-        const values = {
-            email: emailInput.value,
-            weight: weightInput.value,
-            street: streetInput.value,
-            house_number: houseNumberInput.value,
-            postal_code: postalCodeInput.value,
-            city: cityInput.value,
-            country: countryInput.value,
-            format_id: sizeFormatInput.value,
-            is_pickup: pickupInput.value,
-            coordinates : JSON.stringify(coordinates)
-        }
-
-        await fetch(`/api/orders/`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        }).then((response) => {
-            if(response.status === 200) {
-                window.location.href = `/dashboard/overview`;
-            }
-        }).catch((error) => {
-            console.error(`Fetch error: could not fulfill post request
-             to create order. Errormessage: ${error}`);
-        });
-
+    // check if format is selected
+    if (sizeFormatInput.value === "") {
+        sizeFormatInput.classList.add(
+            "bg-red-50",
+            "border-red-500");
+            wrongInputs.push(sizeFormatInput);
     } else {
-        wrongInputs.forEach((input) => {
-           input.classList.add(
-               "bg-red-50",
-               "border-red-500"
-           );
-           document.getElementById(`${input.id}_p`).innerHTML = "This field can't be empty!";
-        });
+        sizeFormatInput.classList.remove(
+            "bg-red-50",
+            "border-red-500");
     }
+    
+    // if(wrongInputs.length === 0) {
+    //     const values = {
+    //         email: emailInput.value,
+    //         weight: weightInput.value,
+    //         street: streetInput.value,
+    //         house_number: houseNumberInput.value,
+    //         postal_code: postalCodeInput.value,
+    //         city: cityInput.value,
+    //         country: countryInput.value,
+    //         format_id: sizeFormatInput.value,
+    //         is_pickup: pickupInput.checked,
+    //         price: priceInput.value,
+    //         coordinates : JSON.stringify(coordinates)
+    //     }
 
+    //     await fetch(`/api/orders/`, {
+    //         method: "POST",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify(values),
+    //     }).then((response) => {
+    //         if(response.status === 200) {
+    //             window.location.href = `/dashboard/overview`;
+    //         }
+    //     }).catch((error) => {
+    //         console.error(`Fetch error: could not fulfill post request
+    //          to create order. Errormessage: ${error}`);
+    //     });
+
+    // } else {
+    //     wrongInputs.forEach((input) => {
+    //        input.classList.add(
+    //            "bg-red-50",
+    //            "border-red-500"
+    //        );
+    //        document.getElementById(`${input.id}_p`).innerHTML = "This field can't be empty!";
+    //     });
+    // }
 });
 
-
+sizeFormatInput.addEventListener("change", () => {
+    // check if format is selected
+    if (sizeFormatInput.value === "") {
+        sizeFormatInput.classList.add(
+            "bg-red-50",
+            "border-red-500");
+            wrongInputs.push(sizeFormatInput);
+    } else {
+        sizeFormatInput.classList.remove(
+            "bg-red-50",
+            "border-red-500");
+    }
+});
 
 postalCodeInput.addEventListener("keyup", delay((e) => {
     const postal_code_regex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
@@ -124,7 +149,7 @@ addressInput.addEventListener("keyup", delay((e) => {
                             cityInput.value = address.properties.locality;
                             countryInput.value = address.properties.country;
                             table.innerHTML = "";
-                            coordinates = {lat: address.geometry.coordinates[0], long: address.geometry.coordinates[1]};
+                            coordinates = {long: address.geometry.coordinates[1], lat: address.geometry.coordinates[0]};
                         });
                         let newAddress = document.createElement("td");
                         newAddress.innerHTML = address.properties.label;

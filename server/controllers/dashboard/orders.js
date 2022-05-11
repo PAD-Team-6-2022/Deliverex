@@ -1,6 +1,10 @@
 const auth = require("../../middleware/auth");
 const { Order, Format } = require("../../models");
 const convert = require("convert-units");
+const Organisation = require("../../models/organisation");
+const {addOrderToDeliveryQueue} = require("../../util");
+const moment = require("moment");
+const WeekSchedule = require("../../models/week_schedule");
 
 const router = require("express").Router();
 
@@ -61,6 +65,9 @@ router.get("/:id", auth(true), async (req, res) => {
   // covert the weight to the best value "kg" or "g"
   const convertedWeight = convert(order.weight).from("g").toBest();
   order.weight = `${Math.round(convertedWeight.val)} ${convertedWeight.unit}`;
+
+  // convert price int to euro
+  order.price = new Intl.NumberFormat('en-EN', { style: 'currency', currency: 'EUR' }).format(order.price);
 
   res.render("dashboard/orders/detail", {
     title: `Order #${id} - Dashboard`,

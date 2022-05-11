@@ -8,6 +8,8 @@ const Company = require("./company");
 const Location = require("./location");
 const Goal = require("./goal");
 const Vote = require("./vote");
+const Donation = require("./donation");
+const Organisation = require("./organisation");
 
 User.hasMany(Format);
 Format.belongsTo(User);
@@ -16,14 +18,26 @@ Format.hasMany(Order);
 Order.belongsTo(Format);
 
 User.hasMany(Order);
-Order.belongsTo(User);
+Order.belongsTo(User, {as: 'userCreated',foreignKey: 'created_by'});
+Order.belongsTo(User, {as: 'courier', foreignKey: 'courier_id'});
+
+Company.hasMany(User);
+User.belongsTo(Company, {as: 'company', foreignKey: 'company_id'});
+
+Location.hasOne(Company);
+Company.belongsTo(Location, {as: 'location', foreignKey: 'location_id'});
 
 Goal.hasMany(Vote);
-Order.hasOne(Vote);
-Vote.belongsTo(Order);
 Vote.belongsTo(Goal);
 
-// Location.belongsTo(Company)
+Order.hasOne(Vote);
+Vote.belongsTo(Order);
+
+Goal.hasMany(Donation);
+Donation.belongsTo(Goal);
+
+Order.hasOne(Donation);
+Donation.belongsTo(Order);
 
 module.exports = {
     Format,
@@ -36,4 +50,5 @@ module.exports = {
     Location,
     Goal,
     Vote,
+    Donation,
 };

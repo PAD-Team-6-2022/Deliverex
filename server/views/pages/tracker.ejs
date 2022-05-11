@@ -1,3 +1,9 @@
+<%
+    const donationPrice = new Intl.NumberFormat('en-EN', {
+            style: 'currency',
+            currency: 'EUR',
+        }).format((order.donation !== null) ? order.donation.amount : 0);
+%> 
 <!DOCTYPE html>
 <html lang="en" class="bg-slate-50">    
   <head>
@@ -126,10 +132,17 @@
                         </span>
                         <p class="text-slate-500 ml-8"><%= order.created_at.toISOString().split("T")[0] %></p>
                     </div>
+                    <div class="mb-4 pr-0 lg:pr-3 w-full lg:w-1/2">
+                        <span class="flex items-center font-semibold text-slate-600">
+                            <svg class="mr-2 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" fill="currentColor"><path d="M9 13v-2a3 3 0 1 1 0-6V4a1 1 0 1 1 2 0v1h.022A2.978 2.978 0 0 1 14 7.978a1 1 0 0 1-2 0A.978.978 0 0 0 11.022 7H11v2a3 3 0 0 1 0 6v1a1 1 0 0 1-2 0v-1h-.051A2.949 2.949 0 0 1 6 12.051a1 1 0 1 1 2 0 .95.95 0 0 0 .949.949H9zm2 0a1 1 0 0 0 0-2v2zM9 7a1 1 0 1 0 0 2V7zm1 13C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"></path></svg>
+                            Price
+                        </span>
+                        <p class="text-slate-500 ml-8"><%= order.price %></p>
+                    </div>
                 </div>
                 <div class="flex-1 ml-0 md:ml-3 text-slate-600">
                     <% if (currentGoal) { %>
-                        <h2 class="text-gray-800 font-bold text-4xl mb-2">$2.04 🎉</h2>
+                        <h2 class="text-gray-800 font-bold text-4xl mb-2"><%= donationPrice %> 🎉</h2>
                         <p>
                             Thank you! A small part of your order will be used to fund the community chosen goal.
                             <br><br>
