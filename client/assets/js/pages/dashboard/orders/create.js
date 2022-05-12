@@ -46,45 +46,45 @@ document.getElementById("submitButton").addEventListener("click", async (event) 
             "border-red-500");
     }
     
-    // if(wrongInputs.length === 0) {
-    //     const values = {
-    //         email: emailInput.value,
-    //         weight: weightInput.value,
-    //         street: streetInput.value,
-    //         house_number: houseNumberInput.value,
-    //         postal_code: postalCodeInput.value,
-    //         city: cityInput.value,
-    //         country: countryInput.value,
-    //         format_id: sizeFormatInput.value,
-    //         is_pickup: pickupInput.checked,
-    //         price: priceInput.value,
-    //         coordinates : JSON.stringify(coordinates)
-    //     }
+    if(wrongInputs.length === 0) {
+        const values = {
+            email: emailInput.value,
+            weight: weightInput.value,
+            street: streetInput.value,
+            house_number: houseNumberInput.value,
+            postal_code: postalCodeInput.value,
+            city: cityInput.value,
+            country: countryInput.value,
+            format_id: sizeFormatInput.value,
+            is_pickup: pickupInput.checked,
+            price: priceInput.value,
+            coordinates : JSON.stringify(coordinates)
+        }
 
-    //     await fetch(`/api/orders/`, {
-    //         method: "POST",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify(values),
-    //     }).then((response) => {
-    //         if(response.status === 200) {
-    //             window.location.href = `/dashboard/overview`;
-    //         }
-    //     }).catch((error) => {
-    //         console.error(`Fetch error: could not fulfill post request
-    //          to create order. Errormessage: ${error}`);
-    //     });
+        await fetch(`/api/orders/`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+        }).then((response) => {
+            if(response.status === 200) {
+                window.location.href = `/dashboard/overview`;
+            }
+        }).catch((error) => {
+            console.error(`Fetch error: could not fulfill post request
+             to create order. Errormessage: ${error}`);
+        });
 
-    // } else {
-    //     wrongInputs.forEach((input) => {
-    //        input.classList.add(
-    //            "bg-red-50",
-    //            "border-red-500"
-    //        );
-    //        document.getElementById(`${input.id}_p`).innerHTML = "This field can't be empty!";
-    //     });
-    // }
+    } else {
+        wrongInputs.forEach((input) => {
+           input.classList.add(
+               "bg-red-50",
+               "border-red-500"
+           );
+           document.getElementById(`${input.id}_p`).innerHTML = "This field can't be empty!";
+        });
+    }
 });
 
 sizeFormatInput.addEventListener("change", () => {
@@ -138,7 +138,6 @@ addressInput.addEventListener("keyup", delay((e) => {
             if(data.features.length > 0) {
 
                 data.features.forEach((address) => {
-                    console.log(address);
                     if(address.properties.housenumber && address.properties.postalcode) {
                         let tr = document.createElement("tr");
                         tr.classList.add("hover:bg-gray-200", "hover:cursor-pointer");
