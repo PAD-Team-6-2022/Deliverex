@@ -316,14 +316,14 @@ router.post('/setting', auth(true), (req, res) => {
         });
 });
 
-router.put('/editAccount/:id', (req, res) => {
+router.put('/editAccount', (req, res) => {
     console.log(req);
     User.update(
         {
             username: req.body.username,
             email: req.body.email,
         },
-        {where: {id: req.params.id}},
+        {where: {id: req.user.id}},
     )
         .then((affectedRows) => {
             res.status(200).json({
@@ -335,17 +335,14 @@ router.put('/editAccount/:id', (req, res) => {
         });
 });
 
-router.put('/editDoelPercentage', auth(true), (req, res) => {
-    console.log(req.user.id)
+router.put('/editDoelPercentage', (req, res) => {
     Company.update(
         {
             percentageToGoal: req.body.percentage,
         },
-        {where: {id: req.user.id}},
-
+        {where: {id: req.user.company_id}},
     )
         .then((affectedRows) => {
-            console.log(req.user.id)
             res.status(200).json({
                 message: `${affectedRows} rows updated`,
             });
@@ -355,13 +352,13 @@ router.put('/editDoelPercentage', auth(true), (req, res) => {
         });
 });
 
-router.put('/editStore/:id', (req, res) => {
+router.put('/editStore', async(req, res) => {
     Company.update(
         {
             name: req.body.name,
             email: req.body.email,
         },
-        {where: {id: req.params.id}},
+        {where: {id: req.user.company_id}},
     )
         .then((affectedRows) => {
             res.status(200).json({
@@ -371,6 +368,12 @@ router.put('/editStore/:id', (req, res) => {
         .catch((err) => {
             res.status(500).json(err);
         });
+
+    const company = await Company.findAll({
+        where: {
+            id: 1
+        }
+    });
 
     Location.update(
         {
@@ -379,7 +382,7 @@ router.put('/editStore/:id', (req, res) => {
             city: req.body.city,
             country: req.body.country,
         },
-        {where: {location_id: req.params.id}},
+        {where: {location_id: company[0].id}},
     );
 });
 

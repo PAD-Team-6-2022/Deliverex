@@ -1,5 +1,5 @@
 import {openModal} from "../../modal.js";
-import {User} from "../../../../../server/models";
+
 // get all form inputs
 const formatInputs = document
     .querySelector("#formatForm")
@@ -14,8 +14,7 @@ document.getElementById("saveGoal").addEventListener("click", async (event) => {
     const values = {
         percentage: document.getElementById("rangeDoel").value,
     };
-    console.log(values)
-    const id = 1
+
     await fetch(`/api/orders/editDoelPercentage`, {
         method: "PUT",
         headers: {
@@ -43,10 +42,8 @@ document.getElementById("saveAccount").addEventListener("click", async(req, res)
         acountNewPassword: document.getElementById("acount-new-password").value,
         acountConfirmNewPassword: document.getElementById("acount-confirm-new-password").value
     };
-    console.log(values)
-    const id = req.user.id
-    console.log(id + "weeee")
-    await fetch(`/api/orders/editAccount/${id}`, {
+
+    await fetch(`/api/orders/editAccount`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -74,8 +71,8 @@ document.getElementById("saveStore").addEventListener("click", async (event) => 
         city: document.getElementById("City").value,
         country: document.getElementById("Country").value
     };
-    const id = 1
-    await fetch(`/api/orders/editStore/${id}`, {
+
+    await fetch(`/api/orders/editStore`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",

@@ -26,7 +26,9 @@ const showError = (elem, error, message) => {
 }
 
 // send to track page if order code is filled in
-document.querySelector("#submit").addEventListener("click", () => {
+document.querySelector("#submit").addEventListener("click", (e) => {
+    e.preventDefault();
+
     // trim all inputs
     document.querySelectorAll("input").forEach(input => {
         input.value = input.value.trim();
