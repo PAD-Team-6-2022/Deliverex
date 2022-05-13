@@ -34,6 +34,18 @@ document.getElementById("submitButton").addEventListener("click", async (event) 
         }
     });
 
+    // check if format is selected
+    if (sizeFormatInput.value === "") {
+        sizeFormatInput.classList.add(
+            "bg-red-50",
+            "border-red-500");
+            wrongInputs.push(sizeFormatInput);
+    } else {
+        sizeFormatInput.classList.remove(
+            "bg-red-50",
+            "border-red-500");
+    }
+    
     if(wrongInputs.length === 0) {
         const values = {
             email: emailInput.value,
@@ -44,7 +56,7 @@ document.getElementById("submitButton").addEventListener("click", async (event) 
             city: cityInput.value,
             country: countryInput.value,
             format_id: sizeFormatInput.value,
-            is_pickup: pickupInput.value,
+            is_pickup: pickupInput.checked,
             price: priceInput.value,
             coordinates : JSON.stringify(coordinates)
         }
@@ -73,7 +85,20 @@ document.getElementById("submitButton").addEventListener("click", async (event) 
            document.getElementById(`${input.id}_p`).innerHTML = "This field can't be empty!";
         });
     }
+});
 
+sizeFormatInput.addEventListener("change", () => {
+    // check if format is selected
+    if (sizeFormatInput.value === "") {
+        sizeFormatInput.classList.add(
+            "bg-red-50",
+            "border-red-500");
+            wrongInputs.push(sizeFormatInput);
+    } else {
+        sizeFormatInput.classList.remove(
+            "bg-red-50",
+            "border-red-500");
+    }
 });
 
 postalCodeInput.addEventListener("keyup", delay((e) => {
@@ -113,7 +138,6 @@ addressInput.addEventListener("keyup", delay((e) => {
             if(data.features.length > 0) {
 
                 data.features.forEach((address) => {
-                    console.log(address);
                     if(address.properties.housenumber && address.properties.postalcode) {
                         let tr = document.createElement("tr");
                         tr.classList.add("hover:bg-gray-200", "hover:cursor-pointer");

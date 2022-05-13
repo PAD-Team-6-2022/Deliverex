@@ -35,6 +35,18 @@ document.getElementById("submitButton").addEventListener("click", async () => {
         }
     });
 
+    // check if format is selected
+    if (sizeFormatInput.value === "") {
+        sizeFormatInput.classList.add(
+            "bg-red-50",
+            "border-red-500");
+            wrongInputs.push(sizeFormatInput);
+    } else {
+        sizeFormatInput.classList.remove(
+            "bg-red-50",
+            "border-red-500");
+    }
+
     if(wrongInputs.length === 0) {
 
         const values = {
@@ -47,7 +59,7 @@ document.getElementById("submitButton").addEventListener("click", async () => {
             city: cityInput.value,
             country: countryInput.value,
             format_id: sizeFormatInput.value,
-            is_pickup: pickupInput.value,
+            is_pickup: pickupInput.checked,
             status: statusInput.value,
             price: priceInput.value,
             coordinates : JSON.stringify(coordinates)
@@ -77,6 +89,20 @@ document.getElementById("submitButton").addEventListener("click", async () => {
         });
     }
 
+});
+
+sizeFormatInput.addEventListener("change", () => {
+    // check if format is selected
+    if (sizeFormatInput.value === "") {
+        sizeFormatInput.classList.add(
+            "bg-red-50",
+            "border-red-500");
+            wrongInputs.push(sizeFormatInput);
+    } else {
+        sizeFormatInput.classList.remove(
+            "bg-red-50",
+            "border-red-500");
+    }
 });
 
 postalCodeInput.addEventListener("keyup", delay((e) => {
