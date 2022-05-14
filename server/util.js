@@ -53,6 +53,41 @@ const convertOrdersToShipments = (orders) => {
   return shipments;
 }
 
+const convertOrdersToJobs = (orders) => {
+  const jobs = [];
+
+  orders.forEach((order) => {
+    //TODO:
+    // -change the way pickup coordinates should be retrieved (retrieve it from the company)
+    // -check & account for the time period the order is planned for (morning, afternoon, evening)
+    // -calculate the 'amount' either based on the order's weight and format, or the actual amount of packages
+
+    const id = order.getDataValue("id");
+
+    const deliveryCoordinates = order.getDataValue("coordinates").coordinates;
+
+    jobs.push({
+      id,
+      amount: [1],
+      skills: [1],
+      service: 60,
+      location: deliveryCoordinates,
+      delivery: [1]
+    });
+  });
+  return jobs;
+}
+
+/**
+ * Returns the timestamp of a specific moment in seconds
+ *
+ * @param timestamp
+ * @returns {number}
+ */
+const getTimestampInSeconds = (timestamp) => {
+  return moment(timestamp, "HH:mm:ss").diff(moment().startOf('day'), 's');
+}
+
 /**
  * Takes a list of users and uses it to produce
  * a list of users in vehicle-format. To be fed to
@@ -79,10 +114,6 @@ const convertUsersToVehicles = (users) => {
 
     const rawWorkingHours = user.getDataValue('todaySchedule');
 
-    const getTimestampInSeconds = (timestamp) => {
-        return moment(timestamp, "HH:mm:ss").diff(moment().startOf('day'), 's');
-    }
-
     //Convert the working hour timestamps from 'HH:mm:ss' format to seconds since
     //the day started. This is the format required by ORS.
     const startingTime = getTimestampInSeconds(rawWorkingHours.start);
@@ -100,19 +131,29 @@ const convertUsersToVehicles = (users) => {
   return vehicles;
 }
 
-const sameDayDeliveryEvent = new EventEmitter();
+const orderRequestEvents = new EventEmitter();
 
 const addOrderToDeliveryQueue = (id) => {
-  sameDayDeliveryEvent.emit('sameDayDelivery', id);
+  orderRequestEvents.emit('sameDayDelivery', id);
 }
 const onSameDayDelivery = (handlerCallBack) => {
-  sameDayDeliveryEvent.on('sameDayDelivery', handlerCallBack);
+  orderRequestEvents.on('sameDayDelivery', handlerCallBack);
+}
+const notifyOrderStatusChange = (id, status) => {
+  orderRequestEvents.emit('orderStatusChange', id, status);
+}
+const onOrderStatusChange = (handlerCallBack) => {
+  orderRequestEvents.on('orderStatusChange', handlerCallBack);
 }
 
 module.exports = {
   searchQueryToWhereClause,
   convertOrdersToShipments,
   convertUsersToVehicles,
+  convertOrdersToJobs,
   addOrderToDeliveryQueue,
-  onSameDayDelivery
+  onSameDayDelivery,
+  notifyOrderStatusChange,
+  onOrderStatusChange,
+  getTimestampInSeconds
 };

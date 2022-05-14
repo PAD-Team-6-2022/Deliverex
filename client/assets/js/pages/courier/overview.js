@@ -1,4 +1,69 @@
 
+const loadCompletedCheckpoints = () => {
+    if(!document.cookie)
+        return;
+
+    const checkpointsMetadata = JSON.parse(document.cookie);
+    console.log(checkpointsMetadata);
+
+    const currentDate = new Date();
+    const today = currentDate.getFullYear()+'-'+(currentDate.getMonth()+1)+'-'+currentDate.getDate();
+    console.log(checkpointsMetadata.date);
+    //Clear the cookie in case the data is not from today
+    if(checkpointsMetadata.date.length)
+    if(checkpointsMetadata.date !== today){
+        document.cookie = "";
+        return;
+    }
+
+    const tableContainer = document.querySelector("#checkpointsTable");
+    tableContainer.classList.remove("animate-pulse");
+    tableContainer.classList.replace("bg-slate-100", "bg-white");
+
+    if(checkpointsMetadata.completedCheckpoints.length){
+        checkpointsMetadata.completedCheckpoints.forEach((completedCheckpoint, index) => {
+
+            const checkpointElement = tableContainer.children[index];
+            checkpointElement.classList.remove("bg-slate-300");
+            checkpointElement.querySelectorAll(".loading-pulse")
+                .forEach(loadingPulse => loadingPulse.remove());
+
+            const checkpointIndex = checkpointElement.querySelector(".indexContainer");
+            checkpointIndex.textContent = index+1;
+
+            const checkpointType = checkpointElement.querySelector(".typeContainer");
+            checkpointType.textContent = completedCheckpoint.type;
+
+            const checkpointAddress = checkpointElement.querySelector(".addressContainer");
+            checkpointAddress.textContent = completedCheckpoint.location.address;
+
+            const checkpointPostalCode = checkpointElement.querySelector(".postalCodeContainer")
+            checkpointPostalCode.textContent = completedCheckpoint.location.postal_code;
+
+            const checkpointCity = checkpointElement.querySelector(".cityContainer");
+            checkpointCity.textContent = completedCheckpoint.location.city;
+
+            const checkpointCountry = checkpointElement.querySelector(".countryContainer");
+            checkpointCountry.textContent = completedCheckpoint.location.country;
+
+            const checkpointOrderId = checkpointElement.querySelector(".orderIdContainer");
+            checkpointOrderId.textContent = completedCheckpoint.order_id;
+
+            const checkpointTime = checkpointElement.querySelector(".timeContainer");
+            checkpointTime.textContent = completedCheckpoint.time;
+
+            checkpointIndex.classList.add('line-through');
+            checkpointType.classList.add('line-through');
+            checkpointAddress.classList.add('line-through');
+            checkpointPostalCode.classList.add('line-through');
+            checkpointCity.classList.add('line-through');
+            checkpointCountry.classList.add('line-through');
+            checkpointOrderId.classList.add('line-through');
+            checkpointTime.classList.add('line-through');
+        })
+    }
+}
+
 navigator.geolocation.getCurrentPosition((success) => {
 
     //TODO: Use the 'pending' state of the fetch request
@@ -14,6 +79,8 @@ navigator.geolocation.getCurrentPosition((success) => {
     }).then(response => response.json())
         .then((data) => {
 
+            loadCompletedCheckpoints();
+
             if(data.checkpoints.length === 0)
                 return;
 
@@ -23,6 +90,12 @@ navigator.geolocation.getCurrentPosition((success) => {
             tableContainer.classList.remove("animate-pulse");
             tableContainer.classList.replace("bg-slate-100", "bg-white");
             data.checkpoints.forEach((checkpointData, index) => {
+
+                //Move the checkpoints to a lower point in the table. This way, we take
+                //into account the rows occupied by the completed checkpoints
+                if(document.cookie)
+                    index += JSON.parse(document.cookie).completedCheckpoints.length;
+
                 const checkpointElement = tableContainer.children[index];
                 checkpointElement.classList.remove("bg-slate-300");
                 checkpointElement.querySelectorAll(".loading-pulse")
@@ -51,17 +124,6 @@ navigator.geolocation.getCurrentPosition((success) => {
 
                 const checkpointTime = checkpointElement.querySelector(".timeContainer");
                 checkpointTime.textContent = checkpointData.time;
-
-                if(checkpointData.hasCompleted){
-                    checkpointIndex.classList.add('line-through');
-                    checkpointType.classList.add('line-through');
-                    checkpointAddress.classList.add('line-through');
-                    checkpointPostalCode.classList.add('line-through');
-                    checkpointCity.classList.add('line-through');
-                    checkpointCountry.classList.add('line-through');
-                    checkpointOrderId.classList.add('line-through');
-                    checkpointTime.classList.add('line-through');
-                }
             });
 
             //Temporarily hard-coded. In the future, the travelmode should be

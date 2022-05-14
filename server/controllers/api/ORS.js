@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const fetch = require('node-fetch');
+const { Op, QueryTypes} = require("sequelize");
 const Order = require("../../models/order");
 const User = require("../../models/user");
 const Organisation = require("../../models/organisation");
@@ -9,13 +10,13 @@ const API_KEY = process.env.ORS_API_KEY;
 const cron = require("node-cron");
 const {convertOrdersToShipments,
     convertUsersToVehicles,
-    onSameDayDelivery} = require("../../util");
+    onSameDayDelivery,
+    onOrderStatusChange,
+    convertOrdersToJobs} = require("../../util");
 const convert = require("convert-units");
 const moment = require("moment");
 const web_push = require("web-push");
 const auth = require("../../middleware/auth");
-const {hashSync} = require("bcrypt");
-const {or, QueryTypes} = require("sequelize");
 const {Company} = require("../../models");
 
 //TODO: GeoCode endpoint of address-finding to be placed here
@@ -29,7 +30,7 @@ const {Company} = require("../../models");
 
 //For debugging purposes. Comment it out if
 //necessary but don't remove.
-/*cron.schedule("* * * * * *", () => {
+cron.schedule("0,10,20,30,40,50 * * * * *", () => {
 
     console.log('\nSTATUS REPORT:')
     console.log(`Time: ${moment().format("HH:mm:ss")}`);
@@ -43,11 +44,11 @@ const {Company} = require("../../models");
        ids.push(courier.id);
     });
     console.log(ids);
-},{scheduled: true})*/
+},{scheduled: true});
 
 
 //Keys for identifying the server from the client perspective
-//Moet in ENV file worden gestopt als enviroment variables
+//Moet in ENV file worden gestopt als environment variables
 const publicVapidKey = 'BLxVvjwWFJLXU0nqPOxRB_cZZiDMMTeD6c-7gTDvatl3gak50_jM9AhpWMwmn3sOkd8Ga-xhnzhq-zYpVqueOnI';
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 
@@ -112,7 +113,8 @@ const initiateOrderRequestCycle = (orderId) => {
             const courierQueue = [];
             activeCourierLoads.forEach((courierLoadData) => {
                 courierQueue.push(courierLoadData.courier_id);
-            })
+            });
+
             const queueObject = {
                 orderId,
                 courierQueue
@@ -230,107 +232,145 @@ Organisation.findOne().then((organisation) => {
     WeekSchedule.findOne({where: {id: organisation.getDataValue('operatingScheduleId')}})
         .then((schedule) => {
 
-            //TODO: Use the actual daily time-window rather than just the one of monday for every day
-            const timeWindow = schedule.getDataValue('monday');
+            const weekDays = [
+                'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+                'Friday', 'Saturday', 'Sunday'
+            ];
 
-            const hoursAmount = moment(timeWindow.end, "HH:mm:ss").diff(moment(timeWindow.start, "HH:mm:ss"), "h");
-            const formattedStartTime = moment(timeWindow.start, "HH:mm:ss").format("s m H");
+            //For each day of the week, set a daily and hourly cronjob
+            for (let i = 0; i < 7; i++) {
 
-            let cronjobSchedule = formattedStartTime;
-            for (let i = 0; i < hoursAmount; i++) {
-                cronjobSchedule += `,${moment(timeWindow.start, "HH:mm:ss").add(i+1, 'h').format("H")}`;
-            }
-            cronjobSchedule += ' * * *';
+                const dayOfTheWeek = weekDays[i];
 
-            //Sets the hourly cron-job
-            cron.schedule(cronjobSchedule, () => {
-                sameDayDeliveryQueue.forEach((orderId) => {
-                    initiateOrderRequestCycle(orderId);
-                });
-            }, {scheduled: true});
+                //In case there is no schedule for this day, simply skip it
+                if(schedule.getDataValue(dayOfTheWeek.toLowerCase()) === null)
+                    continue;
 
-            //The daily 'morning' cronjob for planned orders. Disabled in freelance mode.
-            if(!freelanceMode)
-                cron.schedule(`${formattedStartTime} * * *`, () => {
+                const timeWindow = schedule.getDataValue(dayOfTheWeek.toLowerCase());
 
-                const today = moment().format("YYYY-MM-DD");
+                const hoursAmount = moment(timeWindow.end, "HH:mm:ss").diff(moment(timeWindow.start, "HH:mm:ss"), "h");
+                const formattedStartTime = moment(timeWindow.start, "HH:mm:ss").format("s m H");
 
-                Order.findAll({
-                    where: {
-                        status: 'READY',
-                        courier_id: null,
-                        delivery_date: today
-                    }
-                }).then((orders) => {
-                        console.log(`Assigning all unassigned orders of ${today}`);
+                let cronjobSchedule = formattedStartTime;
+                for (let i = 0; i < hoursAmount; i++) {
+                    cronjobSchedule += `,${moment(timeWindow.start, "HH:mm:ss").add(i+1, 'h').format("H")}`;
+                }
+                cronjobSchedule += ` * * ${dayOfTheWeek}`;
 
-                        if (!orders.length)
-                            return;
+                console.log(cronjobSchedule);
 
-                        //Checks if one or more of the orders are currently regarded
-                        //as 'same-day-deliveries' and then subsequently excludes those
-                        orders.forEach((order, index) => {
-                            if(sameDayDeliveryQueue.includes(order.getDataValue('id')))
-                                orders.splice(index, 1);
-                        });
+                //Sets the hourly cron-job
+                cron.schedule(cronjobSchedule, () => {
+                    Order.findAll({where: {status: 'READY', id:{[Op.in]: sameDayDeliveryQueue}}})
+                        .then((orders) => {
+                            orders.forEach((order) => {
+                                initiateOrderRequestCycle(order.getDataValue('id'));
+                            })
+                        }).catch((err) => console.error(`Failed to retrieve orders for
+                     the hourly cronjob. Errormessage: ${err}`));
+                }, {scheduled: true});
 
-                        const shipments = convertOrdersToShipments(orders);
+                //The daily 'morning' cronjob for planned orders. Disabled in freelance mode.
+                if(!freelanceMode)
+                    cron.schedule(`${formattedStartTime} * * ${dayOfTheWeek}`, () => {
 
-                        //Takes the current day of the week and converts it to lowercase
-                        let dayOfTheWeek = moment().format('dddd').toLowerCase();
+                        const today = moment().format("YYYY-MM-DD");
 
-                            User.sequelize.query(`SELECT users.*, week_schedules.${dayOfTheWeek} FROM users INNER JOIN week_schedules ON users.work_schedule = week_schedules.id WHERE role = 'COURIER' AND week_schedules.${dayOfTheWeek} IS NOT NULL;`,
+                        Order.findAll({where: { status: 'READY', courier_id: null, delivery_date: today},
+                            include: {model: User, as: 'userCreated', required: true,
+                                include: [{model: Company, as: 'company', required: true,
+                                    include: [{model: Location, as: 'location', required: true}]}]}
+                        }).then((orders) => {
+                            console.log(`Assigning all unassigned orders of ${today}`);
+
+                            console.log('Found amount of orders: ' + orders.length);
+                            console.log('Orders:');
+
+                            if(!orders.length)
+                                return;
+
+                            orders.forEach((order) => {
+                                console.log(order.getDataValue('id'));
+                            })
+
+                            if (!orders.length)
+                                return;
+
+                            //Checks if one or more of the orders are currently regarded
+                            //as 'same-day-deliveries' and then subsequently excludes those
+                            orders.forEach((order, index) => {
+                                if(sameDayDeliveryQueue.includes(order.getDataValue('id')))
+                                    orders.splice(index, 1);
+                            });
+
+                            const shipments = convertOrdersToShipments(orders);
+
+                            //Takes the current day of the week and converts it to lowercase
+                            let currentWeekDay = moment().format('dddd').toLowerCase();
+
+                            //Take all users who work today
+                            User.sequelize.query(`SELECT users.*, week_schedules.${currentWeekDay} AS 'todaySchedule' FROM users INNER JOIN week_schedules ON users.schedule_id = week_schedules.id WHERE role = 'COURIER' AND week_schedules.${currentWeekDay} IS NOT NULL;`,
                                 {type: QueryTypes.SELECT, model: User, mapToModel: true})
-                            .then((users) => {
-                                const vehicles = convertUsersToVehicles(users);
+                                .then((users) => {
+                                    console.log('users:')
+                                    console.log(users);
 
-                                fetch('https://api.openrouteservice.org/optimization', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
-                                        'Authorization': API_KEY,
-                                        'Content-Type': 'application/json; charset=utf-8'
-                                    },
-                                    body: '{"shipments": ' + JSON.stringify(shipments) + ',' + '"vehicles": ' + JSON.stringify(vehicles) + '}'
-                                }).then(response => response.json())
-                                    .then((data) => {
-                                        //Loop through every order of every route to assign the right orders to the right couriers
-                                        data.routes.forEach((route) => {
-                                            for (let i = 0; i < route.steps.length; i++) {
-                                                //To prevent updating the same order twice, we ignore steps of type 'start' and 'delivery'
-                                                if (route.steps[i].type === 'pickup')
-                                                    Order.update({status: 'TRANSIT', courier_id: route.vehicle},
-                                                        {where: {id: route.steps[i].id}}).then((rowsAffected) => {
-                                                        console.log(`Updated order ${route.steps[i].id}. ${rowsAffected} rows affected.`)
-                                                    }).catch((err) => {
-                                                        console.log(`Could not update order ${route.steps[i].id}. Error message: ${err}`)
-                                                    });
-                                            }
-                                        })
-                                    }).catch((err) => {
-                                    console.error(err);
-                                });
-                            }).catch((err) => {
-                            console.error(`Failed to retrieve couriers from database. Errormessage: ${err}`)
-                        })
-                    }).catch((err) => {
-                    console.error(`Failed to retrieve orders from database. Errormessage: ${err}`)
-                });
-            }, {
-                scheduled: true
-            });
+                                    if(!users.length)
+                                        return;
+
+                                    const vehicles = convertUsersToVehicles(users);
+
+                                    fetch('https://api.openrouteservice.org/optimization', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+                                            'Authorization': API_KEY,
+                                            'Content-Type': 'application/json; charset=utf-8'
+                                        },
+                                        body: '{"shipments": ' + JSON.stringify(shipments) + ',' + '"vehicles": ' + JSON.stringify(vehicles) + '}'
+                                    }).then(response => response.json())
+                                        .then((data) => {
+                                            //Loop through every order of every route to assign the right orders to the right couriers
+                                            data.routes.forEach((route) => {
+                                                for (let i = 0; i < route.steps.length; i++) {
+                                                    //To prevent updating the same order twice, we ignore steps of type 'start' and 'delivery'
+                                                    if (route.steps[i].type === 'pickup')
+                                                        Order.update({status: 'TRANSIT', courier_id: route.vehicle},
+                                                            {where: {id: route.steps[i].id}}).then((rowsAffected) => {
+                                                            console.log(`Updated order ${route.steps[i].id}. ${rowsAffected} rows affected.`)
+                                                        }).catch((err) => {
+                                                            console.log(`Could not update order ${route.steps[i].id}. Error message: ${err}`)
+                                                        });
+                                                }
+                                            })
+                                        }).catch((err) => {
+                                        console.error(err);
+                                    });
+                                }).catch((err) => {
+                                console.error(`Failed to retrieve couriers from database. Errormessage: ${err}`)
+                            })
+                        }).catch((err) => {
+                            console.error(`Failed to retrieve orders from database. Errormessage: ${err}`)
+                        });
+                    }, {
+                        scheduled: true
+                    });
+            }
     });
 });
 
 //Event handler that is triggered when a new same-day-delivery has been
 //requested for an order.
 onSameDayDelivery( (orderId) => {
-
-    //As an initial response, let the order go through a request cycle at least once
-    initiateOrderRequestCycle(orderId);
-
     //Add the order to the hourly cron-job loop
-    sameDayDeliveryQueue.push(orderId);
+    sameDayDeliveryQueue.push(Number(orderId));
+    console.log('added ID: ' + orderId);
+});
+
+onOrderStatusChange((id, status) => {
+    if(sameDayDeliveryQueue.includes(Number(id)) && status === 'READY'){
+        initiateOrderRequestCycle(id);
+    }
 });
 
 router.put('/submitSpontaneousDeliveryResponse', (req, res) => {
@@ -389,34 +429,62 @@ router.get('/:longitude/:latitude', (req, res) => {
 
     //Pak alle orders van vandaag die bij deze koerier horen
     Order.findAll({where: {courier_id: req.user.id, delivery_date: moment().format("YYYY-MM-DD")},
-        include: {model: User, as: 'userCreated', required: true,
+        include: [{model: User, as: 'userCreated', required: true,
             include: [{model: Company, as: 'company', required: true,
-                include: [{model: Location, as: 'location', required: true}]}]}})
+                include: [{model: Location, as: 'location', required: true}]}]},
+            {model: User, as: 'courier', required: true,
+                include: [{model: WeekSchedule, as: 'schedule', required: true}]}]})
         .then((orders) => {
+            //console.log(orders.length)
+            //console.log(orders[0]);
 
             //TODO: The data directly below is largely hardcoded and has to be
             // replaced by various factors from the database. See
             // 'utils.js' for further explanation.
 
-            const shipments = convertOrdersToShipments(orders);
+            const ordersNotPickedUp = [];
+            const ordersInTransit = [];
+            orders.forEach((order) => {
+                if(order.getDataValue('status') === 'READY')
+                    ordersNotPickedUp.push(order);
+                else if(order.getDataValue('status') === 'TRANSIT')
+                    ordersInTransit.push(order);
+            });
+
+            const shipments = convertOrdersToShipments(ordersNotPickedUp);
+            const jobs = convertOrdersToJobs(ordersInTransit);
+
+
             const userCoordinates = [Number(req.params.longitude), Number(req.params.latitude)];
 
-            //TODO: Currently hardcoded as 8:30 to 18:00 both here and in utils.js. To
-            // be replaced with values from admin panel. Keep in mind whether its
-            // freelance mode or not.
-            const beginWorkDay = 30600;
-            const endWorkDay = 90000;
+            const currentDayOfTheWeek = moment().format("dddd").toLowerCase();
+            //We know every order has the same courier, so we just take the first one.
+            const courierWeekSchedule = orders[0].getDataValue('courier').schedule;
+            let courierDaySchedule;
+
+            switch (currentDayOfTheWeek){
+                case 'monday': courierDaySchedule = courierWeekSchedule.monday; break;
+                case 'tuesday': courierDaySchedule = courierWeekSchedule.tuesday; break;
+                case 'wednesday': courierDaySchedule = courierWeekSchedule.wednesday; break;
+                case 'thursday': courierDaySchedule = courierWeekSchedule.thursday; break;
+                case 'friday': courierDaySchedule = courierWeekSchedule.friday; break;
+                case 'saturday': courierDaySchedule = courierWeekSchedule.saturday; break;
+                case 'sunday': courierDaySchedule = courierWeekSchedule.sunday; break;
+            }
+
+            const beginWorkDay = require("../../util").getTimestampInSeconds(courierDaySchedule.start);
+            const endWorkDay = require("../../util").getTimestampInSeconds(courierDaySchedule.end);
 
             const currentTimeInSeconds = moment().diff(moment().startOf('day'), 'seconds');
 
-            const working_hours = [Math.max(beginWorkDay, currentTimeInSeconds), endWorkDay];
+            const working_hours = [Math.max(beginWorkDay, Math.min(currentTimeInSeconds, endWorkDay)), endWorkDay];
             const vehicle = {
                 id: req.user.id,
                 profile: "cycling-regular",
                 start: userCoordinates,
                 capacity: [4],
                 skills: [1],
-                time_window: working_hours
+                time_window: working_hours//[0, 100000]
             };
 
             fetch('https://api.openrouteservice.org/optimization', {
@@ -426,10 +494,12 @@ router.get('/:longitude/:latitude', (req, res) => {
                     'Authorization': process.env.ORS_API_KEY,
                     'Content-Type': 'application/json; charset=utf-8'
                 },
-                body: '{"shipments": ' + JSON.stringify(shipments) + ',' +
+                body: '{"shipments": ' + JSON.stringify(shipments) + ', ' +
+                    '"jobs": ' + JSON.stringify(jobs) + ',' +
                     '"vehicles": ' + JSON.stringify([vehicle]) + '}'
             }).then(response => response.json())
                 .then((data) => {
+                    console.log(data);
 
                     orders.forEach((order) => {
                         //converteer het gewicht van elke order naar de beste maat
@@ -443,9 +513,15 @@ router.get('/:longitude/:latitude', (req, res) => {
                     const checkpoints = [];
                     if (data.routes){
                         data.routes[0].steps.forEach((step) => {
+
+                            //In case the type equals 'job', override that as a 'delivery'
                             orders.forEach((order) => {
+
                                 if (order.getDataValue('id') === step.id && step.type !== 'start') {
+                                    step.type = step.type === 'pickup' ? 'pickup' : 'delivery';
                                     const isPickup = step.type === 'pickup';
+                                    console.log(step);
+
 
                                     //If its a pickup, add a location object with the company location data. Otherwise,
                                     //add a location object with the order/destination location data.
@@ -468,11 +544,7 @@ router.get('/:longitude/:latitude', (req, res) => {
                                         location: checkpointLocation,
                                         type: step.type,
                                         order_id: step.id,
-                                        time: moment((step.arrival - 3600) * 1000).format("HH:mm:ss"),
-                                        hasCompleted: isPickup ?
-                                            ((order.getDataValue('status') === 'TRANSIT' ||
-                                                (order.getDataValue('status') === 'DELIVERED'))) :
-                                            (order.getDataValue('status') === 'DELIVERED')
+                                        time: moment((step.arrival - 3600) * 1000).format("HH:mm:ss")
                                     });
                                 }
                             });
@@ -489,7 +561,7 @@ router.get('/:longitude/:latitude', (req, res) => {
                 res.status(500).json(err);
             })
         }).catch((err) => {
-        console.error(`Failed to retrieve orders from database. Errormessage: ${err}`)
+        console.error(`Failed to retrieve orders from database. Errormessage: ${err}`);
     })
 });
 

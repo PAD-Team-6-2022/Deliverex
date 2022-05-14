@@ -34,14 +34,14 @@ const User = sequelize.define(
         this.setDataValue("password", hashSync(value, 10));
       },
     },
-    workSchedule: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
     role: {
       type: DataTypes.ENUM,
       values: ["ADMIN", "SHOP_OWNER", "COURIER"]
     },
+    schedule_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+     },
     companyId: {
         type: DataTypes.INTEGER
     }

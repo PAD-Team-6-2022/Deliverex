@@ -7,7 +7,8 @@ const moment = require("moment");
 const fetch = require("node-fetch");
 const ejs = require("ejs");
 const path = require('path')
-const {addOrderToDeliveryQueue}  = require("../../util");
+const {addOrderToDeliveryQueue,
+    notifyOrderStatusChange}  = require("../../util");
 
 router.delete("/:id", (req, res) => {
     Order.destroy({where: {id: req.params.id}})
@@ -127,13 +128,14 @@ router.post("/", (req, res) => {
     .then(async (order) => {
 
         console.log(req.user.id);
+        console.log(order.getDataValue('id'));
 
         //Handle the way this order should be treated based on whether the 'freelanceMode'
         //option is currently being used.
         Organisation.findOne().then((organisation) => {
             const freelanceMode = organisation.getDataValue('freelanceMode');
             if(freelanceMode)
-                addOrderToDeliveryQueue(order.getDataValue('id'));
+                addOrderToDeliveryQueue(Number(order.getDataValue('id')));
             else{
                 //Planned mode
                 if(order.getDataValue('delivery_date') !== moment().format("YYYY-MM-DD"))
@@ -153,7 +155,7 @@ router.post("/", (req, res) => {
                 }
         });
 
-        await donateMoney(order);
+       // await donateMoney(order);
 
       sendEmail(order.id);
       res.status(200).json({
@@ -201,11 +203,18 @@ router.post("/edit", async (req, res) => {
         is_pickup: pickup_status,
         updated_at: Date.now(),
         price: req.body.price,
-        // coordinates: req.body.coordinates
+        // coordinates: { type: 'Point', coordinates: Object.values(JSON.parse(req.body.coordinates)).reverse()}
     },
     { where: { id: req.body.id } })
     .then( async (affectedRows) => {
+
+        //Though the status might not actually have been changed, we
+        //still assume as such to be sure.
+        notifyOrderStatusChange(req.body.id, req.body.status);
+        console.log('ID in orders.js: ' + req.body.id);
+
         await updateDonation(req.body.id, req.body.price);
+
       res.status(200).json({
         message: `${affectedRows} rows updated`
       });
@@ -369,7 +378,6 @@ router.get("/deliveryDates", (req, res) => {
     });
 
 })
-
 
 /**
  * Retrieves the order associated with a given ID. Since it is assumed that

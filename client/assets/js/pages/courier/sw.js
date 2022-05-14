@@ -106,7 +106,7 @@ self.addEventListener('notificationclick',  async (event) => {
 
     //TODO: Change this to the live-deployed domain link
     if(action !== 'denied')
-        clients.openWindow('http://192.168.0.100:3000/dashboard/overview')
+        clients.openWindow('http://192.168.178.14:3000/dashboard/overview')
             .catch((err) => console.error(`Could not open new window: ${err}`));
 
     notification.close();
