@@ -42,18 +42,18 @@ const deliveredAmount= document.getElementById("deliveredAmount").innerText
 const myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: ["Dag 1", "Dag 2", "Dag 3"],
+        labels: ["Januari"],
         datasets: [
             {
 
-                label: 'Dataset 1',
-                data: [ordersAmount, ordersAmount],
+                label: 'Orders Amount',
+                data: [ ordersAmount],
                 borderColor: '#4dc9f6',
                 backgroundColor: '#f67019',
             },
             {
-                label: 'Dataset 2',
-                data: [deliveredAmount, deliveredAmount],
+                label: 'Delivered Amount',
+                data: [deliveredAmount],
                 borderColor: '#4dc9f6',
                 backgroundColor: '#f67019',
             }

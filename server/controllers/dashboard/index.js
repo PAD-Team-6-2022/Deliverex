@@ -10,6 +10,7 @@ const searching = require("../../middleware/searching");
 const {searchQueryToWhereClause} = require("../../util");
 const moment = require("moment");
 const {User, Company, Location} = require("../../models");
+const {Op} = require("sequelize");
 
 router.get("/", auth(true), (req, res) => {
     res.redirect("/dashboard/overview");
@@ -38,14 +39,13 @@ router.get(
                         "status",
                     ]),
                 });
-
         //Count specific values from database
         const ordersAmount = await Order.count();
         const deliverdAmount = await Order.count({
             where: {
                 status: "DELIVERED",
             },
-        });
+        })
 
         orders.forEach((order) => {
             //converteer het gewicht van elke order naar de beste maat
@@ -109,9 +109,9 @@ router.get("/signout", auth(true), (req, res) => {
  */
 router.get("/settings", async (req, res) => {
     const formats = await Format.findAll();
-    const user = await User.findByPk(1);
-    const company = await Company.findByPk(1)
-    const location = await Location.findByPk(1)
+    const user = await User.findByPk(req.user.id);
+    const company = await Company.findByPk(req.user.companyId)
+    const location = await Location.findByPk(company.location_id)
 
     res.render("dashboard/settings", {
         title: "Package sizes",
