@@ -155,7 +155,7 @@ router.post("/", (req, res) => {
                 }
         });
 
-       // await donateMoney(order);
+        await donateMoney(order);
 
       sendEmail(order.id);
       res.status(200).json({
