@@ -3,8 +3,10 @@ import { openModal } from "../../../modal.js";
 document.querySelectorAll("[data-order-code]").forEach((order) => {
   const id = order.getAttribute("data-order-code");
 
+  const qrCodeObject = document.querySelector("#qrcode");
+
   //QR Code is added to the 'qrcode' div element
-  new QRCode(document.querySelector("#qrcode"), order.getAttribute("data-order-code"));
+  new QRCode(qrCodeObject, qrCodeObject.getAttribute("qrHash"));
 
   order
     .querySelector("[data-order-delete]")

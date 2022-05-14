@@ -141,6 +141,12 @@ router.post('/', (req, res) => {
     //TODO: Remove this hard-coded deliveryDate with one sent by the front-end
     req.body.deliveryDate = moment().format('YYYY-MM-DD');
 
+    //Generate a unique QR code for this order
+    let qrCode = "";
+    const possibleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (let i = 0; i < 30; i++)
+        qrCode += possibleCharacters.charAt(Math.floor(Math.random() * possibleCharacters.length));
+
     Order.create({
     status: 'SORTING',
     email: req.body.email,
@@ -156,6 +162,7 @@ router.post('/', (req, res) => {
     updated_at: Date.now(),
     price: req.body.price,
     created_by: req.user.id,
+    qr_code: qrCode,
     coordinates: {
     	type: 'Point',
  		coordinates: Object.values(
@@ -178,7 +185,7 @@ router.post('/', (req, res) => {
             else{
                 //Planned mode
                 if(order.getDataValue('delivery_date') !==
- 					moment().format("YYYY-MM-DD"))
+                    moment().format("YYYY-MM-DD"))
                     return;
 
                 WeekSchedule.findOne({
@@ -463,10 +470,10 @@ router.get('/deliveryDates', (req, res) => {
  * request will come from the scanning page, the server will check whether
  * this order is being scanned by the right courier for safety sake.
  */
-router.get('/:id/scan', auth(true), async (req, res) => {
-    const {id} = req.params;
+router.get('/:qrCode/scan', auth(true), async (req, res) => {
+    const {qrCode} = req.params;
 
-    await Order.findByPk(id)
+    await Order.findOne({where: {qr_code: qrCode}})
         .then((order) => {
             res.json({
                 order: order,
@@ -476,7 +483,7 @@ router.get('/:id/scan', auth(true), async (req, res) => {
         })
         .catch((error) => {
             res.status(404).json(
-                `Could not find order with ID ${id}. Error: ${error}`,
+                `Could not find order with hash ${qrCode}. Error: ${error}`,
             );
         });
 });
