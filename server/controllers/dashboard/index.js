@@ -11,6 +11,7 @@ const {searchQueryToWhereClause} = require("../../util");
 const moment = require("moment");
 const {User, Company, Location} = require("../../models");
 const {Op} = require("sequelize");
+const sequelize = require("../../db/connection");
 
 router.get("/", auth(true), (req, res) => {
     res.redirect("/dashboard/overview");
@@ -46,6 +47,97 @@ router.get(
                 status: "DELIVERED",
             },
         })
+        
+        const aprilDelivered = await Order.count({
+            where: {
+                status: "DELIVERED",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-04-01 23:00:00')), new Date(Date.parse('2022-04-31 00:00:00'))]}
+            }
+        });
+        const meiDelivered = await Order.count({
+            where: {
+                status: "DELIVERED",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-05-01 23:00:00')), new Date(Date.parse('2022-05-31 00:00:00'))]}
+            }
+        });
+        const juniDelivered = await Order.count({
+            where: {
+                status: "DELIVERED",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-06-01 23:00:00')), new Date(Date.parse('2022-06-31 00:00:00'))]}
+            }
+        });
+        const aprilSorting = await Order.count({
+            where: {
+                status: "SORTING",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-04-01 23:00:00')), new Date(Date.parse('2022-04-31 00:00:00'))]}
+            }
+        });
+        const meiSorting = await Order.count({
+            where: {
+                status: "SORTING",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-05-01 23:00:00')), new Date(Date.parse('2022-05-31 00:00:00'))]}
+            }
+        });
+        const juniSorting = await Order.count({
+            where: {
+                status: "SORTING",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-06-01 23:00:00')), new Date(Date.parse('2022-06-31 00:00:00'))]}
+            }
+        });
+        const aprilReady = await Order.count({
+            where: {
+                status: "READY",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-04-01 23:00:00')), new Date(Date.parse('2022-04-31 00:00:00'))]}
+            }
+        });
+        const meiReady = await Order.count({
+            where: {
+                status: "READY",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-05-01 23:00:00')), new Date(Date.parse('2022-05-31 00:00:00'))]}
+            }
+        });
+        const juniReady = await Order.count({
+            where: {
+                status: "READY",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-06-01 23:00:00')), new Date(Date.parse('2022-06-31 00:00:00'))]}
+            }
+        });
+        const meiTransit = await Order.count({
+            where: {
+                status: "TRANSIT",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-05-01 23:00:00')), new Date(Date.parse('2022-05-31 00:00:00'))]}
+            }
+        });
+        const aprilTransit = await Order.count({
+            where: {
+                status: "TRANSIT",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-04-01 23:00:00')), new Date(Date.parse('2022-04-31 00:00:00'))]}
+            }
+        });
+        const juniTransit = await Order.count({
+            where: {
+                status: "TRANSIT",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-06-01 23:00:00')), new Date(Date.parse('2022-06-31 00:00:00'))]}
+            }
+        });
+        const aprilFailed = await Order.count({
+            where: {
+                status: "FAILED",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-04-01 23:00:00')), new Date(Date.parse('2022-04-31 00:00:00'))]}
+            }
+        });
+        const meiFailed = await Order.count({
+            where: {
+                status: "FAILED",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-05-01 23:00:00')), new Date(Date.parse('2022-05-31 00:00:00'))]}
+            }
+        });
+        const juniFailed = await Order.count({
+            where: {
+                status: "FAILED",
+                updated_at: {[Op.between]:[new Date(Date.parse('2022-06-01 23:00:00')), new Date(Date.parse('2022-06-31 00:00:00'))]}
+            }
+        });
 
         orders.forEach((order) => {
             //converteer het gewicht van elke order naar de beste maat
@@ -71,6 +163,21 @@ router.get(
             page: req.page,
             ordersAmount,
             deliverdAmount,
+            aprilDelivered,
+            meiDelivered,
+            juniDelivered,
+            aprilSorting,
+            meiSorting,
+            juniSorting,
+            aprilReady,
+            meiReady,
+            juniReady,
+            aprilTransit,
+            meiTransit,
+            juniTransit,
+            aprilFailed,
+            meiFailed,
+            juniFailed,
         });
     }
 );
