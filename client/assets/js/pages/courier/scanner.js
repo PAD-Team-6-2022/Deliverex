@@ -48,7 +48,7 @@ Html5Qrcode.getCameras().then((cameras) => {
                             console.log(order.isNotAuthorized)
                             document.querySelector("#occupied-order-message").classList.remove("hidden");
                             document.querySelector("#order-id-container-occupied").textContent = order.order.id;
-                            document.querySelector("#order-status-container").textContent = order.order.status;
+                            document.querySelector("#order-status-container-occupied").textContent = order.order.status;
                             document.querySelector("#courier-id-container").textContent = order.order.courier_id;
 
                             //Hide the 'add order' button and center the 'scan again' button
@@ -65,10 +65,10 @@ Html5Qrcode.getCameras().then((cameras) => {
 
                         //Show the loaded order data to the user in the UI
 
-
-
                         orderInfoContainer.querySelector("#order-id-container")
                             .textContent = order.order.id || '[Unavailable]';
+                        orderInfoContainer.querySelector("#order-status-container")
+                            .textContent = order.order.status || '[Unavailable]';
                         orderInfoContainer.querySelector("#order-format-container")
                             .textContent = order.order.formatId || '[Unavailable]';
                         orderInfoContainer.querySelector("#order-weight-container")
@@ -115,17 +115,65 @@ Html5Qrcode.getCameras().then((cameras) => {
 document.querySelector("#update-order-button")
     .addEventListener("click", async () => {
 
-    const id = document.querySelector("#order-id-container").textContent;
+        const id = document.querySelector("#order-id-container").textContent;
+        const status = document.querySelector("#order-status-container").textContent;
+        const address = document.querySelector("#order-address-container").textContent;
+        const city = document.querySelector("#order-city-container").textContent;
+        const postal_code = document.querySelector("#order-postal-code-container").textContent;
+        const country = document.querySelector("#order-country-container").textContent;
 
-    await fetch(`/api/orders/${id}/scan`, {
+        await fetch(`/api/orders/${id}/scan`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({id}),
     }).then((response) => {
-        if(response.status === 200)
+        if(response.status === 200){
+
+            const currentDate = new Date();
+            const today = currentDate.getFullYear()+'-'+(currentDate.getMonth()+1)+'-'+currentDate.getDate();
+
+            const calculateTime = (date) => {
+                const hours = date.getHours() < 10 ? '0'+date.getHours() : date.getHours();
+                const minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes();
+                const seconds = date.getSeconds() < 10 ? '0'+date.getSeconds() : date.getSeconds();
+                return `${hours}:${minutes}:${seconds}`;
+            }
+
+            const time = calculateTime(currentDate);
+
+            let completedCheckpoints = [];
+            //Clear the cookie in case the data is not from today
+
+            if(document.cookie){
+                const cookieData = JSON.parse(document.cookie);
+                if(cookieData.date === today)
+                    completedCheckpoints = completedCheckpoints.concat(cookieData.completedCheckpoints);
+            }
+
+            let type;
+            if(status === 'READY')
+                type = 'pickup';
+            else if (status === 'TRANSIT')
+                type = 'delivery';
+
+            completedCheckpoints.push({
+                order_id: id,
+                type,
+                location: {
+                    address,
+                    city,
+                    postal_code,
+                    country
+                },
+                time
+            })
+
+            document.cookie = JSON.stringify({date: today, completedCheckpoints});
+
             location.href = location.href.replace("/scan", "");
+        }
         else if(response.status === 500)
             document.querySelector("#server-error-message").classList.remove("hidden");
     }).catch((error) => {

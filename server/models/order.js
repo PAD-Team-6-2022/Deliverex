@@ -85,6 +85,10 @@ const Order = sequelize.define(
         type: DataTypes.DECIMAL(10,2),
         allowNull: false
     },
+    qr_code: {
+        type: DataTypes.STRING(30),
+        allowNull: false
+    }
   },
   {
     underscored: true,

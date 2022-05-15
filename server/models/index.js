@@ -10,6 +10,7 @@ const Goal = require("./goal");
 const Vote = require("./vote");
 const Donation = require("./donation");
 const Organisation = require("./organisation");
+const WeekSchedule = require("./week_schedule");
 
 User.hasMany(Format);
 Format.belongsTo(User);
@@ -20,6 +21,9 @@ Order.belongsTo(Format);
 User.hasMany(Order);
 Order.belongsTo(User, {as: 'userCreated',foreignKey: 'created_by'});
 Order.belongsTo(User, {as: 'courier', foreignKey: 'courier_id'});
+
+WeekSchedule.hasOne(User);
+User.belongsTo(WeekSchedule, {as: 'schedule', foreignKey: 'schedule_id'});
 
 Company.hasMany(User);
 User.belongsTo(Company, {as: 'company', foreignKey: 'company_id'});
@@ -51,4 +55,6 @@ module.exports = {
     Goal,
     Vote,
     Donation,
+    Organisation,
+    WeekSchedule
 };
