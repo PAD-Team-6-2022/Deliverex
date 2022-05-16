@@ -126,7 +126,7 @@ navigator.geolocation.getCurrentPosition((success) => {
 
             for (let i = 0; i < checkpointsTable.children.length; i++) {
                 if (checkpointsTable.children[i].children[0].children[0].classList.contains('animate-pulse')){
-                    checkpointsTable.children[i].setAttribute("style", "background-color: rgb(248 113 113);");
+                    checkpointsTable.children[i].setAttribute("style", "background-color: rgb(252 165 165);");
 
                     checkpointsTable.children[i].querySelector(".indexContainer").textContent = 'FAILED';
                     checkpointsTable.children[i].querySelector(".typeContainer").textContent = '-';
