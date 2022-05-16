@@ -9,7 +9,7 @@ const convert = require("convert-units");
 const searching = require("../../middleware/searching");
 const {searchQueryToWhereClause} = require("../../util");
 const moment = require("moment");
-const {User, Company, Location} = require("../../models");
+const {User, Company, Location, WeekSchedule} = require("../../models");
 const {Op} = require("sequelize");
 
 router.get("/", auth(true), (req, res) => {
@@ -27,7 +27,10 @@ router.get(
         const orders =
             req.user.role === "COURIER"
                 ? await Order.findAll({
-                    where: {courier_id: req.user.getDataValue("id"), delivery_date: moment().format("YYYY-MM-DD")},
+                    where: {courier_id: req.user.getDataValue("id"),
+                        delivery_date: moment().format("YYYY-MM-DD")},
+                    include: {model: User, as: 'courier', required: true,
+                        include: {model: WeekSchedule, as: 'schedule', required: true}},
                 })
                 : await Order.findAll({
                     offset: req.offset,
@@ -45,7 +48,25 @@ router.get(
             where: {
                 status: "DELIVERED",
             },
-        })
+        });
+
+        //We first assume the courier doesn't work today
+        let daySchedule = null;
+        if(req.user.role === 'COURIER'){
+            const currentDayOfTheWeek = moment().format("dddd").toLowerCase();
+            //We know every order has the same courier, so we just take the first one.
+            const courierWeekSchedule = orders[0].getDataValue('courier').schedule;
+
+            switch (currentDayOfTheWeek){
+                case 'monday': daySchedule = courierWeekSchedule.monday; break;
+                case 'tuesday': daySchedule = courierWeekSchedule.tuesday; break;
+                case 'wednesday': daySchedule = courierWeekSchedule.wednesday; break;
+                case 'thursday': daySchedule = courierWeekSchedule.thursday; break;
+                case 'friday': daySchedule = courierWeekSchedule.friday; break;
+                case 'saturday': daySchedule = courierWeekSchedule.saturday; break;
+                case 'sunday': daySchedule = courierWeekSchedule.sunday; break;
+            }
+        }
 
         orders.forEach((order) => {
             //converteer het gewicht van elke order naar de beste maat
@@ -57,10 +78,16 @@ router.get(
             order.date = moment(order.created_at).format("YYYY-MM-DD");
         });
 
-        // Render the page, pass on the order array
-        res.render(req.user.role === "COURIER" ?
-            "dashboard/courier/overview" :
-            "dashboard/overview", {
+
+        const courierRenderData = {
+            title: "Overzicht - Dashboard",
+            orders,
+            daySchedule,
+            order: req.order,
+            user: req.user,
+        }
+
+        const shopOwnerRenderData = {
             title: "Overzicht - Dashboard",
             orders,
             sort: req.sort,
@@ -71,7 +98,14 @@ router.get(
             page: req.page,
             ordersAmount,
             deliverdAmount,
-        });
+        }
+
+        // Render the page, pass on the order array
+        res.render(req.user.role === "COURIER" ?
+            "dashboard/courier/overview" :
+            "dashboard/overview",
+            req.user.role === "COURIER" ? courierRenderData :
+            shopOwnerRenderData);
     }
 );
 

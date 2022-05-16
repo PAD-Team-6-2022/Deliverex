@@ -1,18 +1,17 @@
 
 const loadCompletedCheckpoints = () => {
-    if(!document.cookie)
+    if(document.cookie === 'empty' || !document.cookie)
         return;
 
     const checkpointsMetadata = JSON.parse(document.cookie);
-    console.log(checkpointsMetadata);
 
     const currentDate = new Date();
     const today = currentDate.getFullYear()+'-'+(currentDate.getMonth()+1)+'-'+currentDate.getDate();
-    console.log(checkpointsMetadata.date);
+
     //Clear the cookie in case the data is not from today
     if(checkpointsMetadata.date.length)
     if(checkpointsMetadata.date !== today){
-        document.cookie = "";
+        document.cookie = 'empty';
         return;
     }
 
@@ -81,22 +80,21 @@ navigator.geolocation.getCurrentPosition((success) => {
 
             loadCompletedCheckpoints();
 
-            if(data.checkpoints.length === 0)
-                return;
-
             document.querySelector("#button-container").classList.remove("hidden");
 
-            const tableContainer = document.querySelector("#checkpointsTable");
-            tableContainer.classList.remove("animate-pulse");
-            tableContainer.classList.replace("bg-slate-100", "bg-white");
+            const checkpointsTable = document.querySelector("#checkpointsTable");
+            checkpointsTable.classList.remove("animate-pulse");
+            checkpointsTable.classList.replace("bg-slate-100", "bg-white");
+
+            if(data.checkpoints.length !== 0)
             data.checkpoints.forEach((checkpointData, index) => {
 
                 //Move the checkpoints to a lower point in the table. This way, we take
                 //into account the rows occupied by the completed checkpoints
-                if(document.cookie)
+                if(document.cookie !== 'empty' && document.cookie.length){
                     index += JSON.parse(document.cookie).completedCheckpoints.length;
-
-                const checkpointElement = tableContainer.children[index];
+                }
+                const checkpointElement = checkpointsTable.children[index];
                 checkpointElement.classList.remove("bg-slate-300");
                 checkpointElement.querySelectorAll(".loading-pulse")
                     .forEach(loadingPulse => loadingPulse.remove());
@@ -126,6 +124,53 @@ navigator.geolocation.getCurrentPosition((success) => {
                 checkpointTime.textContent = checkpointData.time;
             });
 
+            for (let i = 0; i < checkpointsTable.children.length; i++) {
+                if (checkpointsTable.children[i].children[0].children[0].classList.contains('animate-pulse')){
+                    checkpointsTable.children[i].setAttribute("style", "background-color: rgb(248 113 113);");
+
+                    checkpointsTable.children[i].querySelector(".indexContainer").textContent = 'FAILED';
+                    checkpointsTable.children[i].querySelector(".typeContainer").textContent = '-';
+                    checkpointsTable.children[i].querySelector(".addressContainer").textContent = '-';
+                    checkpointsTable.children[i].querySelector(".postalCodeContainer").textContent = '-';
+                    checkpointsTable.children[i].querySelector(".cityContainer").textContent = '-';
+                    checkpointsTable.children[i].querySelector(".countryContainer").textContent = '-';
+                    checkpointsTable.children[i].querySelector(".orderIdContainer").textContent = '-';
+                    checkpointsTable.children[i].querySelector(".timeContainer").textContent = '-';
+
+                    for (let j = 0; j < checkpointsTable.children[i].children.length; j++) {
+                        checkpointsTable.children[i].children[j].children[0].remove();
+                    }
+                }
+            }
+
+            const ordersTable = document.querySelector("#ordersTable");
+            const orders = ordersTable.children;
+
+            for (let i = 0; i < orders.length; i++) {
+                const id = orders[i].querySelector(".order-id-attribute").textContent;
+                const status = orders[i].querySelector(".status-attribute");
+
+                const checkpoints = checkpointsTable.children;
+                let sum = 0;
+                for (let j = 0; j < checkpoints.length; j++) {
+                    if(checkpoints[j].querySelector(".orderIdContainer").textContent === id)
+                        sum++;
+                }
+                if(sum !== 2){
+                    status.classList.remove('bg-green-100');
+                    status.classList.remove('text-green-800');
+                    status.classList.remove('bg-yellow-100');
+                    status.classList.remove('text-yellow-800');
+                    status.classList.remove('bg-slate-100');
+                    status.classList.remove('text-slate-800');
+                    status.classList.remove('bg-slate-100');
+                    status.classList.remove('text-slate-800');
+                    status.classList.add('bg-red-100');
+                    status.classList.add('text-red-800');
+                    status.textContent = 'FAILED';
+                }
+            }
+
             //Temporarily hard-coded. In the future, the travelmode should be
             //obtained from the back-end as the page loads.
             const travelMode = 'bicycling';
@@ -136,7 +181,7 @@ navigator.geolocation.getCurrentPosition((success) => {
             const checkpoints = document.querySelectorAll(".checkpoint");
             checkpoints.forEach((checkpoint, index) => {
                 const checkpointIndex = checkpoint.querySelector(".indexContainer");
-                if(!checkpointIndex.classList.contains('line-through') && index !== (checkpoints.length-1)){
+                if(!checkpointIndex.classList.contains('line-through') && index !== (checkpoints.length-1) && checkpointIndex.textContent !== 'FAILED'){
                     const address = checkpoint.querySelector(".addressContainer").textContent;
                     const postalCode = checkpoint.querySelector(".postalCodeContainer").textContent;
                     const city = checkpoint.querySelector(".cityContainer").textContent;
@@ -145,8 +190,18 @@ navigator.geolocation.getCurrentPosition((success) => {
                 }
             });
 
+            let i = 0;
+
+            for (let j = 0; j < checkpoints.length; j++) {
+                if(checkpoints[j].querySelector(".indexContainer").textContent === 'FAILED'){
+                    i = j-1;
+                    break;
+                }
+            }
+
             //Retrieve the location data from the last checkpoint
-            const lastCheckpoint = checkpoints[checkpoints.length-1];
+            const lastCheckpoint = checkpoints[i];
+
             lastCheckpoint.location = {
                 address: lastCheckpoint.querySelector(".addressContainer").textContent,
                 postal_code: lastCheckpoint.querySelector(".postalCodeContainer").textContent,
@@ -157,6 +212,7 @@ navigator.geolocation.getCurrentPosition((success) => {
             const destination = `${lastCheckpoint.location.address},${lastCheckpoint.location.postal_code},${lastCheckpoint.location.city}`;
             const url = encodeURI(`https://www.google.com/maps/dir/?api=1&travelmode=${travelMode}&waypoints=${waypoints}&destination=${destination}`
                 .replaceAll(',', '+'));
+
 
             //Adds a click event to a button that opens the google maps url in a new window
             document.querySelector("#viewRouteButton").addEventListener("click", () => {
@@ -171,7 +227,6 @@ navigator.geolocation.getCurrentPosition((success) => {
 
 }, (error) => {
     console.log(`Caught error while trying to get position. Error message: ${error}`);
-    console.log(error);
 });
 
 const publicVapidKey = 'BLxVvjwWFJLXU0nqPOxRB_cZZiDMMTeD6c-7gTDvatl3gak50_jM9AhpWMwmn3sOkd8Ga-xhnzhq-zYpVqueOnI';
@@ -208,7 +263,6 @@ if('serviceWorker' in navigator){
 
         subscribeButtonContainer.classList.remove("hidden");
         subscribeButton.addEventListener("click", () => {
-            console.log(registrationObject);
             registrationObject.pushManager.subscribe({
                 userVisibleOnly: true,
                 applicationServerKey: urlBase64ToUint8Array(publicVapidKey)

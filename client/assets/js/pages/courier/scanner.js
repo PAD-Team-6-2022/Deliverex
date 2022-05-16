@@ -146,7 +146,7 @@ document.querySelector("#update-order-button")
             let completedCheckpoints = [];
             //Clear the cookie in case the data is not from today
 
-            if(document.cookie){
+            if(document.cookie !== 'empty' && document.cookie.length){
                 const cookieData = JSON.parse(document.cookie);
                 if(cookieData.date === today)
                     completedCheckpoints = completedCheckpoints.concat(cookieData.completedCheckpoints);

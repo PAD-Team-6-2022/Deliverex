@@ -355,6 +355,22 @@ Organisation.findOne().then((organisation) => {
                     }, {
                         scheduled: true
                     });
+
+                const formattedEndTime = moment(timeWindow.end, "HH:mm:ss").format("s m H");
+                const today = moment().format("YYYY-MM-DD");
+
+                console.log(formattedEndTime);
+
+                cron.schedule(`${formattedEndTime} * * ${dayOfTheWeek}`, () => {
+                    Order.update({status: 'FAILED', courier_id: null},
+                        {where: {delivery_date: today, status: {[Op.ne]: 'DELIVERED'}}})
+                        .then((rowsUpdated) => {
+                        console.log(`Updated ${rowsUpdated} orders to 'FAILED' status.`)
+                    }).catch((err) => console.error(`Caught error in trying to update the
+                     status of orders to 'FAILED'. Errormessage: ${err}`))
+                }, {
+                    scheduled: true
+                });
             }
     });
 });
@@ -435,12 +451,6 @@ router.get('/:longitude/:latitude', (req, res) => {
             {model: User, as: 'courier', required: true,
                 include: [{model: WeekSchedule, as: 'schedule', required: true}]}]})
         .then((orders) => {
-            //console.log(orders.length)
-            //console.log(orders[0]);
-
-            //TODO: The data directly below is largely hardcoded and has to be
-            // replaced by various factors from the database. See
-            // 'utils.js' for further explanation.
 
             const ordersNotPickedUp = [];
             const ordersInTransit = [];
@@ -484,7 +494,7 @@ router.get('/:longitude/:latitude', (req, res) => {
                 start: userCoordinates,
                 capacity: [4],
                 skills: [1],
-                time_window: working_hours//[0, 100000]
+                time_window: working_hours //[0, 80000]
             };
 
             fetch('https://api.openrouteservice.org/optimization', {
@@ -511,7 +521,7 @@ router.get('/:longitude/:latitude', (req, res) => {
                     });
 
                     const checkpoints = [];
-                    if (data.routes){
+                    if (data.routes.length){
                         data.routes[0].steps.forEach((step) => {
 
                             //In case the type equals 'job', override that as a 'delivery'
@@ -521,7 +531,6 @@ router.get('/:longitude/:latitude', (req, res) => {
                                     step.type = step.type === 'pickup' ? 'pickup' : 'delivery';
                                     const isPickup = step.type === 'pickup';
                                     console.log(step);
-
 
                                     //If its a pickup, add a location object with the company location data. Otherwise,
                                     //add a location object with the order/destination location data.
