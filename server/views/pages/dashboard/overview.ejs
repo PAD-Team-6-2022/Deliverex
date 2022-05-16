@@ -30,7 +30,7 @@
         <h2 class="font-medium text-2xl text-slate-800">Statistics</h2>
         <div>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-            <canvas id="myChart" class="w-full max-h-200"></canvas>
+            <canvas id="myChart" class="max-h-200"></canvas>
         </div>
 
 
@@ -42,7 +42,6 @@
             </div>
             <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
                 <h1 id="deliveredAmount" class="font-bold text-4xl text-slate-800"><%= deliverdAmount %></h1>
-                <p id="vinden" class="font-bold text-4xl text-slate-800"><%= order.weight %></p>
                 <p class="font-medium text-slate-500 text-xl mt-2">Delivered</p>
             </div>
             <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
@@ -241,10 +240,27 @@
                 No orders found
               </h2>
             <%} %>
-    
+
         </div>
         </form>
         </div>
+    </div>
+    <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
+        <p id="aprilDelivered" class="max-h-0"  ><%= aprilDelivered %></p>
+        <p id="meiDelivered" class="max-h-0"  ><%= meiDelivered %></p>
+        <p id="juniDelivered" class="max-h-0"  ><%= juniDelivered %></p>
+        <p id="aprilSorting" class="max-h-0"  ><%= aprilSorting %></p>
+        <p id="meiSorting" class="max-h-0"  ><%= meiSorting %></p>
+        <p id="juniSorting" class="max-h-0"  ><%= juniSorting %></p>
+        <p id="aprilReady" class="max-h-0"  ><%= aprilReady %></p>
+        <p id="meiReady" class="max-h-0"  ><%= meiReady %></p>
+        <p id="juniReady" class="max-h-0"  ><%= juniReady %></p>
+        <p id="aprilTransit" class="max-h-0"  ><%= aprilTransit %></p>
+        <p id="meiTransit" class="max-h-0"  ><%= meiTransit %></p>
+        <p id="juniTransit" class="max-h-0"  ><%= juniTransit %></p>
+        <p id="aprilFailed" class="max-h-0"  ><%= aprilFailed %></p>
+        <p id="meiFailed" class="max-h-0"  ><%= meiFailed %></p>
+        <p id="juniFailed" class="max-h-0"  ><%= juniFailed %></p>
     </div>
 </body>
 </html>
