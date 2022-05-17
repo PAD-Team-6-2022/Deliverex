@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const Order = require("../../models/order");
 const Format = require("../../models/format");
 const passport = require("../../auth/passport");
 const auth = require("../../middleware/auth");
@@ -9,7 +8,7 @@ const convert = require("convert-units");
 const searching = require("../../middleware/searching");
 const {searchQueryToWhereClause} = require("../../util");
 const moment = require("moment");
-const {User, Company, Location, WeekSchedule} = require("../../models");
+const {User, Company, Location, WeekSchedule, Order} = require("../../models");
 const {Op} = require("sequelize");
 const sequelize = require("../../db/connection");
 
@@ -43,6 +42,28 @@ router.get(
                         "status",
                     ]),
                 });
+
+        /**
+         * Gets the money donated from this month of the current company
+         * @param {number} companyId the id of the company
+         * @returns the money donated
+         */
+        const getDonatedMoney = async (companyId) => {
+            let donated = await sequelize.query(`
+                SELECT users.company_id AS company_id, SUM(donations.amount) AS collected
+                FROM users
+                INNER JOIN orders
+                ON users.id = orders.created_by
+                INNER JOIN donations
+                ON orders.id = donations.order_id
+                WHERE users.company_id = ${companyId} && MONTH(donations.created_at) = MONTH(CURRENT_DATE()) && YEAR(donations.created_at) = YEAR(CURRENT_DATE())
+                GROUP BY users.company_id`,
+                { type: sequelize.QueryTypes.SELECT }
+            );
+
+            return (donated.length !== 0) ? donated[0].collected : 0;
+        }
+
         //Count specific values from database
         const ordersAmount = await Order.count();
         const deliverdAmount = await Order.count({
@@ -50,6 +71,7 @@ router.get(
                 status: "DELIVERED",
             },
         })
+        const donatedAmount = (req.user.role === "SHOP_OWNER") ? await getDonatedMoney(req.user.companyId) : 0;
         
         //We first assume the courier doesn't work today
         let daySchedule = null;
@@ -196,6 +218,7 @@ router.get(
             page: req.page,
             ordersAmount,
             deliverdAmount,
+            donatedAmount,
             aprilDelivered,
             meiDelivered,
             juniDelivered,
