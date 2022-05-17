@@ -63,30 +63,35 @@ const myChart = new Chart(ctx, {
                 data: [0, 0, 0, deliveredApril, deliveredMay, deliveredJune],
                 borderColor: '#4dc9f6',
                 backgroundColor: '#f67019',
+                tension: 0.2,
             },
             {
                 label: 'Number of Sorting per month',
                 data: [0, 0, 0, SortingApril,SortingMay,SortingJune],
                 borderColor: '#4dc9f6',
                 backgroundColor: '#f67019',
+                tension: 0.2,
             },
             {
                 label: 'Number of Ready per month',
                 data: [0, 0, 0, ReadyApril,ReadyMay,ReadyJune],
                 borderColor: '#4dc9f6',
                 backgroundColor: '#f67019',
+                tension: 0.2,
             },
             {
                 label: 'Number of Transit per month',
                 data: [0, 0, 0, TransitApril,TransitMay,TransitJune],
                 borderColor: '#4dc9f6',
                 backgroundColor: '#f67019',
+                tension: 0.2,
             },
             {
                 label: 'Number of Failed per month',
                 data: [0, 0, 0, FailedApril,FailedMay,FailedJune],
                 borderColor: '#4dc9f6',
                 backgroundColor: '#f67019',
+                tension: 0.2,
             }
         ],
         options: {
