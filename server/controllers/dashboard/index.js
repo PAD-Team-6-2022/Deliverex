@@ -12,7 +12,6 @@ const moment = require("moment");
 const {User, Company, Location, WeekSchedule} = require("../../models");
 const {Op} = require("sequelize");
 const sequelize = require("../../db/connection");
-// const { QueryTypes} = require("../../db/connection");
 
 router.get("/", auth(true), (req, res) => {
     res.redirect("/dashboard/overview");
@@ -51,10 +50,6 @@ router.get(
          * @returns the money donated
          */
         const getDonatedMoney = async (companyId) => {
-            const currentDate = new Date();
-            const currentMonth = currentDate.getMonth() + 1;
-            const currentYear = currentDate.getFullYear();
-
             let donated = await sequelize.query(`
                 SELECT companies.id AS company_id, SUM(donations.amount) AS collected
                 FROM companies
@@ -62,8 +57,9 @@ router.get(
                 ON companies.id = users.company_id
                 INNER JOIN orders
                 ON users.id = orders.created_by
-                INNER JOIN donations ON orders.id = donations.order_id
-                WHERE companies.id = ${companyId} && MONTH(donations.created_at) = "${currentMonth}" && YEAR(donations.created_at) = "${currentYear}"
+                INNER JOIN donations
+                ON orders.id = donations.order_id
+                WHERE companies.id = ${companyId} && MONTH(donations.created_at) = MONTH(CURRENT_DATE()) && YEAR(donations.created_at) = YEAR(CURRENT_DATE())
                 GROUP BY companies.id`,
                 { type: sequelize.QueryTypes.SELECT }
             );
