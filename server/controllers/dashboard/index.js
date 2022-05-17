@@ -61,7 +61,9 @@ router.get(
         if(req.user.role === 'COURIER'){
             const currentDayOfTheWeek = moment().format("dddd").toLowerCase();
             //We know every order has the same courier, so we just take the first one.
-            const courierWeekSchedule = orders[0].getDataValue('courier').schedule;
+            const user = await User.findOne({where: {id: req.user.id},
+                include: {model: WeekSchedule, as: 'schedule', required: true}});//orders[0].getDataValue('courier').schedule;
+            const courierWeekSchedule = user.getDataValue('schedule');
 
             switch (currentDayOfTheWeek){
                 case 'monday': daySchedule = courierWeekSchedule.monday; break;
