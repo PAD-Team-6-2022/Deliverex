@@ -8,7 +8,7 @@ const convert = require("convert-units");
 const searching = require("../../middleware/searching");
 const {searchQueryToWhereClause} = require("../../util");
 const moment = require("moment");
-const {User, Company, Location, WeekSchedule, Order} = require("../../models");
+const {User, Company, Location, Timetable, WeekSchedule, Order} = require("../../models");
 const {Op} = require("sequelize");
 const sequelize = require("../../db/connection");
 

@@ -10,6 +10,7 @@ const Goal = require("./goal");
 const Vote = require("./vote");
 const Donation = require("./donation");
 const Organisation = require("./organisation");
+const Timetable = require("./timetable");
 const WeekSchedule = require("./week_schedule");
 
 User.hasMany(Format);

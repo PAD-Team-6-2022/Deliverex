@@ -1,6 +1,10 @@
 <aside
   class="bg-white border-r border-r-slate-200 p-4 sticky top-0 h-screen flex flex-col justify-between"
 >
+
+  <% if(typeof isShopOwner == "undefined") isShopOwner = true %>
+
+  <%# Home icon %>
   <div class="space-y-3">
     <a
       href="/dashboard/overview"
@@ -17,6 +21,9 @@
         ></path>
       </svg>
     </a>
+
+    <%# Orders icon %>
+    <% if(isShopOwner) { %>
     <div class="border-t border-slate-200 h-px"></div>
     <a
       href="/dashboard/orders"
@@ -33,6 +40,8 @@
         ></path>
       </svg>
     </a>
+
+    <%# Users icon %>
     <a
       href="/dashboard/users"
       class="p-2 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors block"
@@ -44,6 +53,9 @@
       </svg>
     </a>
   </div>
+  <% } %>
+
+  <%# Profile icon %>
   <div class="space-y-3">
     <a
       href="/dashboard/profile"
@@ -55,6 +67,8 @@
         ></path>
       </svg>
     </a>
+
+    <%# Settings icon %>
     <a
       href="/dashboard/settings"
       class="p-2 bg-slate-100 hover:bg-slate-200 block rounded-full transition-colors"
