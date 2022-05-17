@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const Order = require("../../models/order");
 const Format = require("../../models/format");
 const passport = require("../../auth/passport");
 const auth = require("../../middleware/auth");
@@ -9,7 +8,7 @@ const convert = require("convert-units");
 const searching = require("../../middleware/searching");
 const {searchQueryToWhereClause} = require("../../util");
 const moment = require("moment");
-const {User, Company, Location, WeekSchedule} = require("../../models");
+const {User, Company, Location, WeekSchedule, Order} = require("../../models");
 const {Op} = require("sequelize");
 const sequelize = require("../../db/connection");
 
@@ -51,16 +50,14 @@ router.get(
          */
         const getDonatedMoney = async (companyId) => {
             let donated = await sequelize.query(`
-                SELECT companies.id AS company_id, SUM(donations.amount) AS collected
-                FROM companies
-                INNER JOIN users
-                ON companies.id = users.company_id
+                SELECT users.company_id AS company_id, SUM(donations.amount) AS collected
+                FROM users
                 INNER JOIN orders
                 ON users.id = orders.created_by
                 INNER JOIN donations
                 ON orders.id = donations.order_id
-                WHERE companies.id = ${companyId} && MONTH(donations.created_at) = MONTH(CURRENT_DATE()) && YEAR(donations.created_at) = YEAR(CURRENT_DATE())
-                GROUP BY companies.id`,
+                WHERE users.company_id = ${companyId} && MONTH(donations.created_at) = MONTH(CURRENT_DATE()) && YEAR(donations.created_at) = YEAR(CURRENT_DATE())
+                GROUP BY users.company_id`,
                 { type: sequelize.QueryTypes.SELECT }
             );
 
