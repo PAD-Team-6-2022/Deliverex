@@ -55,7 +55,7 @@
                                    for="grid-first-name">
                                 Name format
                             </label>
-                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full"
+                            <input class="bg-slate-50 border border-slate-200 focus:ring-cyan-500 focus:border-cyan-500 py-2 px-3 text-slate-800 rounded-lg w-full"
                                    id="name" type="text" name="name" placeholder="Name"/>
                         </div>
                         <p class="text-red-500  text sm " id="error2"></p>
@@ -67,7 +67,7 @@
                                    for="grid-city">
                                 Length
                             </label>
-                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full"
+                            <input class="bg-slate-50 border border-slate-200 focus:ring-cyan-500 focus:border-cyan-500 py-2 px-3 text-slate-800 rounded-lg w-full"
                                    id="length" type="number" name="length" placeholder="Enter length"/>
                             <p class="text-red-500  text sm " id="error3"></p>
                             <p class="text-gray-600 text-xs italic">Enter values in CM *</p>
@@ -78,7 +78,7 @@
                                    for="grid-zip">
                                 Width
                             </label>
-                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full"
+                            <input class="bg-slate-50 border border-slate-200 focus:ring-cyan-500 focus:border-cyan-500 py-2 px-3 text-slate-800 rounded-lg w-full"
                                    id="width" type="number" placeholder="Enter width" name="width"/>
                             <p class="text-red-500  text sm " id="error4"></p>
                         </div>
@@ -87,7 +87,7 @@
                                    for="grid-state">
                                 Height
                             </label>
-                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full"
+                            <input class="bg-slate-50 border border-slate-200 focus:ring-cyan-500 focus:border-cyan-500 py-2 px-3 text-slate-800 rounded-lg w-full"
                                    id="height" type="number" placeholder="Enter height" name="height"/>
                             <p class="text-red-500  text sm " id="error5"></p>
 
@@ -122,7 +122,6 @@
                                 <input type="range"
                                        class="form-range w-full h-6 p-0 bg-transparent focus:outline-none focus:ring-0 focus:shadow-none"
                                        id="rangeDoel" value="<%= company.percentageToGoal %>"/>
-                                <input/>
                             </div>
                             <p>Percentage: <span id="rangeDoelInfo"></span></p>
                         </div>
@@ -211,7 +210,7 @@
                                    for="grid-first-name">
                                 Store name
                             </label>
-                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full"
+                            <input class="bg-slate-50 border border-slate-200 focus:ring-cyan-500 focus:border-cyan-500 py-2 px-3 text-slate-800 rounded-lg w-full"
                                    id="Store_name" type="text" name="Store_name" placeholder="Store name" value="<%= company.name %>"/>
                         </div>
                         <div class="w-full px-3 mb-6 md:mb-0 my-4">
@@ -219,7 +218,7 @@
                                    for="grid-first-name">
                                 Store email
                             </label>
-                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full"
+                            <input class="bg-slate-50 border border-slate-200 focus:ring-cyan-500 focus:border-cyan-500 py-2 px-3 text-slate-800 rounded-lg w-full"
                                    id="Store_email" type="text" name="Store_email" placeholder="Store email" value="<%= company.email %>"/>
                         </div>
                         <div class="w-full px-3 mb-6 md:mb-0 my-4">
@@ -230,7 +229,7 @@
                                    for="grid-first-name">
                                 Street house number
                             </label>
-                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full"
+                            <input class="bg-slate-50 border border-slate-200 focus:ring-cyan-500 focus:border-cyan-500 py-2 px-3 text-slate-800 rounded-lg w-full"
                                    id="Street_house_number" type="text" name="Street_house_number" placeholder="Streethouse" value="<%= location.house_number %>"/>
                         </div>
                         <div class="w-full px-3 mb-6 md:mb-0 my-4">
@@ -238,7 +237,7 @@
                                    for="grid-first-name">
                                 Postal code
                             </label>
-                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full"
+                            <input class="bg-slate-50 border border-slate-200 focus:ring-cyan-500 focus:border-cyan-500 py-2 px-3 text-slate-800 rounded-lg w-full"
                                    id="Postal_code" type="text" name="Postal_code" placeholder="Postal code" value="<%= location.postal_code %>"/>
                         </div>
                         <div class="w-full px-3 mb-6 md:mb-0 my-4">
@@ -246,14 +245,14 @@
                                    for="City">
                                 City
                             </label>
-                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full"
+                            <input class="bg-slate-50 border border-slate-200 focus:ring-cyan-500 focus:border-cyan-500 py-2 px-3 text-slate-800 rounded-lg w-full"
                                    id="City" type="text" name="City" placeholder="City" value="<%= location.city %>"/>
                         </div>
                         <div class="w-full px-3 mb-6 md:mb-0 my-4">
                             <label class="block uppercase tracking-wide text-slate-700 text-xs font-bold mb-2" for="Country">
                                 Country
                             </label>
-                            <input class="bg-slate-50 border border-slate-200 py-2 px-3 text-slate-800 rounded-lg w-full" id="Country" type="text" name="Country" placeholder="Country" value="<%= location.country %>"/>
+                            <input class="bg-slate-50 border border-slate-200 focus:ring-cyan-500 focus:border-cyan-500 py-2 px-3 text-slate-800 rounded-lg w-full" id="Country" type="text" name="Country" placeholder="Country" value="<%= location.country %>"/>
                         </div>
                     </div>
                     <button class="bg-cyan-500 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex my-4 float-right transition-colors"
