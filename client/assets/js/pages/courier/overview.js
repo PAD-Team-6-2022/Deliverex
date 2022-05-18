@@ -179,6 +179,8 @@ navigator.geolocation.getCurrentPosition((success) => {
             //second-to-last
             let waypoints = '';
             const checkpoints = document.querySelectorAll(".checkpoint");
+            let previousLocation = '';
+
             checkpoints.forEach((checkpoint, index) => {
                 const checkpointIndex = checkpoint.querySelector(".indexContainer");
                 if(!checkpointIndex.classList.contains('line-through') && index !== (checkpoints.length-1) && checkpointIndex.textContent !== 'FAILED'){
@@ -186,7 +188,12 @@ navigator.geolocation.getCurrentPosition((success) => {
                     const postalCode = checkpoint.querySelector(".postalCodeContainer").textContent;
                     const city = checkpoint.querySelector(".cityContainer").textContent;
 
-                    waypoints += `${address},${postalCode},${city}|`;
+                    const newLocation = `${address},${postalCode},${city}|`;
+
+                    if(newLocation !== previousLocation){
+                        waypoints += newLocation;
+                        previousLocation = newLocation;
+                    }
                 }
             });
 
@@ -199,8 +206,18 @@ navigator.geolocation.getCurrentPosition((success) => {
                 }
             }
 
+            let lastIndex;
+            for (let j = 0; j < checkpoints.length; j++) {
+                if(checkpoints[j].querySelector(".indexContainer").textContent !== 'FAILED' &&
+                    !checkpoints[j].querySelector(".indexContainer").classList.contains('line-through') &&
+                    j === checkpoints.length-1){
+                    lastIndex = j;
+                    break;
+                }
+            }
+
             //Retrieve the location data from the last checkpoint
-            const lastCheckpoint = checkpoints[i];
+            const lastCheckpoint = checkpoints[lastIndex];
 
             lastCheckpoint.location = {
                 address: lastCheckpoint.querySelector(".addressContainer").textContent,
