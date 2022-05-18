@@ -250,8 +250,6 @@ Organisation.findOne().then((organisation) => {
                 }
                 cronjobSchedule += ` * * ${dayOfTheWeek}`;
 
-                console.log(cronjobSchedule);
-
                 //Sets the hourly cron-job
                 cron.schedule(cronjobSchedule, () => {
                     Order.findAll({where: {status: 'READY', id:{[Op.in]: sameDayDeliveryQueue}}})
