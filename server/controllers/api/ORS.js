@@ -21,13 +21,6 @@ const {Company} = require("../../models");
 
 //TODO: GeoCode endpoint of address-finding to be placed here
 
-//TODO: Make a cronjob that fires at the end of the day and
-// checks whether all shipments of today are finished. If a
-// shipment could not be delivered today, adjust its status
-// to 'FAILED'. Also adjust the morning cronjob to set
-// overdue/failed orders to 'READY' again and include them
-// in todays scheduled deliveries.
-
 //For debugging purposes. Comment it out if
 //necessary but don't remove.
 cron.schedule("0,10,20,30,40,50 * * * * *", () => {
