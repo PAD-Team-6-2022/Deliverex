@@ -1,0 +1,22 @@
+{
+    "name": "deliverex-client",
+    "version": "0.0.1",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "rm -rf dist && webpack"
+    },
+    "devDependencies": {
+        "@types/node": "^17.0.31",
+        "@types/qs": "^6.9.7",
+        "terser-webpack-plugin": "^5.3.1",
+        "ts-loader": "^9.3.0",
+        "typescript": "^4.6.4",
+        "webpack": "^5.72.1",
+        "webpack-cli": "^4.9.2"
+    },
+    "dependencies": {
+        "isomorphic-unfetch": "^3.1.0",
+        "qs": "^6.10.3",
+        "undici": "^5.1.1"
+    }
+}
