@@ -1,10 +1,10 @@
 <%
     const collected = (currentGoal.donations && currentGoal.donations.length !== 0) ? currentGoal.donations[0].dataValues.total : 0;
-    const collectedPrice = new Intl.NumberFormat('en-EN', {
+    const collectedPrice = new Intl.NumberFormat('nl-NL', {
             style: 'currency',
             currency: 'EUR',
         }).format(collected);
-    const currentGoalPrice = new Intl.NumberFormat('en-EN', {
+    const currentGoalPrice = new Intl.NumberFormat('nl-NL', {
             style: 'currency',
             currency: 'EUR',
         }).format(currentGoal.amount);
@@ -119,6 +119,7 @@
     <script>
         const goal = <%- currentGoal.amount %>;
         const collected = <%- collected %>;
+        const ratio = (goal - collected > 0 ) ? goal - collected : 0;
     
         const ctx = document.getElementById('myChart').getContext('2d');
         const myChart = new Chart(ctx, {
@@ -127,7 +128,7 @@
                 labels: ['Amount raised', 'Amount left'],
                 datasets: [{
                     label: 'Goal collection',
-                    data: [collected, (goal - collected)],
+                    data: [collected, ratio],
                     backgroundColor: [
                         'rgba(6, 182, 212, 0.4)',
                         'rgba(226, 232, 240, 0.2)',

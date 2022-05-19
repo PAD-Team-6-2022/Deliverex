@@ -78,7 +78,7 @@ router.get('/track/:postal_code/:id', async (req, res) => {
     order.weight = `${Math.round(convertedWeight.val)} ${convertedWeight.unit}`;
 
     // convert price int to euro
-    order.price = new Intl.NumberFormat('en-EN', {
+    order.price = new Intl.NumberFormat('nl-NL', {
         style: 'currency',
         currency: 'EUR',
     }).format(order.price);

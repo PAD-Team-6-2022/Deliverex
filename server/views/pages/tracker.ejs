@@ -1,5 +1,5 @@
 <%
-    const donationPrice = new Intl.NumberFormat('en-EN', {
+    const donationPrice = new Intl.NumberFormat('nl-NL', {
             style: 'currency',
             currency: 'EUR',
         }).format((order.donation !== null) ? order.donation.amount : 0);
