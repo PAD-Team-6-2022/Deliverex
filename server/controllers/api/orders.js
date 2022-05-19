@@ -147,6 +147,8 @@ router.post('/', (req, res) => {
     for (let i = 0; i < 30; i++)
         qrCode += possibleCharacters.charAt(Math.floor(Math.random() * possibleCharacters.length));
 
+    console.log(req.body.format_id);
+
     Order.create({
     status: 'SORTING',
     email: req.body.email,
@@ -157,7 +159,7 @@ router.post('/', (req, res) => {
     postal_code: req.body.postal_code,
     city: req.body.city,
     country: req.body.country,
-    format_id: req.body.format_id,
+    formatId: req.body.format_id,
     is_pickup: pickup_status,
     updated_at: Date.now(),
     price: req.body.price,
