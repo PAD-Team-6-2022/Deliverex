@@ -10,7 +10,6 @@ const Goal = require('./goal');
 const Vote = require('./vote');
 const Donation = require('./donation');
 const Organisation = require('./organisation');
-const Timetable = require('./timetable');
 const WeekSchedule = require('./week_schedule');
 
 User.hasMany(Format);
@@ -44,6 +43,9 @@ Donation.belongsTo(Goal);
 Order.hasOne(Donation);
 Donation.belongsTo(Order);
 
+User.hasOne(Timetable);
+Timetable.belongsTo(User);
+
 module.exports = {
     Format,
     Order,
@@ -57,6 +59,5 @@ module.exports = {
     Vote,
     Donation,
     Organisation,
-    Timetable,
     WeekSchedule,
 };
