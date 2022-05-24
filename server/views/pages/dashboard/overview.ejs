@@ -4,268 +4,56 @@
     <%- include("../../partials/head", { js: "dashboard/overview" }) %>
 </head>
 <body>
-    <%- include("../../partials/modal", {
-    id: "delete-order",
-    type: "warning",
-    actions: {
-        confirm: {
-            type: "warning",
-            label: "Delete"
-        }
-    },
-    title: "Are you sure?",
-    description: "Are you sure you want to delete this order? You cannot go back."
-}) %>
+    <%- include("../../partials/modal", { id: "delete-order", type: "warning", actions: { confirm: { type: "warning", label: "Delete" } }, title: "Are you sure?", description: "Are you sure you want to delete this order? You cannot go back." }) %>
     <div class="flex">
         <%- include("../../partials/dashboard/sidebar") %>
         <div class="p-10 flex-1 overflow-hidden space-y-10">
-            <%- include("../../partials/breadcrumb", { links: [{
-                name: "Overview"
-            }] }) %>
-    <div class="text-center sm:text-left space-y-3">
-        <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Welcome back, <%= user.username %>!</h1>
-        <p class="text-lg sm:text-xl font-medium text-slate-500 max-w-sm inline-block">See how your business is doing by looking at the statistics below</p>
-    </div>
-    <div class="space-y-3">
-        <h2 class="font-medium text-2xl text-slate-800">Statistics</h2>
-        <div>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-            <canvas id="myChart" class="max-h-200"></canvas>
-        </div>
-
-
-
-        <div class="flex gap-3 flex-col sm:flex-row">
-            <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
-                <h1 id="ordersAmount" class="font-bold text-4xl text-slate-800"><%= ordersAmount %></h1>
-                <p class="font-medium text-slate-500 text-xl mt-2">Orders</p>
+            <%- include("../../partials/breadcrumb", { links: [{ name: "Overview" }] }) %>
+            <div class="text-center sm:text-left space-y-3">
+                <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Welcome back, <%= user.username %>!</h1>
+                <p class="text-lg sm:text-xl font-medium text-slate-500 max-w-sm inline-block">See how your business is doing by looking at the statistics below</p>
             </div>
-            <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
-                <h1 id="deliveredAmount" class="font-bold text-4xl text-slate-800"><%= deliverdAmount %></h1>
-                <p class="font-medium text-slate-500 text-xl mt-2">Delivered</p>
-            </div>
-            <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
-                <h1 class="font-bold text-4xl text-slate-800"><%=
-                    new Intl.NumberFormat('nl-NL', {
-                        style: 'currency',
-                        currency: 'EUR',
-                    }).format(donatedAmount);
-                %></h1>
-                <p class="font-medium text-slate-500 text-xl mt-2">Money raised <small class="text-slate-400">(This month)</small></p>
-            </div>
-        </div>
-    </div>
-
-    <%# order overview %>
-    <form class="flex flex-col bg-white rounded-md border border-slate-200 overflow-hidden p-8" data-pagination-enabled data-ordering-enabled>
-
-        <%# Hidden inputs for column sorting and pagination %>
-        <input type="hidden" name="sort" value="<%= sort %>">
-        <input type="hidden" name="order" value="<%= order %>">
-        <input type="hidden" name="page" value="<%= page %>">   
-
-        <h2 class="font-medium text-2xl text-slate-800 mb-4 flex">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -4 24 24" width="24" fill="currentColor">
-                <path
-                        d="M3 0h14a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3zm0 2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H3zm10.874 5a4.002 4.002 0 0 1-7.748 0H2V5h16v2h-4.126zm-2.142 0H8.268a2 2 0 0 0 3.464 0z">
-                </path>
-            </svg>
-            <span class="ml-3">Orders</span>
-        </h2>
-
-        <%# searchbar & add button %>
-        <div class="flex mb-4">
-            <div class="flex-1">
-                <div class="input-group relative flex flex-wrap items-stretch w-full">
-                    <input type="search"
-                            name="search"
-                           class="form-control flex-auto w-full px-3 py-2 text-base font-normal text-slate-700 bg-slate-50 border border-solid focus:ring-cyan-500 focus:border-cyan-500  border-slate-200 border-r-0 focus:outline-none rounded-l-lg"
-                           placeholder="Search orders"
-                           value="<%= search %>">
+            <div class="space-y-3">
+                <h2 class="font-medium text-2xl text-slate-800">Statistics</h2>
+                <div>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+                    <canvas id="myChart" class="max-h-200"></canvas>
                 </div>
+                <div class="flex gap-3 flex-col sm:flex-row">
+                    <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
+                        <h1 id="ordersAmount" class="font-bold text-4xl text-slate-800"><%= ordersAmount %></h1>
+                        <p class="font-medium text-slate-500 text-xl mt-2">Orders</p>
+                    </div>
+                    <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
+                        <h1 id="deliveredAmount" class="font-bold text-4xl text-slate-800"><%= deliverdAmount %></h1>
+                        <p class="font-medium text-slate-500 text-xl mt-2">Delivered</p>
+                    </div>
+                    <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
+                        <h1 class="font-bold text-4xl text-slate-800"><%= new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(donatedAmount); %></h1>
+                        <p class="font-medium text-slate-500 text-xl mt-2">Money raised <small class="text-slate-400">(This month)</small></p>
+                    </div>
+                 </div>
             </div>
-            <div class="border border-solid bg-slate-50 border-slate-200 border-l-0 rounded-r-lg px-3 py-2 items-stretch text-slate-700">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24" fill="currentColor">
-                    <path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zm6.32-1.094l3.58 3.58a1 1 0 1 1-1.415 1.413l-3.58-3.58a8 8 0 1 1 1.414-1.414z"></path>
-                </svg>
-            </div>
-            <a href="/dashboard/orders/create">
-                <button type="button" class="bg-cyan-500 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex ml-4 transition-colors">
-          <span class="hidden md:inline">
-            New order
-          </span>
-                    <svg class="inline" xmlns="http://www.w3.org/2000/svg" viewBox="-4.5 -4.5 24 24" width="24"
-                         fill="currentColor">
-                        <path d="M8.9 6.9v-5a1 1 0 1 0-2 0v5h-5a1 1 0 1 0 0 2h5v5a1 1 0 1 0 2 0v-5h5a1 1 0 1 0 0-2h-5z"></path>
-                    </svg>
-                </button>
-            </a>
+            <%# order overview %>
+            <%- include('../../partials/orders') %> 
         </div>
-        <% if (!orders.length == 0) { %>
-
-        <%# table %>
-        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <div class="overflow-hidden border-b border-slate-200">
-                    <table class="min-w-full divide-y divide-slate-200">
-                        <thead>
-                        <tr>
-                            <th data-order-toggle="id" scope="col"
-                                class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
-                    <span class="flex items-center">
-                      Id
-                        <%- include("../../partials/dashboard/tableArrow", { column: 'id' }) %>
-                    </span>
-                            </th>
-                            <th data-order-toggle="weight" scope="col"
-                                class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
-                    <span class="flex">
-                      Weight
-                        <%- include("../../partials/dashboard/tableArrow", { column: 'weight' }) %>
-                    </span>
-                            </th>
-                            <th data-order-toggle="status" scope="col"
-                                class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
-                    <span class="flex">
-                      Status
-                        <%- include("../../partials/dashboard/tableArrow", { column: 'status' }) %>
-                    </span>
-                            </th>
-                            <th data-order-toggle="created_at" scope="col"
-                                class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
-                    <span class="flex">
-                      Date
-                        <%- include("../../partials/dashboard/tableArrow", { column: 'created_at' }) %>
-                    </span>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-slate-200">
-                        <% orders.forEach(order => { %>
-                            <tr data-order-code=<%= order.id %> class="text-slate-500 hover:bg-slate-100 cursor-pointer">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="text-sm font-medium text-slate-900">
-                                            <%= order.id %>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="text-sm font-medium text-slate-900">
-                                            <%= order.weight %>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <% if (order.status === "DELIVERED" ) { %>
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                <%= order.status %>
-                            </span>
-                                    <% } else if (order.status === "TRANSIT") { %>
-                                        <span
-                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                <%= order.status %>
-                            </span>
-                                    <% } else if (order.status === "SORTING") { %>
-                                        <span
-                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">
-                                <%= order.status %>
-                            </span>
-                                    <% } else if (order.status === "READY") { %>
-                                        <span
-                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">
-                              <%= order.status %>
-                          </span>
-                                    <% } else { %>
-                                        <span
-                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                <%= order.status %>
-                            </span>
-                                    <% } %>
-
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <%= order.date %>
-                                </td>
-                                <td class="px-6 text-right text-sm font-medium">
-                                    <button type="button" data-order-edit class="inline">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24"
-                                             fill="currentColor">
-                                            <path
-                                                    d="M12.238 5.472L3.2 14.51l-.591 2.016 1.975-.571 9.068-9.068-1.414-1.415zM13.78 3.93l1.414 1.414 1.318-1.318a.5.5 0 0 0 0-.707l-.708-.707a.5.5 0 0 0-.707 0L13.781 3.93zm3.439-2.732l.707.707a2.5 2.5 0 0 1 0 3.535L5.634 17.733l-4.22 1.22a1 1 0 0 1-1.237-1.241l1.248-4.255 12.26-12.26a2.5 2.5 0 0 1 3.535 0z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                </td>
-                                <td class="px-6 pl-0 text-right text-sm font-medium">
-                                    <button type="button" data-order-delete class="mr-none inline">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -2 24 24" width="24"
-                                             fill="currentColor">
-                                            <path
-                                                    d="M6 2V1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-.133l-.68 10.2a3 3 0 0 1-2.993 2.8H5.826a3 3 0 0 1-2.993-2.796L2.137 7H2a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h4zm10 2H2v1h14V4zM4.141 7l.687 10.068a1 1 0 0 0 .998.932h6.368a1 1 0 0 0 .998-.934L13.862 7h-9.72zM7 8a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                </td>
-                            </tr>
-                        <% }); %>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="bg-white rounded-md border border-slate-200 p-4 flex-1 hidden">
+            <p id="aprilDelivered" class="max-h-0"  ><%= aprilDelivered %></p>
+            <p id="meiDelivered" class="max-h-0"  ><%= meiDelivered %></p>
+            <p id="juniDelivered" class="max-h-0"  ><%= juniDelivered %></p>
+            <p id="aprilSorting" class="max-h-0"  ><%= aprilSorting %></p>
+            <p id="meiSorting" class="max-h-0"  ><%= meiSorting %></p>
+            <p id="juniSorting" class="max-h-0"  ><%= juniSorting %></p>
+            <p id="aprilReady" class="max-h-0"  ><%= aprilReady %></p>
+            <p id="meiReady" class="max-h-0"  ><%= meiReady %></p>
+            <p id="juniReady" class="max-h-0"  ><%= juniReady %></p>
+            <p id="aprilTransit" class="max-h-0"  ><%= aprilTransit %></p>
+            <p id="meiTransit" class="max-h-0"  ><%= meiTransit %></p>
+            <p id="juniTransit" class="max-h-0"  ><%= juniTransit %></p>
+            <p id="aprilFailed" class="max-h-0"  ><%= aprilFailed %></p>
+            <p id="meiFailed" class="max-h-0"  ><%= meiFailed %></p>
+            <p id="juniFailed" class="max-h-0"  ><%= juniFailed %></p>
         </div>
-
-        <div class="text-slate-700 flex justify-end items-center mt-4">
-            <div class="inline-block relative w-32 ml-4">
-                <select name="limit" onchange="this.form.submit()"
-                        class="bg-white h-10 block appearance-none w-full border border-slate-300 px-3 py-2 rounded-lg leading-tight focus:outline-none focus:shadow-outline">
-                    <option value="25"<%= limit === 25 ? " selected" : "" %>>25</option>
-                    <option value="50"<%= limit === 50 ? " selected": "" %>>50</option>
-                    <option value="100"<%= limit === 100 ? " selected" : "" %>>100</option>
-                </select>
-            </div>
-            <button type="button" data-pagination-prev-trigger
-                    class="h-10 hover:bg-slate-100 border border-solid border-slate-300 rounded-lg px-3 py-2 ml-4 text-slate-700 disabled:text-slate-400 disabled:hover:bg-slate-50 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
-                    <path d="M3.414 7.657l3.95 3.95A1 1 0 0 1 5.95 13.02L.293 7.364a.997.997 0 0 1 0-1.414L5.95.293a1 1 0 1 1 1.414 1.414l-3.95 3.95H13a1 1 0 0 1 0 2H3.414z"></path>
-                </svg>
-            </button>
-            <button type="button" data-pagination-next-trigger
-                    class="h-10 first-letter:hover:bg-slate-100 border border-solid border-slate-300 rounded-lg px-3 py-2 ml-4 text-slate-700 disabled:text-slate-400 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
-                    <path d="M10.586 5.657l-3.95-3.95A1 1 0 0 1 8.05.293l5.657 5.657a.997.997 0 0 1 0 1.414L8.05 13.021a1 1 0 1 1-1.414-1.414l3.95-3.95H1a1 1 0 1 1 0-2h9.586z"></path>
-                </svg>
-            </button>
-            <% } else { %>
-              <div class="mx-auto mt-4">
-                <img src="/assets/img/no_orders_found.svg" class="max-h-60">
-              </div>
-              <h2 class="text-3xl text-center text-slate-500 mt-6 mb-2">
-                No orders found
-              </h2>
-            <%} %>
-
-        </div>
-        </form>
-        </div>
-    </div>
-    <div class="bg-white rounded-md border border-slate-200 p-4 flex-1 hidden">
-        <p id="aprilDelivered" class="max-h-0"  ><%= aprilDelivered %></p>
-        <p id="meiDelivered" class="max-h-0"  ><%= meiDelivered %></p>
-        <p id="juniDelivered" class="max-h-0"  ><%= juniDelivered %></p>
-        <p id="aprilSorting" class="max-h-0"  ><%= aprilSorting %></p>
-        <p id="meiSorting" class="max-h-0"  ><%= meiSorting %></p>
-        <p id="juniSorting" class="max-h-0"  ><%= juniSorting %></p>
-        <p id="aprilReady" class="max-h-0"  ><%= aprilReady %></p>
-        <p id="meiReady" class="max-h-0"  ><%= meiReady %></p>
-        <p id="juniReady" class="max-h-0"  ><%= juniReady %></p>
-        <p id="aprilTransit" class="max-h-0"  ><%= aprilTransit %></p>
-        <p id="meiTransit" class="max-h-0"  ><%= meiTransit %></p>
-        <p id="juniTransit" class="max-h-0"  ><%= juniTransit %></p>
-        <p id="aprilFailed" class="max-h-0"  ><%= aprilFailed %></p>
-        <p id="meiFailed" class="max-h-0"  ><%= meiFailed %></p>
-        <p id="juniFailed" class="max-h-0"  ><%= juniFailed %></p>
     </div>
 </body>
 </html>

@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-slate-50">
   <head>
-    <%- include("../../../partials/head") %>
+    <%- include("../../../partials/head", { js: "dashboard/orders/list" }) %>
   </head>
   <body>
+    <%- include("../../../partials/modal", { id: "delete-order", type: "warning", actions: { confirm: { type: "warning", label: "Delete" } }, title: "Are you sure?", description: "Are you sure you want to delete this order? You cannot go back." }) %>
     <div class="flex">
       <%- include("../../../partials/dashboard/sidebar") %>
-      <div class="p-10 flex-1 overflow-hidden">
-        <%- include("../../../partials/breadcrumb", { links: [{ name:
-        "Overview", href: "/dashboard/overview" }, { name: "Orders" }] }) %>
+      <div class="p-10 flex-1 overflow-hidden space-y-10">
+        <%- include("../../../partials/breadcrumb", { links: [{ name: "Overview", href: "/dashboard/overview" }, { name: "Orders" }] }) %>
+        <%- include("../../../partials/orders") %>
       </div>
     </div>
   </body>
