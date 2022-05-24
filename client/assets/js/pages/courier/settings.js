@@ -1,4 +1,4 @@
-import { delay } from "../../util";
+import { delay } from "../../util.js";
 
 const API_KEY = "5b3ce3597851110001cf62482d328da4ad724df196a3e2f0af3e15f3";
 
@@ -11,18 +11,17 @@ const cityInput = document.getElementById("city");
 const addressInput = document.getElementById("address");
 const countryInput = document.getElementById("country");
 
-const timetableButton = document.getElementById("saveTimetable");
+const scheduleButton = document.getElementById("saveTimetable");
 
-const timetableInputs = document.querySelectorAll("[data-timetable-input]");
+const scheduleInputs = document.querySelectorAll("[data-timetable-input]");
 
-timetableButton.addEventListener("click", async (event) => {
+scheduleButton.addEventListener("click", async (event) => {
 
     event.preventDefault();
 
     let wrongInputs = [];
 
-    const inputs = document.querySelectorAll("[data-timetable-input]");
-    inputs.forEach((input) => {
+    scheduleInputs.forEach((input) => {
         input.classList.remove(
             "bg-red-50",
             "border-red-500");
@@ -32,7 +31,7 @@ timetableButton.addEventListener("click", async (event) => {
         }
     });
 
-    if(inputs.length === 0) {
+    if(wrongInputs.length === 0) {
 
         const values = {
             mondayStart: timetableInputs[0].value,
@@ -51,20 +50,22 @@ timetableButton.addEventListener("click", async (event) => {
             sundayEnd: timetableInputs[13].value,
         }
 
-        await fetch(`/api/courier/timetable/${id}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        }).then((response) => {
-            if(response.status === 200) {
-                window.location.href = `/dashboard/settings`;
-            }
-        }).catch((error) => {
-            console.error(`Fetch error: could not fulfill post request
-             to create order. Errormessage: ${error}`);
-        });
+        console.log("Succes");
+
+        // await fetch(`/api/courier/timetable/${id}`, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(values),
+        // }).then((response) => {
+        //     if(response.status === 200) {
+        //         window.location.href = `/dashboard/settings`;
+        //     }
+        // }).catch((error) => {
+        //     console.error(`Fetch error: could not fulfill post request
+        //      to create order. Errormessage: ${error}`);
+        // });
 
     } else {
         wrongInputs.forEach((input) => {
@@ -105,7 +106,7 @@ addressInput.addEventListener("keyup", delay((e) => {
 
     if(addressInput.value === "") return;
 
-    fetch(`https://api.openrouteservice.org/geocode/search?api_key=${API_KEY}&text=${addressInput.value}&boundary.country=NL`)
+    fetch(`https://api.openrouteservice.org/geocode/autocomplete?api_key=${API_KEY}&text=${addressInput.value}&boundary.country=NL`)
         .then(res => res.json())
         .then(data => {
 
