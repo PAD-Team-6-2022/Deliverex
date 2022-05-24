@@ -43,9 +43,6 @@ Donation.belongsTo(Goal);
 Order.hasOne(Donation);
 Donation.belongsTo(Order);
 
-User.hasOne(Timetable);
-Timetable.belongsTo(User);
-
 module.exports = {
     Format,
     Order,
