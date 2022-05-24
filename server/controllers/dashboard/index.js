@@ -410,16 +410,29 @@ router.get('/signout', auth(true), (req, res) => {
 router.get('/settings', async (req, res) => {
     const formats = await Format.findAll();
     const user = await User.findByPk(req.user.id);
-    const company = await Company.findByPk(req.user.companyId);
-    const location = await Location.findByPk(company.location_id);
 
-    res.render('dashboard/settings', {
-        title: 'Package sizes',
-        formats,
-        user,
-        company,
-        location,
-    });
+    if(req.user.role === "COURIER") {
+
+        const timetable = Timetable.findOne({where: { user_id: req.user.id }});
+
+        res.render("dashboard/courier/settings", {
+            title: "Settings",
+            user,
+            timetable
+        });
+    } else {
+
+        const company = await Company.findByPk(req.user.companyId)
+        const location = await Location.findByPk(company.location_id)
+
+        res.render("dashboard/settings", {
+            title: "Package sizes",
+            formats,
+            user,
+            company,
+            location,
+        });
+    }
 });
 
 router.use('/orders', require('./orders'));
