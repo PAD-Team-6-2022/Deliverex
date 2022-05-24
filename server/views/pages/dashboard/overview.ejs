@@ -6,7 +6,7 @@
 <body>
     <%- include("../../partials/modal", { id: "delete-order", type: "warning", actions: { confirm: { type: "warning", label: "Delete" } }, title: "Are you sure?", description: "Are you sure you want to delete this order? You cannot go back." }) %>
     <div class="flex">
-        <%- include("../../partials/dashboard/sidebar") %>
+        <%- include("../../partials/dashboard/sidebar", {isShopOwner: true}) %>
         <div class="p-10 flex-1 overflow-hidden space-y-10">
             <%- include("../../partials/breadcrumb", { links: [{ name: "Overview" }] }) %>
             <div class="text-center sm:text-left space-y-3">
