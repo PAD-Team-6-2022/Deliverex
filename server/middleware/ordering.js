@@ -1,14 +1,20 @@
-const ordering = (defaultSort, defaultOrder) => (req, res, next) => {
-  const sort = req.query.sort || defaultSort;
-  let order = req.query.order || defaultOrder;
+const ordering =
+    (defaultSort, defaultOrder, allowedSorts = [defaultSort]) =>
+    (req, res, next) => {
+        // Make sure the sorting is allowed
+        const sort = allowedSorts.includes(req.query.sort)
+            ? req.query.sort
+            : defaultSort;
 
-  // Default to asc if invalid order value
-  if (order !== "asc" && order !== "desc") order = "asc";
+        let order = req.query.order || defaultOrder;
 
-  req.sort = sort;
-  req.order = order;
+        // Default to asc if invalid order value
+        if (order !== 'asc' && order !== 'desc') order = 'asc';
 
-  next();
-};
+        req.sort = sort;
+        req.order = order;
+
+        next();
+    };
 
 module.exports = ordering;
