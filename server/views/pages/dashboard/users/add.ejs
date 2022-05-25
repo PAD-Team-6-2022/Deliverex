@@ -15,7 +15,7 @@
                         Username
                         <span class="text-slate-600">(min. 3 chars)</span>
                     </label>
-                    <input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 w-full" type="email" name="email" placeholder="johndoe" id="username"/>
+                    <input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 w-full" type="text" name="username" placeholder="johndoe" id="username"/>
                 </div>
                 <div class="flex-1">
                     <label class="block mb-2 font-medium text-sm text-slate-900 " for="email">Email</label>
@@ -23,10 +23,10 @@
                 </div>
                 <div class="flex-1">
                     <label class="block mb-2 font-medium text-sm text-slate-900 " for="role">Role</label>
-                    <select class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 w-full">
-                        <option>Admin</option>
-                        <option>Shop Owner</option>
-                        <option selected>Courier</option>
+                    <select class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 w-full" name="role">
+                        <option value="ADMIN">Admin</option>
+                        <option value="SHOP_OWNER">Shop Owner</option>
+                        <option value="COURIER" selected>Courier</option>
                     </select>
                 </div>
             </div>

@@ -18,15 +18,17 @@ const User = sequelize.define(
             },
         },
         username: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(16),
             validate: {
                 min: 3,
+                max: 16,
             },
         },
         password: {
             type: DataTypes.STRING,
             validate: {
                 min: 8,
+                max: 255,
             },
             set(value) {
                 this.setDataValue('password', hashSync(value, 10));
