@@ -133,7 +133,7 @@ addressInput.addEventListener(
         if (addressInput.value === '') return;
 
         fetch(
-            `https://api.openrouteservice.org/geocode/search?api_key=${API_KEY}&text=${addressInput.value}&boundary.country=NL`,
+            `https://api.openrouteservice.org/geocode/autocomplete?api_key=${API_KEY}&text=${addressInput.value}&boundary.country=NL`,
         )
             .then((res) => res.json())
             .then((data) => {

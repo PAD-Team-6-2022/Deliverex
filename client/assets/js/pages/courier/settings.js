@@ -1,4 +1,4 @@
-import { delay } from "../../util";
+import { delay } from "../../util.js";
 
 const API_KEY = "5b3ce3597851110001cf62482d328da4ad724df196a3e2f0af3e15f3";
 
@@ -11,60 +11,120 @@ const cityInput = document.getElementById("city");
 const addressInput = document.getElementById("address");
 const countryInput = document.getElementById("country");
 
-const timetableButton = document.getElementById("saveTimetable");
+const addressButton = document.getElementById("saveAddress");
 
-const timetableInputs = document.querySelectorAll("[data-timetable-input]");
+const addressInputs = document.querySelectorAll("[data-input-address]");
 
-timetableButton.addEventListener("click", async (event) => {
+addressButton.addEventListener("click", async (event) => {
+
+   event.preventDefault();
+
+   let wrongInputs = [];
+
+   addressInputs.forEach(input => {
+
+       input.classList.remove(
+           "bg-red-50",
+           "border-red-500");
+       document.getElementById(`${input.id}_p`).innerHTML = "";
+       if(input.value === "") {
+           wrongInputs.push(input);
+       }
+
+   });
+
+   if(wrongInputs.length === 0) {
+
+       console.log("sucess")
+
+       // TODO: change address in db
+
+   } else {
+       wrongInputs.forEach((input) => {
+           input.classList.add(
+               "bg-red-50",
+               "border-red-500"
+           );
+           document.getElementById(`${input.id}_p`).innerHTML = "This field can't be empty!";
+       });
+   }
+
+});
+
+const scheduleButton = document.getElementById("saveTimetable");
+
+const scheduleInputs = document.querySelectorAll("[data-timetable-input]");
+
+scheduleButton.addEventListener("click", async (event) => {
 
     event.preventDefault();
 
     let wrongInputs = [];
 
-    const inputs = document.querySelectorAll("[data-timetable-input]");
-    inputs.forEach((input) => {
+    scheduleInputs.forEach((input) => {
         input.classList.remove(
             "bg-red-50",
             "border-red-500");
         document.getElementById(`${input.id}_p`).innerHTML = "";
-        if(!input.value) {
+        let checked = document.getElementById(input.getAttribute("data-input-cb")).checked;
+        if(checked && !input.value) {
             wrongInputs.push(input);
         }
     });
 
-    if(inputs.length === 0) {
+    if(wrongInputs.length === 0) {
+
+        console.log(scheduleInputs);
 
         const values = {
-            mondayStart: timetableInputs[0].value,
-            mondayEnd: timetableInputs[1].value,
-            tuesdayStart: timetableInputs[2].value,
-            tuesdayEnd: timetableInputs[3].value,
-            wednesdayStart: timetableInputs[4].value,
-            wednesdayEnd: timetableInputs[5].value,
-            thursdayStart: timetableInputs[6].value,
-            thursdayEnd: timetableInputs[7].value,
-            fridayStart: timetableInputs[8].value,
-            fridayEnd: timetableInputs[9].value,
-            saturdayStart: timetableInputs[10].value,
-            saturdayEnd: timetableInputs[11].value,
-            sundayStart: timetableInputs[12].value,
-            sundayEnd: timetableInputs[13].value,
+            monday: {
+                start: document.getElementById("mondayStart").value,
+                end: document.getElementById("mondayEnd").value,
+            },
+            tuesday: {
+                start: document.getElementById("tuesdayStart").value,
+                end: document.getElementById("tuesdayEnd").value,
+            },
+            wednesday: {
+                start: document.getElementById("wednesdayStart").value,
+                end: document.getElementById("wednesdayEnd").value,
+            },
+            thursday: {
+                start: document.getElementById("thursdayStart").value,
+                end: document.getElementById("thursdayEnd").value,
+            },
+            friday: {
+                start: document.getElementById("fridayStart").value,
+                end: document.getElementById("fridayEnd").value,
+            },
+            saturday: {
+                start: document.getElementById("saturdayStart").value,
+                end: document.getElementById("saturdayEnd").value,
+            },
+            sunday: {
+                start: document.getElementById("sundayStart").value,
+                end: document.getElementById("sundayEnd").value,
+            },
         }
 
-        await fetch(`/api/courier/timetable/${id}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        }).then((response) => {
-            if(response.status === 200) {
-                window.location.href = `/dashboard/settings`;
-            }
-        }).catch((error) => {
-            console.error(`Fetch error: could not fulfill post request
-             to create order. Errormessage: ${error}`);
-        });
+        console.log(values);
+
+        console.log("Succes");
+
+        // await fetch(`/api/courier/timetable/${id}`, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(values),
+        // }).then((response) => {
+        //     if(response.status === 200) {
+        //         window.location.href = `/dashboard/settings`;
+        //     }
+        // }).catch((error) => {
+        //     console.error(`Fetch error: could not fulfill post request
+        //      to create order. Errormessage: ${error}`);
+        // });
 
     } else {
         wrongInputs.forEach((input) => {
@@ -105,7 +165,7 @@ addressInput.addEventListener("keyup", delay((e) => {
 
     if(addressInput.value === "") return;
 
-    fetch(`https://api.openrouteservice.org/geocode/search?api_key=${API_KEY}&text=${addressInput.value}&boundary.country=NL`)
+    fetch(`https://api.openrouteservice.org/geocode/autocomplete?api_key=${API_KEY}&text=${addressInput.value}&boundary.country=NL`)
         .then(res => res.json())
         .then(data => {
 
