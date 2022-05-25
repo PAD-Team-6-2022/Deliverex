@@ -9,7 +9,7 @@
       <div class="p-10 flex-1 overflow-hidden space-y-10">
         <%- include("../../../partials/breadcrumb", { links: [{ name: "Overview", href: "/dashboard/overview" }, { name: "Users", href: "/dashboard/users" }, { name: "Add" }] }) %>
         <form method="POST" class="bg-white rounded-md border border-slate-200 overflow-hidden p-8 space-y-6">
-            <div class="flex gap-2">
+            <div class="flex gap-6 flex-col lg:gap-2 lg:flex-row">
                 <div class="flex-1">
                     <label class="block mb-2 font-medium text-md text-slate-900" for="username">
                         Username
@@ -34,7 +34,7 @@
                 <label class="mb-2 block font-medium text-md text-slate-900">
                     Authentication
                 </label>
-                <div class="flex gap-2">
+                <div class="flex gap-2 flex-col md:flex-row">
                     <div class="flex-1 group">
                         <input type="radio" name="type" value="create" id="create" class="hidden peer" checked>
                         <label for="create" class="flex gap-6 border-2 border-slate-200 p-6 w-full h-full rounded-md group-hover:border-cyan-700 peer-checked:border-cyan-500 transition-colors cursor-pointer peer-checked:text-cyan-500">
@@ -65,7 +65,7 @@
                     </div>
                 </div>
             </div>
-            <div class="flex gap-2" id="password-section" data-password-show-group>
+            <div class="flex gap-6 sm:gap-2 flex-col sm:flex-row" id="password-section" data-password-show-group>
                 <div class="flex-1">
                     <label class="block mb-2 font-medium text-md text-slate-900" for="country">
                         Password
