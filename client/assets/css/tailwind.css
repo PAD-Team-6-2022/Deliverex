@@ -1410,12 +1410,6 @@ select {
   margin-bottom: calc(2.5rem * var(--tw-space-y-reverse));
 }
 
-.space-y-16 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(4rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(4rem * var(--tw-space-y-reverse));
-}
-
 .divide-y > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-y-reverse: 0;
   border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
@@ -2327,6 +2321,10 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 @media (min-width: 640px) {
+  .sm\:visible {
+    visibility: visible;
+  }
+
   .sm\:-mx-6 {
     margin-left: -1.5rem;
     margin-right: -1.5rem;
@@ -2338,6 +2336,10 @@ input[type=number]::-webkit-outer-spin-button {
 
   .sm\:mr-8 {
     margin-right: 2rem;
+  }
+
+  .sm\:block {
+    display: block;
   }
 
   .sm\:flex-row {
@@ -2425,6 +2427,10 @@ input[type=number]::-webkit-outer-spin-button {
     margin-top: 0px;
   }
 
+  .md\:block {
+    display: block;
+  }
+
   .md\:inline {
     display: inline;
   }
@@ -2471,10 +2477,6 @@ input[type=number]::-webkit-outer-spin-button {
 
   .md\:flex-row {
     flex-direction: row;
-  }
-
-  .md\:flex-col {
-    flex-direction: column;
   }
 
   .md\:space-x-3 > :not([hidden]) ~ :not([hidden]) {
