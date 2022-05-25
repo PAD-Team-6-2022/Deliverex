@@ -723,20 +723,20 @@ select {
   left: -0.25rem;
 }
 
-.top-5 {
-  top: 1.25rem;
-}
-
-.right-5 {
-  right: 1.25rem;
-}
-
 .top-0 {
   top: 0px;
 }
 
 .left-0 {
   left: 0px;
+}
+
+.top-5 {
+  top: 1.25rem;
+}
+
+.right-5 {
+  right: 1.25rem;
 }
 
 .right-0 {
@@ -807,11 +807,6 @@ select {
   margin-bottom: -0.25rem;
 }
 
-.-my-2 {
-  margin-top: -0.5rem;
-  margin-bottom: -0.5rem;
-}
-
 .-mx-3 {
   margin-left: -0.75rem;
   margin-right: -0.75rem;
@@ -825,6 +820,11 @@ select {
 .mx-2 {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
+}
+
+.-my-2 {
+  margin-top: -0.5rem;
+  margin-bottom: -0.5rem;
 }
 
 .mt-6 {
@@ -927,16 +927,16 @@ select {
   margin-top: 0.5rem;
 }
 
-.ml-3 {
-  margin-left: 0.75rem;
-}
-
 .mt-10 {
   margin-top: 2.5rem;
 }
 
 .-mt-3 {
   margin-top: -0.75rem;
+}
+
+.ml-3 {
+  margin-left: 0.75rem;
 }
 
 .mr-4 {
@@ -1115,16 +1115,16 @@ select {
   width: 1.25rem;
 }
 
-.w-32 {
-  width: 8rem;
-}
-
 .w-2\/4 {
   width: 50%;
 }
 
 .w-1\/4 {
   width: 25%;
+}
+
+.w-32 {
+  width: 8rem;
 }
 
 .w-3\/6 {
@@ -1139,14 +1139,14 @@ select {
   min-width: 0px;
 }
 
-.min-w-full {
-  min-width: 100%;
-}
-
 .min-w-min {
   min-width: -webkit-min-content;
   min-width: -moz-min-content;
   min-width: min-content;
+}
+
+.min-w-full {
+  min-width: 100%;
 }
 
 .max-w-xl {
@@ -1327,6 +1327,14 @@ select {
   gap: 0.75rem;
 }
 
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-6 {
+  gap: 1.5rem;
+}
+
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
@@ -1455,6 +1463,10 @@ select {
 
 .border {
   border-width: 1px;
+}
+
+.border-2 {
+  border-width: 2px;
 }
 
 .border-l {
@@ -1665,6 +1677,10 @@ select {
 
 .p-0 {
   padding: 0px;
+}
+
+.p-6 {
+  padding: 1.5rem;
 }
 
 .py-1 {
@@ -1887,12 +1903,12 @@ select {
   line-height: 1.25;
 }
 
-.tracking-wider {
-  letter-spacing: 0.05em;
-}
-
 .tracking-wide {
   letter-spacing: 0.025em;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
 }
 
 .text-green-800 {
@@ -2235,6 +2251,21 @@ input[type=number]::-webkit-outer-spin-button {
 .disabled\:hover\:bg-slate-50:hover:disabled {
   --tw-bg-opacity: 1;
   background-color: rgb(248 250 252 / var(--tw-bg-opacity));
+}
+
+.group:hover .group-hover\:border-cyan-700 {
+  --tw-border-opacity: 1;
+  border-color: rgb(14 116 144 / var(--tw-border-opacity));
+}
+
+.peer:checked ~ .peer-checked\:border-cyan-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(6 182 212 / var(--tw-border-opacity));
+}
+
+.peer:checked ~ .peer-checked\:text-cyan-500 {
+  --tw-text-opacity: 1;
+  color: rgb(6 182 212 / var(--tw-text-opacity));
 }
 
 @media (prefers-color-scheme: dark) {

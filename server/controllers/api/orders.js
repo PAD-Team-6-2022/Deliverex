@@ -1,24 +1,27 @@
-const router = require("express").Router();
-const { Order, 
-		Format, 
-		User, 
-		Location, 
-		Company, 
-		Goal, 
-		Donation
-} = require("../../models");
-const Organisation = require("../../models/organisation");
-const WeekSchedule = require("../../models/week_schedule");
-const auth = require("../../middleware/auth");
-const moment = require("moment");
-const fetch = require("node-fetch");
-const ejs = require("ejs");
-const path = require('path')
-const {addOrderToDeliveryQueue,
-    notifyOrderStatusChange}  = require("../../util");
+const router = require('express').Router();
+const {
+    Order,
+    Format,
+    User,
+    Location,
+    Company,
+    Goal,
+    Donation,
+    Organisation,
+    WeekSchedule,
+} = require('../../models');
+const auth = require('../../middleware/auth');
+const moment = require('moment');
+const fetch = require('node-fetch');
+const ejs = require('ejs');
+const path = require('path');
+const {
+    addOrderToDeliveryQueue,
+    notifyOrderStatusChange,
+} = require('../../util');
 
-router.delete("/:id", (req, res) => {
-    Order.destroy({where: {id: req.params.id}})
+router.delete('/:id', (req, res) => {
+    Order.destroy({ where: { id: req.params.id } })
         .then(() => {
             res.status(200).json({
                 message: 'Successfully deleted order',
@@ -32,7 +35,7 @@ router.delete("/:id", (req, res) => {
 });
 
 router.delete('/settings/:id', (req, res) => {
-    Format.destroy({where: {id: req.params.id}})
+    Format.destroy({ where: { id: req.params.id } })
         .then(() => {
             res.status(200).json({
                 message: 'Successfully deleted format',
@@ -142,65 +145,71 @@ router.post('/', (req, res) => {
     req.body.deliveryDate = moment().format('YYYY-MM-DD');
 
     //Generate a unique QR code for this order
-    let qrCode = "";
-    const possibleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let qrCode = '';
+    const possibleCharacters =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for (let i = 0; i < 30; i++)
-        qrCode += possibleCharacters.charAt(Math.floor(Math.random() * possibleCharacters.length));
+        qrCode += possibleCharacters.charAt(
+            Math.floor(Math.random() * possibleCharacters.length),
+        );
 
     console.log(req.body.format_id);
 
     Order.create({
-    status: 'SORTING',
-    email: req.body.email,
-    weight: req.body.weight,
-    created_at: Date.now(),
-    street: req.body.street,
-    house_number: req.body.house_number,
-    postal_code: req.body.postal_code,
-    city: req.body.city,
-    country: req.body.country,
-    formatId: req.body.format_id,
-    is_pickup: pickup_status,
-    updated_at: Date.now(),
-    price: req.body.price,
-    created_by: req.user.id,
-    qr_code: qrCode,
-    coordinates: {
-    	type: 'Point',
- 		coordinates: Object.values(
- 			JSON.parse(req.body.coordinates))
- 			.reverse()},
-    delivery_date: req.body.deliveryDate
-  })
-    .then(async (order) => {
+        status: 'SORTING',
+        email: req.body.email,
+        weight: req.body.weight,
+        created_at: Date.now(),
+        street: req.body.street,
+        house_number: req.body.house_number,
+        postal_code: req.body.postal_code,
+        city: req.body.city,
+        country: req.body.country,
+        formatId: req.body.format_id,
+        is_pickup: pickup_status,
+        updated_at: Date.now(),
+        price: req.body.price,
+        created_by: req.user.id,
+        qr_code: qrCode,
+        coordinates: {
+            type: 'Point',
+            coordinates: Object.values(
+                JSON.parse(req.body.coordinates),
+            ).reverse(),
+        },
+        delivery_date: req.body.deliveryDate,
+    })
+        .then(async (order) => {
+            console.log(req.user.id);
+            console.log(order.getDataValue('id'));
 
-        console.log(req.user.id);
-        console.log(order.getDataValue('id'));
+            //Handle the way this order should be treated based on whether the 'freelanceMode'
+            //option is currently being used.
+            Organisation.findOne().then((organisation) => {
+                const freelanceMode =
+                    organisation.getDataValue('freelanceMode');
+                if (freelanceMode)
+                    addOrderToDeliveryQueue(Number(order.getDataValue('id')));
+                else {
+                    //Planned mode
+                    if (
+                        order.getDataValue('delivery_date') !==
+                        moment().format('YYYY-MM-DD')
+                    )
+                        return;
 
-        //Handle the way this order should be treated based on whether the 'freelanceMode'
-        //option is currently being used.
-        Organisation.findOne().then((organisation) => {
-            const freelanceMode
-				 = organisation.getDataValue('freelanceMode');
-            if(freelanceMode)
-                addOrderToDeliveryQueue(Number(order.getDataValue('id')));
-            else{
-                //Planned mode
-                if(order.getDataValue('delivery_date') !==
-                    moment().format("YYYY-MM-DD"))
-                    return;
-
-                WeekSchedule.findOne({
-                	where: {
-                		id: organisation.getDataValue(
-                		'operating_schedule_id')}})
-                    .then((organisationSchedule) => {
-
+                    WeekSchedule.findOne({
+                        where: {
+                            id: organisation.getDataValue(
+                                'operating_schedule_id',
+                            ),
+                        },
+                    }).then((organisationSchedule) => {
                         const currentDay = moment()
-                        .format('dddd')
-                        .toLowerCase();
+                            .format('dddd')
+                            .toLowerCase();
                         const todaySchedule =
- 						organisationSchedule.getDataValue(currentDay);
+                            organisationSchedule.getDataValue(currentDay);
 
                         //In case the morning cron-job has already fired, add it to the same-day-delivery queue
                         if (
@@ -257,38 +266,39 @@ router.post('/edit', async (req, res) => {
 
     let pickup_status = req.body.is_pickup != null;
 
-  Order.update({
-        weight: req.body.weight,
-        email: req.body.email,
-        street: req.body.street,
-        house_number: req.body.house_number,
-        postal_code: req.body.postal_code,
-        city: req.body.city,
-        formatId: req.body.format_id,
-        status: req.body.status,
-        is_pickup: pickup_status,
-        updated_at: Date.now(),
-        price: req.body.price,
-        // coordinates: { type: 'Point', coordinates: Object.values(JSON.parse(req.body.coordinates)).reverse()}
-    },
-    { where: { id: req.body.id } })
-    .then( async (affectedRows) => {
+    Order.update(
+        {
+            weight: req.body.weight,
+            email: req.body.email,
+            street: req.body.street,
+            house_number: req.body.house_number,
+            postal_code: req.body.postal_code,
+            city: req.body.city,
+            formatId: req.body.format_id,
+            status: req.body.status,
+            is_pickup: pickup_status,
+            updated_at: Date.now(),
+            price: req.body.price,
+            // coordinates: { type: 'Point', coordinates: Object.values(JSON.parse(req.body.coordinates)).reverse()}
+        },
+        { where: { id: req.body.id } },
+    )
+        .then(async (affectedRows) => {
+            //Though the status might not actually have been changed, we
+            //still assume as such to be sure.
+            notifyOrderStatusChange(req.body.id, req.body.status);
+            console.log('ID in orders.js: ' + req.body.id);
 
-        //Though the status might not actually have been changed, we
-        //still assume as such to be sure.
-        notifyOrderStatusChange(req.body.id, req.body.status);
-        console.log('ID in orders.js: ' + req.body.id);
+            await updateDonation(req.body.id, req.body.price);
 
-        await updateDonation(req.body.id, req.body.price);
-
-      res.status(200).json({
-        message: `${affectedRows} rows updated`
-      });
-    })
-    .catch((err) => {
-      res.status(500).json(err);
-    })
-})
+            res.status(200).json({
+                message: `${affectedRows} rows updated`,
+            });
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+});
 
 router.put('/editFormat/:id', (req, res) => {
     Format.update(
@@ -298,7 +308,7 @@ router.put('/editFormat/:id', (req, res) => {
             width: req.body.width,
             nameformat: req.body.nameformat,
         },
-        {where: {id: req.params.id}},
+        { where: { id: req.params.id } },
     )
         .then((affectedRows) => {
             res.status(200).json({
@@ -336,7 +346,7 @@ router.put('/editAccount', (req, res) => {
             username: req.body.username,
             email: req.body.email,
         },
-        {where: {id: req.user.id}},
+        { where: { id: req.user.id } },
     )
         .then((affectedRows) => {
             res.status(200).json({
@@ -353,7 +363,7 @@ router.put('/editDoelPercentage', (req, res) => {
         {
             percentageToGoal: req.body.percentage,
         },
-        {where: {id: req.user.company_id}},
+        { where: { id: req.user.company_id } },
     )
         .then((affectedRows) => {
             res.status(200).json({
@@ -365,13 +375,13 @@ router.put('/editDoelPercentage', (req, res) => {
         });
 });
 
-router.put('/editStore', async(req, res) => {
+router.put('/editStore', async (req, res) => {
     Company.update(
         {
             name: req.body.name,
             email: req.body.email,
         },
-        {where: {id: req.user.company_id}},
+        { where: { id: req.user.company_id } },
     )
         .then((affectedRows) => {
             res.status(200).json({
@@ -384,8 +394,8 @@ router.put('/editStore', async(req, res) => {
 
     const company = await Company.findAll({
         where: {
-            id: 1
-        }
+            id: 1,
+        },
     });
 
     Location.update(
@@ -395,7 +405,7 @@ router.put('/editStore', async(req, res) => {
             city: req.body.city,
             country: req.body.country,
         },
-        {where: {location_id: company[0].id}},
+        { where: { location_id: company[0].id } },
     );
 });
 
@@ -404,7 +414,7 @@ router.get('/deliveryDates', (req, res) => {
         const freelanceMode = organisation.getDataValue('freelanceMode');
 
         WeekSchedule.findOne({
-            where: {id: organisation.getDataValue('operating_schedule_id')},
+            where: { id: organisation.getDataValue('operating_schedule_id') },
         }).then((organisationSchedule) => {
             const currentDay = moment().format('dddd').toLowerCase();
             const todaySchedule = organisationSchedule.getDataValue(currentDay);
@@ -452,7 +462,7 @@ router.get('/deliveryDates', (req, res) => {
                         }
                     }
                 }
-                res.status(200).json({schedulable: false, deliveryMessage});
+                res.status(200).json({ schedulable: false, deliveryMessage });
             } else {
                 //Note: if the current day is marked 'true' in 'availabledays', it does not
                 //mean the same as a same day delivery being possible. You have to specifically
@@ -461,7 +471,7 @@ router.get('/deliveryDates', (req, res) => {
                     sameDayDelivery: sameDayDeliverable,
                     availableDays,
                 };
-                res.status(200).json({schedulable: true, schedulingData});
+                res.status(200).json({ schedulable: true, schedulingData });
             }
         });
     });
@@ -473,9 +483,9 @@ router.get('/deliveryDates', (req, res) => {
  * this order is being scanned by the right courier for safety sake.
  */
 router.get('/:qrCode/scan', auth(true), async (req, res) => {
-    const {qrCode} = req.params;
+    const { qrCode } = req.params;
 
-    await Order.findOne({where: {qr_code: qrCode}})
+    await Order.findOne({ where: { qr_code: qrCode } })
         .then((order) => {
             res.json({
                 order: order,
@@ -503,7 +513,7 @@ router.put('/:id/scan', auth(true), (req, res) => {
             else if (order.status === 'READY') newStatus = 'TRANSIT';
             else if (order.status === 'TRANSIT') newStatus = 'DELIVERED';
 
-            Order.update({status: newStatus}, {where: {id: req.body.id}})
+            Order.update({ status: newStatus }, { where: { id: req.body.id } })
                 .then((data) => {
                     res.sendStatus(200);
                 })
@@ -527,8 +537,8 @@ router.put('/:id/scan', auth(true), (req, res) => {
  */
 router.post('/:id/scan', async (req, res) => {
     Order.update(
-        {status: 'DELIVERED'},
-        {where: {id: req.body.selectedOrder}},
+        { status: 'DELIVERED' },
+        { where: { id: req.body.selectedOrder } },
     )
         .then(() => {
             res.redirect('/dashboard/overview');

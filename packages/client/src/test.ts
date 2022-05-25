@@ -6,7 +6,7 @@ import * as deliverex from "./";
     host: "http://localhost:3000",
   });
 
-  const orders = await client.getOrders({
+  const orders = await client.order.getOrders({
     status: "SORTING",
     limit: 60,
     offset: 20,

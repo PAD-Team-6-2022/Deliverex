@@ -1,17 +1,16 @@
-const Format = require("./format");
-const Order = require("./order");
-const Package = require("./package");
-const Receiver = require("./receiver");
-const Session = require("./session");
-const User = require("./user");
-const Company = require("./company");
-const Location = require("./location");
-const Goal = require("./goal");
-const Vote = require("./vote");
-const Donation = require("./donation");
-const Organisation = require("./organisation");
-const Timetable = require("./timetable");
-const WeekSchedule = require("./week_schedule");
+const Format = require('./format');
+const Order = require('./order');
+const Package = require('./package');
+const Receiver = require('./receiver');
+const Session = require('./session');
+const User = require('./user');
+const Company = require('./company');
+const Location = require('./location');
+const Goal = require('./goal');
+const Vote = require('./vote');
+const Donation = require('./donation');
+const Organisation = require('./organisation');
+const WeekSchedule = require('./week_schedule');
 
 User.hasMany(Format);
 Format.belongsTo(User);
@@ -20,17 +19,17 @@ Format.hasMany(Order);
 Order.belongsTo(Format);
 
 User.hasMany(Order);
-Order.belongsTo(User, {as: 'userCreated',foreignKey: 'created_by'});
-Order.belongsTo(User, {as: 'courier', foreignKey: 'courier_id'});
+Order.belongsTo(User, { as: 'userCreated', foreignKey: 'created_by' });
+Order.belongsTo(User, { as: 'courier', foreignKey: 'courier_id' });
 
 WeekSchedule.hasOne(User);
-User.belongsTo(WeekSchedule, {as: 'schedule', foreignKey: 'schedule_id'});
+User.belongsTo(WeekSchedule, { as: 'schedule', foreignKey: 'schedule_id' });
 
 Company.hasMany(User);
-User.belongsTo(Company, {as: 'company', foreignKey: 'company_id'});
+User.belongsTo(Company, { as: 'company', foreignKey: 'company_id' });
 
 Location.hasOne(Company);
-Company.belongsTo(Location, {as: 'location', foreignKey: 'location_id'});
+Company.belongsTo(Location, { as: 'location', foreignKey: 'location_id' });
 
 Goal.hasMany(Vote);
 Vote.belongsTo(Goal);
@@ -57,5 +56,5 @@ module.exports = {
     Vote,
     Donation,
     Organisation,
-    WeekSchedule
+    WeekSchedule,
 };
