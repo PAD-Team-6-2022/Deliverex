@@ -947,6 +947,10 @@ select {
   margin-top: -0.5rem;
 }
 
+.ml-0\.5 {
+  margin-left: 0.125rem;
+}
+
 .mt-8 {
   margin-top: 2rem;
 }
@@ -1771,6 +1775,18 @@ select {
 
 .pt-1 {
   padding-top: 0.25rem;
+}
+
+.pl-1 {
+  padding-left: 0.25rem;
+}
+
+.pt-0\.5 {
+  padding-top: 0.125rem;
+}
+
+.pt-0 {
+  padding-top: 0px;
 }
 
 .pr-4 {
