@@ -23,6 +23,7 @@ document.querySelectorAll('[data-password-show-input]').forEach((input) => {
         'h-full',
         'px-4',
         'cursor-pointer',
+        'select-none',
     );
 
     // Basically an open eye icon

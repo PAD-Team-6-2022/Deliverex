@@ -1,60 +1,60 @@
-const { Store: ExpressSessionStore } = require("express-session");
-const { Op } = require("sequelize");
-const Session = require("../models/session");
+const expressSession = require('express-session');
+const { Op } = require('sequelize');
+const Session = require('../models/session');
 
-class SessionStore extends ExpressSessionStore {
-  constructor() {
-    super();
+class SessionStore extends expressSession.Store {
+    constructor() {
+        super();
 
-    // Set interval for each expiration check
-    setInterval(() => {
-      Session.destroy({
-        where: {
-          expiresAt: {
-            [Op.lt]: new Date(),
-          },
-        },
-      });
-    }, 15 * 60 * 1000);
-  }
+        // Set interval for each expiration check
+        setInterval(() => {
+            Session.destroy({
+                where: {
+                    expiresAt: {
+                        [Op.lt]: new Date(),
+                    },
+                },
+            });
+        }, 15 * 60 * 1000);
+    }
 
-  async get(id, callback) {
-    return Session.findByPk(id)
-      .then((session) => (session ? session.data : null))
-      .then((session) => callback(null, session))
-      .catch((err) => callback(err, null));
-  }
+    async get(id, callback) {
+        return Session.findByPk(id)
+            .then((session) => (session ? session.data : null))
+            .then((session) => callback(null, session))
+            .catch((err) => callback(err, null));
+    }
 
-  async set(id, data, callback) {
-    const expiresAt =
-      data.cookie && data.cookie.expires
-        ? data.cookie.expires
-        : new Date(Date.now() + 24 * 60 * 60 * 1000);
+    async set(id, data, callback) {
+        const expiresAt =
+            data.cookie && data.cookie.expires
+                ? data.cookie.expires
+                : new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-    return Session.findByPk(id)
-      .then((session) => {
-        if (session) {
-          return session.update({
-            data,
-            expiresAt,
-          });
-        } else {
-          return Session.create({
-            id,
-            data,
-            expiresAt,
-          });
-        }
-      })
-      .then((session) => callback(null, session.data))
-      .catch((err) => callback(err, null));
-  }
+        return Session.findByPk(id)
+            .then((session) => {
+                if (session) {
+                    return session.update({
+                        data,
+                        expiresAt,
+                    });
+                } else {
+                    return Session.create({
+                        id,
+                        data,
+                        expiresAt,
+                    });
+                }
+            })
+            .then((session) => callback(null, session.data))
+            .catch((err) => callback(err, null));
+    }
 
-  async destroy(id, callback) {
-    return Session.destroy({ where: { id } })
-      .then(() => callback(null))
-      .catch((err) => callback(err));
-  }
+    async destroy(id, callback) {
+        return Session.destroy({ where: { id } })
+            .then(() => callback(null))
+            .catch((err) => callback(err));
+    }
 }
 
 module.exports = SessionStore;
