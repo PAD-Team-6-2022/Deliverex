@@ -13,7 +13,7 @@ router.get(
     '/',
     auth(true),
     pagination([25, 50, 100]),
-    ordering('id', 'desc'),
+    ordering('id', 'desc', ['id', 'weight', 'status', 'created_at']),
     searching,
     async (req, res) => {
         const orders = await Order.findAll({

@@ -1,6 +1,7 @@
 import '../../../ordering.js';
 import '../../../pagination.js';
 import { openModal } from '../../../modal.js';
+import '../../../tooltip.js';
 
 document.querySelectorAll('[data-order-code]').forEach((order) => {
     const id = order.getAttribute('data-order-code');
