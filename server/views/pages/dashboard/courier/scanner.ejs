@@ -1,20 +1,32 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-slate-200">
 <head>
+    <!-- Includes the standard page header -->
     <%- include("../../../partials/head", { js: "courier/scanner" }) %>
+    <!-- includes the 'html5-qrcode' javascript library for QR code scanning -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body class="bg-slate-200 flex justify-center">
     <div id="content" class="px-8 py-4 flex flex-col max-w-md">
         <h1 class="mb-4 text-2xl font-medium text-slate-800">Scan a new order</h1>
+        
+        <!-- container object for the QR code scanner.
+        The scanner itself is loaded in javascript -->
         <div id="qrcode-container" class="rounded-2xl max-w-md overflow-hidden"></div>
         <h1 id="no-camera-message" class="text-sm text-red-800 hidden">No camera's were detected on this device.</h1>
         <h3 id="instruction-msg" class="my-4">Face the camera towards a QR code to scan an order.</h3>
+
+        <!-- show an error message when the server returns a 404 code -->
         <div id="not-found-message" class="bg-red-100 border border-red-500 px-4 py-2 mt-4 rounded-md hidden">
             <h1>Database error. The order could not be found.</h1>
         </div>
+
+        <!-- contains the information about the loaded order -->
         <div id="loaded-order" class="hidden">
-            <div id="occupied-order-message" class="bg-yellow-100 border border-yellow-500 px-4 py-2 mt-4 rounded-md hidden">
+
+            <!-- Message that gets displayed in case the courier is scanning the wrong order -->
+            <div id="occupied-order-message" class="bg-yellow-100 border
+             border-yellow-500 px-4 py-2 mt-4 rounded-md hidden">
                 <p>You are not authorized to update the status of this order as this order's shipment has been assigned to another courier.
                     If you believe this was a mistake, please consult with the managing administrator using the following
                     order details:<br><br></p>
@@ -22,37 +34,49 @@
                 <h1>Status: <span id="order-status-container-occupied"></span></h1>
                 <h1>Courier ID: <span id="courier-id-container"></span></h1>
             </div>
-            <div id="server-error-message" class="bg-red-100 border border-red-500 px-4 py-2 mt-4 rounded-md hidden">
+
+            <!-- message that gets displayed in case the server returns an error status of 500 -->
+            <div id="server-error-message" class="bg-red-100 border
+             border-red-500 px-4 py-2 mt-4 rounded-md hidden">
                 <h1>Internal server error. Please try again later.</h1>
             </div>
+
+            <!-- Displays the order information. A javascript loop is
+             used to avoid repeating code. -->
             <div id="order-info" class="mt-4 bg-white rounded-md p-4">
                 <h1 class="text-xl mb-2">Order info:</h1>
-                <h1>ID: <span id="order-id-container"></span></h1>
-                <h1>Status: <span id="order-status-container"></span></h1>
-                <h1>Format: <span id="order-format-container"></span></h1>
-                <h1>Weight: <span id="order-weight-container"></span></h1>
-                <h1>Address: <span id="order-address-container"></span></h1>
-                <h1>City: <span id="order-city-container"></span></h1>
-                <h1>Country: <span id="order-country-container"></span></h1>
-                <h1>Postal code: <span id="order-postal-code-container"></span></h1>
+                <%  let headerIdentifiers = [
+                    'order-id-container', 'order-status-container', 'order-format-container',
+                    'order-weight-container', 'order-address-container', 'order-city-container',
+                    'order-country-container', 'order-postal-code-container'];
+                    let headerMessages = ['ID', 'Status', 'Format', 'Weight',
+                        'Address', 'City', 'Country', 'Postal code'];
+                    for(let i = 0; i < 8; i++){ %>
+                    <h1><%=headerMessages[i]%>: <span id="<%=headerIdentifiers[i]%>"></span></h1>
+                <%}%>
             </div>
+
+            <!-- displays the customer info that is tied to the order -->
             <div id="customer-info" class="mt-4 bg-white rounded-md p-4">
                 <h1 class="text-xl mb-2">Customer info:</h1>
                 <h1>Email: <span id="customer-email-container"></span></h1>
                 <h1>Phone number: <span id="customer-phone-number-container"></span></h1>
             </div>
         </div>
+
+        <!-- container for both the 'update' and 'scan again' buttons. They
+         are constructed using a javascript loop to avoid repeating code -->
         <div id="button-container" class="mt-4 flex flex-row flex-wrap justify-between hidden">
-            <button id="update-order-button" type="button" class="bg-cyan-500 hover:bg-cyan-700 text-lg text-white font-medium py-2 px-2 rounded-lg flex transition-colors">
-              <span class="md:inline">
-                Update this order
-              </span>
-            </button>
-            <button id="scan-again-button" type="button" class="bg-cyan-500 hover:bg-cyan-700 text-lg text-white font-medium py-2 px-2 rounded-lg flex transition-colors">
-              <span class="md:inline">
-                Scan again
-              </span>
-            </button>
+            <%  let buttonIdentifiers = ['update-order-button', 'scan-again-button'];
+                let buttonMessages = ['Update this order', 'Scan again'];
+                for(let i = 0; i < 2; i++){%>
+                <button id="<%=buttonIdentifiers[i]%>" type="button" class="bg-cyan-500 hover:bg-cyan-700
+                 text-lg text-white font-medium py-2 px-2 rounded-lg flex transition-colors">
+                  <span class="md:inline">
+                    <%=buttonMessages[i]%>
+                  </span>
+                </button>
+            <%}%>
         </div>
     </div>
 </body>
