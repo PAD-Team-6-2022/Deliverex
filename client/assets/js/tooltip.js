@@ -19,7 +19,7 @@ document.querySelectorAll('[data-tooltip]').forEach((el) => {
     // starting with the transition
     const startOffset = endOffset - TRANSITION_DISTANCE;
 
-    // Set a relation position on the wrapper
+    // Set a relative position on the wrapper
     // to contain the icon within the input
     wrapper.classList.add('relative');
 
