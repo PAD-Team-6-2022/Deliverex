@@ -11,9 +11,9 @@ const Organisation = sequelize.define(
         },
         operatingScheduleId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         },
-        freelanceMode: {
+        plannedMode: {
             type: DataTypes.BOOLEAN,
             allowNull: false
         }

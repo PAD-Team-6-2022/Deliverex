@@ -24,6 +24,7 @@ Order.belongsTo(User, { as: 'courier', foreignKey: 'courier_id' });
 
 WeekSchedule.hasOne(User);
 User.belongsTo(WeekSchedule, { as: 'schedule', foreignKey: 'schedule_id' });
+Organisation.belongsTo(WeekSchedule, {as: 'operating_schedule', foreignKey: 'operating_schedule_id'});
 
 Company.hasMany(User);
 User.belongsTo(Company, { as: 'company', foreignKey: 'company_id' });
