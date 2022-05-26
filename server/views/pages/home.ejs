@@ -5,6 +5,8 @@
 </head>
 <body>
   <%- include("../partials/toaster", { toasters }) %>
+
+  <%# Header with the tracking form %> 
   <header class="bg-cyan-500 px-4 flex justify-center items-center min-h-[30vh] mb-24">
     <form id="track-form" class="max-w-xl bg-white rounded-md border border-slate-200 p-8 my-16 shadow-lg -mb-24">
       <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Track and trace</h1>
@@ -27,6 +29,7 @@
     </form>
   </header>
 
+  <%# Explanation of our goal %> 
   <section class="max-w-6xl px-4 mx-auto flex justify-center space-x-4 py-16">
     <div class="flex-1 px-4 max-w-xl mx-auto sm:px-5 lg:max-w-none lg:mx-0 lg:px-0">
       <div class="bg-cyan-500 text-white p-3 w-fit rounded-md">
@@ -45,6 +48,8 @@
       <img class="max-h-64" src="/assets/img/community-vote.svg" alt="">
     </div>
   </section>
+
+  <%# How it helps local businesses %> 
   <section class="max-w-6xl px-4 mx-auto flex justify-center space-x-4 py-16 mb-16">
     <div class="hidden lg:flex flex-1 justify-start items-center">
       <img class="max-h-64" src="/assets/img/local-business.svg" alt="">

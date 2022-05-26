@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 router.get('/track/:postal_code/:id', async (req, res) => {
     const { id, postal_code } = req.params;
     // find the one order with the given id and postal_code combination
-    const order = await Order.findOne({
+    const order =  await Order.findOne({
         where: {
             id,
             postal_code,
@@ -24,7 +24,7 @@ router.get('/track/:postal_code/:id', async (req, res) => {
         include: [Format, Vote, Donation],
     });
 
-    // redirect with toaster and the given order
+    // if no order is found redirect with error toaster message
     if (!order) {
         const toasters = [
             {
@@ -42,6 +42,34 @@ router.get('/track/:postal_code/:id', async (req, res) => {
         return;
     }
 
+    // get goals
+    const goals = await getGoals(id);
+
+    const convertedWeight = convert(order.weight).from('g').toBest();
+    order.weight = `${Math.round(convertedWeight.val)} ${convertedWeight.unit}`;
+
+    // convert price int to euro
+    order.price = new Intl.NumberFormat('nl-NL', {
+        style: 'currency',
+        currency: 'EUR',
+    }).format(order.price);
+
+    res.render('tracker', {
+        title: 'Track & Trace',
+        order,
+        currentGoal: goals.currentGoal,
+        activeGoals: goals.activeGoals,
+        votedGoal: goals.votedGoal,
+    });
+});
+
+/**
+ * Get all types of goals needed for the tracking page
+ * 
+ * @param {number} id The id of the order you want the votedGoal for
+ * @returns current goal, actively voted on goals and what goal is voted on in this order
+ */
+const getGoals = async (id) => {
     // Get the current goal(the goal that's being collected for) with the sum of donations
     const currentGoal = await Goal.findOne({
         where: {
@@ -74,22 +102,11 @@ router.get('/track/:postal_code/:id', async (req, res) => {
         include: [Goal],
     });
 
-    const convertedWeight = convert(order.weight).from('g').toBest();
-    order.weight = `${Math.round(convertedWeight.val)} ${convertedWeight.unit}`;
-
-    // convert price int to euro
-    order.price = new Intl.NumberFormat('nl-NL', {
-        style: 'currency',
-        currency: 'EUR',
-    }).format(order.price);
-
-    res.render('tracker', {
-        title: 'Track & Trace',
-        order,
+    return {
         currentGoal,
         activeGoals,
         votedGoal,
-    });
-});
+    }
+}
 
 module.exports = router;

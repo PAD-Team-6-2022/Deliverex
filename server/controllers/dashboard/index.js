@@ -14,6 +14,7 @@ const {
     Location,
     WeekSchedule,
     Order,
+    Timetable,
 } = require('../../models');
 const { Op } = require('sequelize');
 const sequelize = require('../../db/connection');
@@ -411,22 +412,22 @@ router.get('/settings', async (req, res) => {
     const formats = await Format.findAll();
     const user = await User.findByPk(req.user.id);
 
-    if(req.user.role === "COURIER") {
+    if (req.user.role === 'COURIER') {
+        const timetable = Timetable.findOne({
+            where: { user_id: req.user.id },
+        });
 
-        const timetable = Timetable.findOne({where: { user_id: req.user.id }});
-
-        res.render("dashboard/courier/settings", {
-            title: "Settings",
+        res.render('dashboard/courier/settings', {
+            title: 'Settings',
             user,
-            timetable
+            timetable,
         });
     } else {
+        const company = await Company.findByPk(req.user.companyId);
+        const location = await Location.findByPk(company.location_id);
 
-        const company = await Company.findByPk(req.user.companyId)
-        const location = await Location.findByPk(company.location_id)
-
-        res.render("dashboard/settings", {
-            title: "Package sizes",
+        res.render('dashboard/settings', {
+            title: 'Package sizes',
             formats,
             user,
             company,
@@ -438,5 +439,6 @@ router.get('/settings', async (req, res) => {
 router.use('/orders', require('./orders'));
 router.use('/scan', require('./scanner'));
 router.use('/users', require('./users'));
+router.use('/goals', require('./goals'));
 
 module.exports = router;

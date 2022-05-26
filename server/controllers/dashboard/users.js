@@ -40,4 +40,33 @@ router.get('/add', auth(true), async (req, res) => {
     });
 });
 
+router.post('/add', auth(true), async (req, res) => {
+    const { type, role, username, email, password, confirm_password, notify } =
+        req.body;
+    const errors = [];
+
+    if (password !== confirm_password) errors.push("Passwords don't match");
+    if (type === 'create' && !password) errors.push('Password is required');
+
+    try {
+        const user = await User.create({
+            username,
+            email,
+            role,
+            // Only insert the password if the user decided
+            // to set a password for the user himself instead
+            // of letting the new user decide for themselves.
+            password: type === 'create' ? password : null,
+        });
+    } catch (err) {
+        errors.push(err);
+    }
+
+    if (errors.length > 0) {
+        req.flash('errors', errors);
+
+        console.log(errors);
+    }
+});
+
 module.exports = router;
