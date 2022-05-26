@@ -10,7 +10,10 @@ document.querySelectorAll('[data-tooltip]').forEach((el) => {
     // The amount of pixels of offset from the element
     // at the end of the transition
     const endOffset =
-        el.clientWidth + (Number(el.getAttribute('data-tooltip-offset')) || 20);
+        (orientation === 'top' || orientation === 'bottom'
+            ? el.clientHeight
+            : el.clientWidth) +
+        (Number(el.getAttribute('data-tooltip-offset')) || 20);
 
     // The starting offset is the offset before
     // starting with the transition
@@ -112,7 +115,7 @@ document.querySelectorAll('[data-tooltip]').forEach((el) => {
         // Make sure the tooltip completes its animation before
         // removing it from the DOM
         setTimeout(() => {
-            wrapper.removeChild(tooltip);
+            //wrapper.removeChild(tooltip);
         }, TRANSITION_DURATION);
     });
 });
