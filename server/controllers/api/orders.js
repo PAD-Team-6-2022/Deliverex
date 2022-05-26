@@ -183,12 +183,12 @@ router.post('/', (req, res) => {
             console.log(req.user.id);
             console.log(order.getDataValue('id'));
 
-            //Handle the way this order should be treated based on whether the 'freelanceMode'
+            //Handle the way this order should be treated based on whether the 'plannedMode'
             //option is currently being used.
             Organisation.findOne().then((organisation) => {
-                const freelanceMode =
-                    organisation.getDataValue('freelanceMode');
-                if (freelanceMode)
+                const plannedMode =
+                    organisation.getDataValue('plannedMode');
+                if (plannedMode)
                     addOrderToDeliveryQueue(Number(order.getDataValue('id')));
                 else {
                     //Planned mode
@@ -411,7 +411,7 @@ router.put('/editStore', async (req, res) => {
 
 router.get('/deliveryDates', (req, res) => {
     Organisation.findOne().then((organisation) => {
-        const freelanceMode = organisation.getDataValue('freelanceMode');
+        const plannedMode = organisation.getDataValue('plannedMode');
 
         WeekSchedule.findOne({
             where: { id: organisation.getDataValue('operating_schedule_id') },
@@ -436,7 +436,7 @@ router.get('/deliveryDates', (req, res) => {
                 sunday: organisationSchedule.getDataValue('sunday') !== null,
             };
 
-            if (freelanceMode) {
+            if (plannedMode) {
                 let deliveryMessage;
                 if (sameDayDeliverable)
                     deliveryMessage = `The order is expected to be delivered today.`;
