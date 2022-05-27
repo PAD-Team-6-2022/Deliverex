@@ -2,7 +2,8 @@ import { delay } from "../../util.js";
 
 const API_KEY = "5b3ce3597851110001cf62482d328da4ad724df196a3e2f0af3e15f3";
 
-const id = document.querySelector("[data-user-id]").getAttribute("data-user-id");
+// const id = document.querySelector("[data-user-id]").getAttribute("data-user-id");
+const scheduleId = document.querySelector("[data-schedule-id]").getAttribute("data-schedule-id");
 
 const postalCodeInput = document.getElementById("postal_code");
 const streetInput = document.getElementById("street");
@@ -66,67 +67,89 @@ scheduleButton.addEventListener("click", async (event) => {
             "bg-red-50",
             "border-red-500");
         document.getElementById(`${input.id}_p`).innerHTML = "";
-        let checked = document.getElementById(input.getAttribute("data-input-cb")).checked;
-        if(checked && !input.value) {
+        let checkbox = document.getElementById(input.getAttribute("data-input-cb"));
+        if(checkbox && checkbox.checked && !input.value) {
             wrongInputs.push(input);
         }
     });
 
     if(wrongInputs.length === 0) {
 
-        console.log(scheduleInputs);
+        let mondayStart = document.getElementById("mondayStart").value;
+        let mondayEnd = document.getElementById("mondayEnd").value;
+        let tuesdayStart = document.getElementById("tuesdayStart").value;
+        let tuesdayEnd = document.getElementById("tuesdayEnd").value;
+        let wednesdayStart = document.getElementById("mondayStart").value;
+        let wednesdayEnd = document.getElementById("wednesdayEnd").value;
+        let thursdayStart = document.getElementById("thursdayStart").value;
+        let thursdayEnd = document.getElementById("thursdayEnd").value;
+        let fridayStart = document.getElementById("fridayStart").value;
+        let fridayEnd = document.getElementById("fridayEnd").value;
+        let saturdayStart = document.getElementById("saturdayStart").value;
+        let saturdayEnd = document.getElementById("saturdayEnd").value;
+        let sundayStart = document.getElementById("sundayStart").value;
+        let sundayEnd = document.getElementById("sundayEnd").value;
 
         const values = {
             monday: {
-                start: document.getElementById("mondayStart").value,
-                end: document.getElementById("mondayEnd").value,
+                start: mondayStart,
+                end: mondayEnd,
             },
             tuesday: {
-                start: document.getElementById("tuesdayStart").value,
-                end: document.getElementById("tuesdayEnd").value,
+                start: tuesdayStart,
+                end: tuesdayEnd,
             },
             wednesday: {
-                start: document.getElementById("wednesdayStart").value,
-                end: document.getElementById("wednesdayEnd").value,
+                start: wednesdayStart,
+                end: wednesdayEnd,
             },
             thursday: {
-                start: document.getElementById("thursdayStart").value,
-                end: document.getElementById("thursdayEnd").value,
+                start: thursdayStart,
+                end: thursdayEnd,
             },
             friday: {
-                start: document.getElementById("fridayStart").value,
-                end: document.getElementById("fridayEnd").value,
+                start: fridayStart,
+                end: fridayEnd,
             },
             saturday: {
-                start: document.getElementById("saturdayStart").value,
-                end: document.getElementById("saturdayEnd").value,
+                start: saturdayStart,
+                end: saturdayEnd,
             },
             sunday: {
-                start: document.getElementById("sundayStart").value,
-                end: document.getElementById("sundayEnd").value,
+                start: sundayStart,
+                end: sundayEnd,
             },
         }
+
+        if(!mondayStart || !mondayEnd || document.getElementById("monday_span").innerHTML === "Closed") values.monday = null;
+        if(!tuesdayStart || !tuesdayEnd || document.getElementById("tuesday_span").innerHTML === "Closed") values.tuesday = null;
+        if(!wednesdayStart || !wednesdayEnd || document.getElementById("wednesday_span").innerHTML === "Closed") values.wednesday = null;
+        if(!thursdayStart || !thursdayEnd || document.getElementById("thursday_span").innerHTML === "Closed") values.thursday = null;
+        if(!fridayStart || !fridayEnd || document.getElementById("friday_span").innerHTML === "Closed") values.friday = null;
+        if(!saturdayStart || !saturdayEnd || document.getElementById("saturday_span").innerHTML === "Closed") values.saturday = null;
+        if(!sundayStart || !sundayEnd || document.getElementById("sunday_span").innerHTML === "Closed") values.sunday = null;
 
         console.log(values);
 
         console.log("Succes");
 
-        // await fetch(`/api/courier/timetable/${id}`, {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(values),
-        // }).then((response) => {
-        //     if(response.status === 200) {
-        //         window.location.href = `/dashboard/settings`;
-        //     }
-        // }).catch((error) => {
-        //     console.error(`Fetch error: could not fulfill post request
-        //      to create order. Errormessage: ${error}`);
-        // });
+        await fetch(`/api/courier/schedule/${scheduleId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+        }).then((response) => {
+            if(response.status === 200) {
+                window.location.href = `/dashboard/settings`;
+            }
+        }).catch((error) => {
+            console.error(`Fetch error: could not fulfill post request
+             to create order. Errormessage: ${error}`);
+        });
 
     } else {
+        console.log("wrong inputs!");
         wrongInputs.forEach((input) => {
             input.classList.add(
                 "bg-red-50",
