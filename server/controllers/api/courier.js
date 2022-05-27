@@ -1,7 +1,7 @@
 const router = require("express").Router()
-const { Timetable } = require("../../models/index")
+const { WeekSchedule } = require("../../models/index")
 
-router.put("/courier/timetable/:id", (req, res) => {
+router.post("/schedule/:id", (req, res) => {
 
     if(!req.params.id || WeekSchedule.findByPk(req.params.id) < 1) {
         WeekSchedule.create({
