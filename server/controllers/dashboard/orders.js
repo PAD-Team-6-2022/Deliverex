@@ -1,4 +1,5 @@
 const auth = require('../../middleware/auth');
+const allowedTypes = require('../../middleware/allowedTypes');
 const { Order, Format } = require('../../models');
 const convert = require('convert-units');
 const { searchQueryToWhereClause } = require('../../util');
@@ -15,6 +16,7 @@ router.get(
     pagination([25, 50, 100]),
     ordering('id', 'desc', ['id', 'weight', 'status', 'created_at']),
     searching,
+    allowedTypes(['SHOP_OWNER']),
     async (req, res) => {
         const orders = await Order.findAll({
             offset: req.offset,
