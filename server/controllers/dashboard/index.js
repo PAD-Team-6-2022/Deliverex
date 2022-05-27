@@ -14,7 +14,7 @@ const {
     Location,
     WeekSchedule,
     Order,
-    Timetable,
+    Organisation,
 } = require('../../models');
 const { Op } = require('sequelize');
 const sequelize = require('../../db/connection');
@@ -412,15 +412,19 @@ router.get('/settings', async (req, res) => {
     const formats = await Format.findAll();
     const user = await User.findByPk(req.user.id);
 
-    if (req.user.role === 'COURIER') {
-        const timetable = Timetable.findOne({
-            where: { user_id: req.user.id },
-        });
+    if(req.user.role === "COURIER") {
 
-        res.render('dashboard/courier/settings', {
-            title: 'Settings',
+        const schedule = await WeekSchedule.findByPk(user.scheduleId);
+
+        // we assume that there is one organisation since its just us
+        const organisation = await Organisation.findOne();
+        const organisationSchedule = await WeekSchedule.findByPk(organisation.operating_schedule_id);
+
+        res.render("dashboard/courier/settings", {
+            title: "Settings",
             user,
-            timetable,
+            schedule,
+            organisationSchedule
         });
     } else {
         const company = await Company.findByPk(req.user.companyId);

@@ -3,45 +3,33 @@ const { Timetable } = require("../../models/index")
 
 router.put("/courier/timetable/:id", (req, res) => {
 
-    if(Timetable.count({where: {user_id: req.params.id}}) < 1) {
-        Timetable.create({
-            mondayStart: req.body.mondayStart,
-            mondayEnd: req.body.mondayEnd,
-            tuesdayStart: req.body.tuesdayStart,
-            tuesdayEnd: req.body.tuesdayEnd,
-            wednesdayStart: req.body.wednesdayStart,
-            wednesdayEnd: req.body.wednesdayEnd,
-            thursdayStart: req.body.thursdayStart,
-            thursdayEnd: req.body.thursdayEnd,
-            fridayStart: req.body.fridayStart,
-            fridayEnd: req.body.fridayEnd,
-            saturdayStart: req.body.saturdayStart,
-            saturdayEnd: req.body.saturdayEnd,
-            sundayStart: req.body.sundayStart,
-            sundayEnd: req.body.sundayEnd,
+    if(!req.params.id || WeekSchedule.findByPk(req.params.id) < 1) {
+        WeekSchedule.create({
+            monday: req.body.monday,
+            tuesday: req.body.tuesday,
+            wednesday: req.body.wednesday,
+            thursday: req.body.thursday,
+            friday: req.body.friday,
+            saturday: req.body.saturday,
+            sunday: req.body.sunday,
         })
     } else {
-        Timetable.update({
-            mondayStart: req.body.mondayStart,
-            mondayEnd: req.body.mondayEnd,
-            tuesdayStart: req.body.tuesdayStart,
-            tuesdayEnd: req.body.tuesdayEnd,
-            wednesdayStart: req.body.wednesdayStart,
-            wednesdayEnd: req.body.wednesdayEnd,
-            thursdayStart: req.body.thursdayStart,
-            thursdayEnd: req.body.thursdayEnd,
-            fridayStart: req.body.fridayStart,
-            fridayEnd: req.body.fridayEnd,
-            saturdayStart: req.body.saturdayStart,
-            saturdayEnd: req.body.saturdayEnd,
-            sundayStart: req.body.sundayStart,
-            sundayEnd: req.body.sundayEnd,
+        WeekSchedule.update({
+            monday: req.body.monday,
+            tuesday: req.body.tuesday,
+            wednesday: req.body.wednesday,
+            thursday: req.body.thursday,
+            friday: req.body.friday,
+            saturday: req.body.saturday,
+            sunday: req.body.sunday,
         },
             {
-                where: { user_id: req.params.id },
+                where: { id: req.params.id },
             })
     }
 
 
 
 })
+
+module.exports = router;
