@@ -32,8 +32,8 @@ const convertOrdersToShipments = (orders) => {
 
     const id = order.getDataValue("id");
 
-    const pickUpCoordinates = order.getDataValue('userCreated').company.location.coordinates.coordinates;
-    const deliveryCoordinates = order.getDataValue("coordinates").coordinates;
+    const pickUpCoordinates = order.userCreated.company.location.coordinates.coordinates;
+    const deliveryCoordinates = order.coordinates.coordinates;
 
     shipments.push({
       amount: [1],
@@ -64,7 +64,7 @@ const convertOrdersToJobs = (orders) => {
 
     const id = order.getDataValue("id");
 
-    const deliveryCoordinates = order.getDataValue("coordinates").coordinates;
+    const deliveryCoordinates = order.coordinates.coordinates;
 
     jobs.push({
       id,
