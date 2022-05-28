@@ -3,7 +3,7 @@
 <head>
     <%- include("../../../partials/head", { js: "courier/settings" }) %>
 </head>
-<body data-user-id="<%= user.id %>">
+<body data-user-id="<%= user.id %>" data-schedule-id="<%= schedule.id ? schedule.id : null %>">
 <!-- include("../../../partials/modal", { id: "delete-format", type: "warning", actions: { confirm: { type: "warning", label: "Delete" } }, title: "Are you sure?", description: "Are you sure you want to delete order " + formats.id + "? You cannot go back." })  -->
 <div class="flex">
     <%- include("../../../partials/dashboard/sidebar", {isShopOwner: false}) %>
@@ -23,127 +23,16 @@
                         Working times
                     </h2>
 
-                    <h2 class="font-medium text-xl text-slate-800 mb-4 flex">Monday</h2>
-                    <div class="flex flex-row flex-wrap justify-between">
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="mondayStart">From</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="mondayStart" id="mondayStart"
-                                   value=""/>
-                            <p class="text-red-500 text-sm" id="mondayStart_p"></p>
-                        </div>
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="mondayEnd">Until</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="mondayEnd" id="mondayEnd"/>
-                            <p class="text-red-500 text-sm" id="mondayEnd_p"></p>
-                        </div>
-                    </div>
-
-                    <h2 class="font-medium text-xl text-slate-800 mb-4 flex">Tuesday</h2>
-                    <div class="flex flex-row flex-wrap justify-between">
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="tuesdayStart">From</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="tuesdayStart" id="tuesdayStart"
-                                   value=""/>
-                            <p class="text-red-500 text-sm" id="tuesdayStart_p"></p>
-                        </div>
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="tuesdayEnd">Until</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="tuesdayEnd" id="tuesdayEnd"/>
-                            <p class="text-red-500 text-sm" id="tuesdayEnd_p"></p>
-                        </div>
-                    </div>
-
-                    <h2 class="font-medium text-xl text-slate-800 mb-4 flex">Wednesday</h2>
-                    <div class="flex flex-row flex-wrap justify-between">
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="wednesdayStart">From</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="wednesdayStart" id="wednesdayStart"
-                                   value=""/>
-                            <p class="text-red-500 text-sm" id="wednesdayStart_p"></p>
-                        </div>
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="wednesdayEnd">Until</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="wednesdayEnd" id="wednesdayEnd"/>
-                            <p class="text-red-500 text-sm" id="wednesdayEnd_p"></p>
-                        </div>
-                    </div>
-
-                    <h2 class="font-medium text-xl text-slate-800 mb-4 flex">Thursday</h2>
-                    <div class="flex flex-row flex-wrap justify-between">
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="thursdayStart">From</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="thursdayStart" id="thursdayStart"
-                                   value=""/>
-                            <p class="text-red-500 text-sm" id="thursdayStart_p"></p>
-                        </div>
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="thursdayEnd">Until</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="thursdayEnd" id="thursdayEnd"/>
-                            <p class="text-red-500 text-sm" id="thursdayEnd_p"></p>
-                        </div>
-                    </div>
-
-                    <h2 class="font-medium text-xl text-slate-800 mb-4 flex">Friday</h2>
-                    <div class="flex flex-row flex-wrap justify-between">
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="fridayStart">From</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="fridayStart" id="fridayStart"
-                                   value=""/>
-                            <p class="text-red-500 text-sm" id="fridayStart_p"></p>
-                        </div>
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="fridayEnd">Until</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="fridayEnd" id="fridayEnd"/>
-                            <p class="text-red-500 text-sm" id="fridayEnd_p"></p>
-                        </div>
-                    </div>
-
-                    <h2 class="font-medium text-xl text-slate-800 mb-4 flex">Saturday</h2>
-                    <div class="flex flex-row flex-wrap justify-between">
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="saturdayStart">From</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="saturdayStart" id="saturdayStart"
-                                   value=""/>
-                            <p class="text-red-500 text-sm" id="saturdayStart_p"></p>
-                        </div>
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="saturdayEnd">Until</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="saturdayEnd" id="saturdayEnd"/>
-                            <p class="text-red-500 text-sm" id="saturdayEnd_p"></p>
-                        </div>
-                    </div>
-
-                    <h2 class="font-medium text-xl text-slate-800 mb-4 flex">Sunday</h2>
-                    <div class="flex flex-row flex-wrap justify-between">
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="sundayStart">From</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="sundayStart" id="sundayStart"
-                                   value=""/>
-                            <p class="text-red-500 text-sm" id="sundayStart_p"></p>
-                        </div>
-                        <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
-                            <label class="mb-2 font-bold text-sm text-slate-900" for="sundayEnd">Until</label>
-                            <input data-timetable-input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                                   type="time" name="sundayEnd" id="sundayEnd"/>
-                            <p class="text-red-500 text-sm" id="sundayEnd_p"></p>
-                        </div>
-                    </div>
+                    <%- include("../../../partials/courier/timeselector", { title: "Monday", schedule: schedule.monday, organisationSchedule: organisationSchedule.monday }) %>
+                    <%- include("../../../partials/courier/timeselector", { title: "Tuesday", schedule: schedule.tuesday, organisationSchedule: organisationSchedule.tuesday }) %>
+                    <%- include("../../../partials/courier/timeselector", { title: "Wednesday", schedule: schedule.wednesday, organisationSchedule: organisationSchedule.wednesday }) %>
+                    <%- include("../../../partials/courier/timeselector", { title: "Thursday", schedule: schedule.thursday, organisationSchedule: organisationSchedule.thursday }) %>
+                    <%- include("../../../partials/courier/timeselector", { title: "Friday", schedule: schedule.friday, organisationSchedule: organisationSchedule.friday }) %>
+                    <%- include("../../../partials/courier/timeselector", { title: "Saturday", schedule: schedule.saturday, organisationSchedule: organisationSchedule.saturday }) %>
+                    <%- include("../../../partials/courier/timeselector", { title: "Sunday", schedule: schedule.sunday, organisationSchedule: organisationSchedule.sunday }) %>
 
                     <button class="bg-cyan-500 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex my-4 float-right transition-colors"
-                            type="submit" id="saveTimetable">
+                            type="button" id="saveTimetable">
                         Save
                         <svg class="ml-1" viewBox="-4.5 -4.5 24 24" width="24" fill="currentColor">
                             <path d="M8.9 6.9v-5a1 1 0 1 0-2 0v5h-5a1 1 0 1 0 0 2h5v5a1 1 0 1 0 2 0v-5h5a1 1 0 1 0 0-2h-5z"></path>
@@ -193,7 +82,7 @@
                   <label class="mb-2 font-bold text-sm text-slate-900" for="country"
                     >Country/Origin</label
                   >
-                  <input
+                  <input data-input-address
                     class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                     type="text"
                     name="country"
@@ -213,7 +102,7 @@
                       for="postal_code"
                       >Postal Code</label
                     >
-                    <input
+                    <input data-input-address
                       class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                       type="text"
                       name="postal_code"
@@ -232,7 +121,7 @@
                       for="city"
                       >City</label
                     >
-                    <input
+                    <input data-input-address
                       class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                       type="text"
                       name="city"
@@ -254,7 +143,7 @@
                       for="street"
                       >Street</label
                     >
-                    <input
+                    <input data-input-address
                       class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                       type="text"
                       name="street"
@@ -272,7 +161,7 @@
                       for="houseNumber"
                       >House number</label
                     >
-                    <input
+                    <input data-input-address
                       class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                       type="text"
                       name="house_number"
@@ -285,6 +174,16 @@
                     ></p
                     >
                   </div>
+                </div>
+
+                <div class="flex justify-end">
+                  <button class="bg-cyan-500 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex my-4 float-right transition-colors"
+                          type="button" id="saveAddress">
+                      Save
+                      <svg class="ml-1" viewBox="-4.5 -4.5 24 24" width="24" fill="currentColor">
+                          <path d="M8.9 6.9v-5a1 1 0 1 0-2 0v5h-5a1 1 0 1 0 0 2h5v5a1 1 0 1 0 2 0v-5h5a1 1 0 1 0 0-2h-5z"></path>
+                      </svg>
+                  </button>
                 </div>
 
             </form>
