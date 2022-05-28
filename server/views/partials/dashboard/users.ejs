@@ -31,17 +31,17 @@
                 <table class="min-w-full divide-y divide-slate-200 border-t border-t-slate-200">
                     <thead>
                         <tr>
-                            <th data-order-toggle="id" scope="col" class="cursor-pointer px-8 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
-                                <span class="flex items-center">
-                                    Id
+                            <th data-order-toggle="id" scope="col" class="cursor-pointer px-8 py-3 text-xs font-medium text-slate-500 tracking-wider">
+                                <div class="flex items-center space-x-1">
+                                    <div>Id</div>
                                     <%- include("tableArrow", { column: 'id' }) %>
-                                </span>
+                                </div>
                             </th>
-                            <th data-order-toggle="email" scope="col" class="cursor-pointer px-8 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
-                                <span class="flex">
-                                    Email
+                            <th data-order-toggle="email" scope="col" class="cursor-pointer px-8 py-3 text-xs font-medium text-slate-500 tracking-wider">
+                                <div class="flex items-center space-x-1">
+                                    <div>Email</div>
                                     <%- include("tableArrow", { column: 'email' }) %>
-                                </span>
+                                </div>
                             </th>
                         </tr>
                     </thead>
@@ -58,15 +58,13 @@
                                     <div class="text-sm font-medium text-slate-900"><%= user.email %></div>
                                 </div>
                             </td>
-                            <td class="px-8 text-right text-sm font-medium">
-                                <button type="button" data-user-edit class="inline">
+                            <td class="px-8 text-right">
+                                <button type="button" data-user-edit class="p-2 hover:bg-slate-200 rounded-md">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24" fill="currentColor">
                                         <path d="M12.238 5.472L3.2 14.51l-.591 2.016 1.975-.571 9.068-9.068-1.414-1.415zM13.78 3.93l1.414 1.414 1.318-1.318a.5.5 0 0 0 0-.707l-.708-.707a.5.5 0 0 0-.707 0L13.781 3.93zm3.439-2.732l.707.707a2.5 2.5 0 0 1 0 3.535L5.634 17.733l-4.22 1.22a1 1 0 0 1-1.237-1.241l1.248-4.255 12.26-12.26a2.5 2.5 0 0 1 3.535 0z"></path>
                                     </svg>
                                 </button>
-                            </td>
-                            <td class="px-8 pl-0 text-right text-sm font-medium">
-                                <button type="button" data-user-delete class="mr-none inline">
+                                <button type="button" data-user-delete class="p-2 hover:bg-slate-200 rounded-md">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -2 24 24" width="24" fill="currentColor">
                                         <path d="M6 2V1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-.133l-.68 10.2a3 3 0 0 1-2.993 2.8H5.826a3 3 0 0 1-2.993-2.796L2.137 7H2a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h4zm10 2H2v1h14V4zM4.141 7l.687 10.068a1 1 0 0 0 .998.932h6.368a1 1 0 0 0 .998-.934L13.862 7h-9.72zM7 8a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path>
                                     </svg>
