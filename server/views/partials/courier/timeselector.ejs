@@ -6,16 +6,16 @@
 <div class="flex flex-row flex-wrap justify-between">
     <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
         <label class="mb-2 font-bold text-sm text-slate-900" for="<%= id %>Start">From</label>
-        <input <%= organisationSchedule ? "" : "disabled" %> data-timetable-input data-input-cb="<%= id %>_cb" class="py-2 px-3 text-slate-<%= organisationSchedule ? "800" : "400" %> rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+        <input data-org-time="<%= organisationSchedule?.start %>" data-input-to="<%= id %>End" <%= organisationSchedule ? "" : "disabled" %> data-timetable-input data-input-cb="<%= id %>_cb" class="py-2 px-3 text-slate-<%= organisationSchedule ? "800" : "400" %> rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                type="time" name="<%= id %>Start" id="<%= id %>Start"
                value="<%= schedule?.start %>"/>
         <p class="text-red-500 text-sm" id="<%= id %>Start_p"></p>
     </div>
     <div class="flex flex-col mb-4 grow w-1/4 mx-2 min-w-min">
         <label class="mb-2 font-bold text-sm text-slate-900" for="<%= id %>End">Until</label>
-        <input <%= organisationSchedule ? "" : "disabled" %> data-timetable-input data-input-cb="<%= id %>_cb" class="py-2 px-3 text-slate-<%= organisationSchedule ? "800" : "400" %> rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+        <input data-org-time="<%= organisationSchedule?.end %>" data-input-from="<%= id %>Start" <%= organisationSchedule ? "" : "disabled" %> data-timetable-input data-input-cb="<%= id %>_cb" class="py-2 px-3 text-slate-<%= organisationSchedule ? "800" : "400" %> rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
                type="time" name="<%= id %>End" id="<%= id %>End"
-               value="<%= schedule?.start %>"/>
+               value="<%= schedule?.end %>"/>
         <p class="text-red-500 text-sm" id="<%= id %>End_p"></p>
     </div>
 </div>

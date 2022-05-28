@@ -52,15 +52,90 @@ addressButton.addEventListener("click", async (event) => {
 
 });
 
+/**
+ * check if t1 is before t2
+ * @param t1 time 1
+ * @param t2 time 2
+ * @returns {boolean} if time 1 is before time 2
+ */
+function compareTime(t1, t2) {
+
+    if(t1 === t2) return false;
+
+    var time1 = t1.split(":");
+    var hours1 = parseInt(time1[0]);
+    var minutes1 = parseInt(time1[1]);
+
+    var time2 = t2.split(":");
+    var hours2 = parseInt(time2[0]);
+    var minutes2 = parseInt(time2[1]);
+
+    if(hours2 < hours1) return false;
+    else {
+        if(hours1 === hours2) {
+            if(minutes2 <= minutes1) return false;
+        }
+    }
+
+    return true;
+
+}
+
+/**
+ * Check if t1 is the same or before t2
+ * @param t1 time 1
+ * @param t2 time 2
+ * @returns {boolean} if time 1 is the same or before time 2
+ */
+function compareOrganisationTime(t1, t2) {
+
+    if(t1 === t2) return true;
+
+    var time1 = t1.split(":");
+    var hours1 = parseInt(time1[0]);
+    var minutes1 = parseInt(time1[1]);
+
+    var time2 = t2.split(":");
+    var hours2 = parseInt(time2[0]);
+    var minutes2 = parseInt(time2[1]);
+
+    if(hours2 < hours1) return false;
+    else {
+        if(hours1 === hours2) {
+            if(minutes2 < minutes1) return false;
+        }
+    }
+
+    return true;
+
+}
+
 const scheduleButton = document.getElementById("saveTimetable");
 
 const scheduleInputs = document.querySelectorAll("[data-timetable-input]");
 
+// add eventlisteners to checkbox
+// so that if checkbox is unchecked it will set value of time to null
+scheduleInputs.forEach(input => {
+    let checkbox = document.getElementById(input.getAttribute("data-input-cb"));
+    if(checkbox != null) checkbox.addEventListener("click", async () => {
+
+        if(!checkbox.checked) {
+            input.value = null;
+        }
+
+    })
+})
+
+// add eventlistener to save button of schedule
+// and validate all inputs
 scheduleButton.addEventListener("click", async (event) => {
 
     event.preventDefault();
 
     let wrongInputs = [];
+    let wrongTimeInputs = [];
+    let wrongOrganisationTimeInputs = [];
 
     scheduleInputs.forEach((input) => {
         input.classList.remove(
@@ -70,10 +145,32 @@ scheduleButton.addEventListener("click", async (event) => {
         let checkbox = document.getElementById(input.getAttribute("data-input-cb"));
         if(checkbox && checkbox.checked && !input.value) {
             wrongInputs.push(input);
+        } else if(checkbox && checkbox.checked && document.getElementById(input.getAttribute("data-input-to")) != null) {
+
+            let t2 = document.getElementById(input.getAttribute("data-input-to")).value;
+
+            let orgTimeStart = input.getAttribute("data-org-time");
+
+            if(!compareTime(input.value, t2)) wrongTimeInputs.push(input);
+            else if(orgTimeStart != null && !compareOrganisationTime(orgTimeStart, input.value)) wrongOrganisationTimeInputs.push(input);
+
+        } else if(checkbox && checkbox.checked && document.getElementById(input.getAttribute("data-input-from")) != null) {
+
+            let t1 = document.getElementById(input.getAttribute("data-input-from")).value;
+
+            let orgTimeEnd = input.getAttribute("data-org-time");
+
+            console.log(orgTimeEnd);
+
+            console.log(!compareOrganisationTime(input.value, orgTimeEnd));
+
+            if(!compareTime(t1, input.value)) wrongTimeInputs.push(input);
+            else if(orgTimeEnd != null && !compareOrganisationTime(input.value, orgTimeEnd)) wrongOrganisationTimeInputs.push(input);
+
         }
     });
 
-    if(wrongInputs.length === 0) {
+    if(wrongInputs.length === 0 && wrongTimeInputs.length === 0 && wrongOrganisationTimeInputs.length === 0) {
 
         let mondayStart = document.getElementById("mondayStart").value;
         let mondayEnd = document.getElementById("mondayEnd").value;
@@ -157,6 +254,22 @@ scheduleButton.addEventListener("click", async (event) => {
             );
             document.getElementById(`${input.id}_p`).innerHTML = "This field can't be empty!";
         });
+
+        wrongTimeInputs.forEach(input => {
+            input.classList.add(
+                "bg-red-50",
+                "border-red-500"
+            );
+            document.getElementById(`${input.id}_p`).innerHTML = "From field can't be after To field!";
+        });
+
+        wrongOrganisationTimeInputs.forEach(input => {
+            input.classList.add(
+                "bg-red-50",
+                "border-red-500"
+            );
+            document.getElementById(`${input.id}_p`).innerHTML = "Time must be within organisation opening hours!";
+        })
     }
 
 })
