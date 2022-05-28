@@ -1,16 +1,10 @@
-<form class="flex flex-col bg-white rounded-md border border-slate-200 overflow-hidden p-8" data-pagination-enabled data-ordering-enabled>
+<form class="flex flex-col bg-white rounded-md border border-slate-200 overflow-hidden" data-pagination-enabled data-ordering-enabled>
     <%# Hidden inputs for column sorting and pagination %>
     <input type="hidden" name="sort" value="<%= sort %>">
     <input type="hidden" name="order" value="<%= order %>">
     <input type="hidden" name="page" value="<%= page %>">   
-    <h2 class="font-medium text-2xl text-slate-800 mb-4 flex">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -1.5 24 24" width="24" fill="currentColor">
-            <path d="M3.534 11.07a1 1 0 1 1 .733 1.86A3.579 3.579 0 0 0 2 16.26V18a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1.647a3.658 3.658 0 0 0-2.356-3.419 1 1 0 1 1 .712-1.868A5.658 5.658 0 0 1 14 16.353V18a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3v-1.74a5.579 5.579 0 0 1 3.534-5.19zM7 1a4 4 0 0 1 4 4v2a4 4 0 1 1-8 0V5a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v2a2 2 0 1 0 4 0V5a2 2 0 0 0-2-2zm9 17a1 1 0 0 1 0-2h1a1 1 0 0 0 1-1v-1.838a3.387 3.387 0 0 0-2.316-3.213 1 1 0 1 1 .632-1.898A5.387 5.387 0 0 1 20 15.162V17a3 3 0 0 1-3 3h-1zM13 2a1 1 0 0 1 0-2 4 4 0 0 1 4 4v2a4 4 0 0 1-4 4 1 1 0 0 1 0-2 2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"></path>
-        </svg>
-        <span class="ml-3">Users</span>
-    </h2>
     <%# searchbar & add button %>
-    <div class="flex mb-4">
+    <div class="flex p-8">
         <div class="flex-1">
             <div class="input-group relative flex flex-wrap items-stretch w-full">
                 <input type="search" name="search" class="form-control flex-auto w-full px-3 py-2 text-base font-normal text-slate-700 bg-slate-50 border border-solid focus:ring-cyan-500 focus:border-cyan-500  border-slate-200 border-r-0 focus:outline-none rounded-l-lg" placeholder="Search users" value="<%= search %>">
@@ -37,13 +31,13 @@
                 <table class="min-w-full divide-y divide-slate-200">
                     <thead>
                         <tr>
-                            <th data-order-toggle="id" scope="col" class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
+                            <th data-order-toggle="id" scope="col" class="cursor-pointer px-8 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                                 <span class="flex items-center">
                                     Id
                                     <%- include("tableArrow", { column: 'id' }) %>
                                 </span>
                             </th>
-                            <th data-order-toggle="email" scope="col" class="cursor-pointer px-6 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
+                            <th data-order-toggle="email" scope="col" class="cursor-pointer px-8 py-3 text-left text-xs font-medium text-slate-500 tracking-wider">
                                 <span class="flex">
                                     Email
                                     <%- include("tableArrow", { column: 'email' }) %>
@@ -54,24 +48,24 @@
                     <tbody class="bg-white divide-y divide-slate-200">
                         <% users.forEach(user => { %>
                         <tr data-user-code=<%= user.id %> class="text-slate-500 hover:bg-slate-100 cursor-pointer">
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-8 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="text-sm font-medium text-slate-900"><%= user.id %></div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-8 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="text-sm font-medium text-slate-900"><%= user.email %></div>
                                 </div>
                             </td>
-                            <td class="px-6 text-right text-sm font-medium">
+                            <td class="px-8 text-right text-sm font-medium">
                                 <button type="button" data-user-edit class="inline">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" width="24" fill="currentColor">
                                         <path d="M12.238 5.472L3.2 14.51l-.591 2.016 1.975-.571 9.068-9.068-1.414-1.415zM13.78 3.93l1.414 1.414 1.318-1.318a.5.5 0 0 0 0-.707l-.708-.707a.5.5 0 0 0-.707 0L13.781 3.93zm3.439-2.732l.707.707a2.5 2.5 0 0 1 0 3.535L5.634 17.733l-4.22 1.22a1 1 0 0 1-1.237-1.241l1.248-4.255 12.26-12.26a2.5 2.5 0 0 1 3.535 0z"></path>
                                     </svg>
                                 </button>
                             </td>
-                            <td class="px-6 pl-0 text-right text-sm font-medium">
+                            <td class="px-8 pl-0 text-right text-sm font-medium">
                                 <button type="button" data-user-delete class="mr-none inline">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -2 24 24" width="24" fill="currentColor">
                                         <path d="M6 2V1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-.133l-.68 10.2a3 3 0 0 1-2.993 2.8H5.826a3 3 0 0 1-2.993-2.796L2.137 7H2a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h4zm10 2H2v1h14V4zM4.141 7l.687 10.068a1 1 0 0 0 .998.932h6.368a1 1 0 0 0 .998-.934L13.862 7h-9.72zM7 8a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path>
@@ -85,7 +79,7 @@
             </div>
         </div>
     </div>
-    <div class="text-slate-700 flex justify-end items-center mt-4">
+    <div class="text-slate-700 flex justify-end items-center p-8">
         <div class="inline-block relative w-32 ml-4">
             <select name="limit" onchange="this.form.submit()" class="bg-white h-10 block appearance-none w-full border border-slate-300 px-3 py-2 rounded-lg leading-tight focus:outline-none focus:shadow-outline">
                 <option value="25"<%= limit === 25 ? " selected" : "" %>>25</option>

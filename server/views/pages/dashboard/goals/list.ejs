@@ -9,9 +9,16 @@
       <div class="p-10 flex-1 overflow-hidden space-y-10">
         <%- include("../../../partials/breadcrumb", { links: [{ name: "Overview", href: "/dashboard/overview" }, { name: "Goals" }] }) %>
         <div class="flex justify-between items-center flex-col md:flex-row gap-10">
-          <div class="text-center md:text-left space-y-3">
-            <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Goals</h1>
-            <p class="text-lg sm:text-xl font-medium text-slate-500 max-w-md inline-block">Create goals and receive donations from ordered packages</p>
+          <div class="space-y-6">
+            <div class="flex items-center gap-4 justify-center md:justify-start">
+              <div class="sm:h-16 sm:w-16 h-12 w-12 rounded-md bg-slate-200 p-2 text-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -4 24 24" class="w-full h-full" fill="currentColor">
+                  <path d="M3.636 7.208L10 13.572l6.364-6.364a3 3 0 1 0-4.243-4.243L10 5.086l-2.121-2.12a3 3 0 0 0-4.243 4.242zM9.293 1.55l.707.707.707-.707a5 5 0 1 1 7.071 7.071l-7.07 7.071a1 1 0 0 1-1.415 0l-7.071-7.07a5 5 0 1 1 7.07-7.071z"></path>
+                </svg>
+              </div>
+              <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Goals</h1>
+            </div>
+            <p class="text-lg sm:text-xl font-medium text-slate-500 max-w-xl inline-block text-center md:text-left space-y-3">Manage your goals here. See which ones are currently active and track how much the goal has received in donations</p>
           </div>
           <button class="flex gap-2 bg-cyan-500 hover:bg-cyan-700 text-white rounded-md px-5 py-3 transition-colors font-medium" type="submit">
             Add
