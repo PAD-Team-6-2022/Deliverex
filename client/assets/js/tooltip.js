@@ -36,6 +36,7 @@ document.querySelectorAll('[data-tooltip]').forEach((el) => {
         'rounded-md',
         'text-slate-50',
         'pointer-events-none',
+        'whitespace-nowrap',
         orientation === 'top'
             ? 'bottom-0'
             : orientation === 'bottom'
