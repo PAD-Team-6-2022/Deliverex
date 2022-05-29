@@ -11,14 +11,14 @@ router.get(
     '/',
     auth(true),
     pagination([25, 50, 100]),
-    ordering('id', 'desc', ['id', 'email']),
+    ordering('id', 'desc', ['username', 'email', 'role']),
     searching,
     async (req, res) => {
         const users = await User.findAll({
             offset: req.offset,
             limit: req.limit,
             order: [[req.sort, req.order]],
-            where: searchQueryToWhereClause(req.search, ['id']),
+            where: searchQueryToWhereClause(req.search, ['id', 'username', 'email', 'role']),
         });
 
         res.render('dashboard/users/list', {
