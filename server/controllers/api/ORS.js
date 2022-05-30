@@ -4,15 +4,15 @@
  * the following tasks:
  *
  * 1. Managing order assignments to couriers that may or may not
- * involve route calculations made by ORS.
+ *    involve route calculations made by ORS.
  * 2. Providing couriers of the route that they should take based
- * on their current location, the  orders that are assigned to them,
- * and the calculations made by ORS.
+ *    on their current location, the  orders that are assigned to
+ *    them, and the calculations made by ORS.
  * 3. Utilizing the database-stored week-schedules of both the
- * organisation and the individual couriers to set timed events
- * such as automatic order-assignments in the morning, hourly
- * order requests of pending orders, and the automatic 'failing'
- * of undelivered orders when the workday is over.
+ *    organisation and the individual couriers to set timed
+ *    events such as automatic order-assignments in the morning,
+ *    hourly order requests of pending orders, and the automatic
+ *    'failing of undelivered orders when the workday is over.
  *
  * Additionally, ORS.js also establishes two-way communications
  * with every active courier by use of push-notifications and
