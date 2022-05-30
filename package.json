@@ -4,7 +4,8 @@
     "start": "node server/app.js",
     "dev": "npm-run-all --parallel dev:nodemon watch:tailwind",
     "dev:nodemon": "nodemon server/app.js",
-    "watch:tailwind": "npx tailwindcss -i tailwind.css -o client/assets/css/tailwind.css --watch"
+    "watch:tailwind": "npx tailwindcss -i tailwind.css -o client/assets/css/tailwind.css --watch",
+    "cypress_run": "cypress open"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -29,7 +30,7 @@
     "autoprefixer": "^10.4.2",
     "convert-units": "^2.3.4",
     "cookie-parser": "^1.4.6",
-    "cypress": "^9.6.1",
+    "cypress": "^9.7.0",
     "dateformat": "^5.0.3",
     "express-useragent": "^1.0.15",
     "html5-qrcode": "^2.2.0",

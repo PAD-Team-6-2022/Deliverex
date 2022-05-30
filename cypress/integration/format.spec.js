@@ -19,6 +19,4 @@ describe('Hij logt in en dan gaat die naar settings', () => {
         cy.get('#saveFormat').click();
 
     });
-
-
 });

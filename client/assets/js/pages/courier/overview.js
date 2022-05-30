@@ -122,7 +122,7 @@ const updateFailedOrderStatus = () => {
     const orders = document.querySelector("#ordersTable").children;
 
     //Get the checkpoints table for reference
-    const checkpoints = document.querySelector(".checkpointsTable").children;
+    const checkpoints = document.querySelector("#checkpointsTable").children;
 
     //Loop through every order
     for (let i = 0; i < orders.length; i++) {
@@ -270,10 +270,8 @@ const loadGoogleMapsRedirect = () => {
         if (checkpoints[j].querySelector(".indexContainer")
                 .textContent !== 'FAILED' &&
             !checkpoints[j].querySelector(".indexContainer")
-                .classList.contains('line-through') &&
-            j === checkpoints.length - 1) {
+                .classList.contains('line-through')) {
             lastIndex = j;
-            break;
         }
     }
 
