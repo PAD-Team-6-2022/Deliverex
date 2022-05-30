@@ -1,315 +1,462 @@
+/**
+ * Loads all the 'passed' or 'checked-off' checkpoints that
+ * are marked in the cookie. This is done because the server
+ * doesn't provide the client with already passed checkpoints.
+ */
+const loadCompletedCheckpoints = (checkpointColumnNames) => {
 
-const loadCompletedCheckpoints = () => {
-    if(document.cookie === 'empty' || !document.cookie)
+    //In case the cookie is empty or if there is no cookie, do nothing
+    if (document.cookie === 'empty' || !document.cookie)
         return;
 
+    //Retrieve the cookie data
     const checkpointsMetadata = JSON.parse(document.cookie);
 
-    const currentDate = new Date();
-    const today = currentDate.getFullYear()+'-'+(currentDate.getMonth()+1)+'-'+currentDate.getDate();
+    //Parse the current day
+    const today = (() => {
+        const currentDate = new Date();
+        return currentDate.getFullYear() + '-' +
+            (currentDate.getMonth() + 1) + '-' +
+            currentDate.getDate();
+    })();
 
     //Clear the cookie in case the data is not from today
-    if(checkpointsMetadata.date.length)
-    if(checkpointsMetadata.date !== today){
-        document.cookie = 'empty';
-        return;
-    }
+    if (checkpointsMetadata.date.length)
+        if (checkpointsMetadata.date !== today) {
+            document.cookie = 'empty';
+            return;
+        }
 
+    //Retrieve the checkpoints table
     const tableContainer = document.querySelector("#checkpointsTable");
-    tableContainer.classList.remove("animate-pulse");
     tableContainer.classList.replace("bg-slate-100", "bg-white");
 
-    if(checkpointsMetadata.completedCheckpoints.length){
+    //For each completed checkpoint, represent this visually in the table
+    if (checkpointsMetadata.completedCheckpoints.length) {
         checkpointsMetadata.completedCheckpoints.forEach((completedCheckpoint, index) => {
 
+            //Retrieve the checkpoint and remove all loading effects
             const checkpointElement = tableContainer.children[index];
             checkpointElement.classList.remove("bg-slate-300");
             checkpointElement.querySelectorAll(".loading-pulse")
                 .forEach(loadingPulse => loadingPulse.remove());
 
-            const checkpointIndex = checkpointElement.querySelector(".indexContainer");
-            checkpointIndex.textContent = index+1;
+            //Define the values that are used to fill in the data fields of the checkpoint row
+            const checkpointDataValues =
+                [`${index + 1}`, completedCheckpoint.type, completedCheckpoint.location.address,
+                    completedCheckpoint.location.postal_code, completedCheckpoint.location.city,
+                    completedCheckpoint.location.country, completedCheckpoint.order_id, completedCheckpoint.time];
 
-            const checkpointType = checkpointElement.querySelector(".typeContainer");
-            checkpointType.textContent = completedCheckpoint.type;
-
-            const checkpointAddress = checkpointElement.querySelector(".addressContainer");
-            checkpointAddress.textContent = completedCheckpoint.location.address;
-
-            const checkpointPostalCode = checkpointElement.querySelector(".postalCodeContainer")
-            checkpointPostalCode.textContent = completedCheckpoint.location.postal_code;
-
-            const checkpointCity = checkpointElement.querySelector(".cityContainer");
-            checkpointCity.textContent = completedCheckpoint.location.city;
-
-            const checkpointCountry = checkpointElement.querySelector(".countryContainer");
-            checkpointCountry.textContent = completedCheckpoint.location.country;
-
-            const checkpointOrderId = checkpointElement.querySelector(".orderIdContainer");
-            checkpointOrderId.textContent = completedCheckpoint.order_id;
-
-            const checkpointTime = checkpointElement.querySelector(".timeContainer");
-            checkpointTime.textContent = completedCheckpoint.time;
-
-            checkpointIndex.classList.add('line-through');
-            checkpointType.classList.add('line-through');
-            checkpointAddress.classList.add('line-through');
-            checkpointPostalCode.classList.add('line-through');
-            checkpointCity.classList.add('line-through');
-            checkpointCountry.classList.add('line-through');
-            checkpointOrderId.classList.add('line-through');
-            checkpointTime.classList.add('line-through');
+            //Use the values defined above to fill in the data fields.
+            // Also add a 'line-through' effect.
+            checkpointColumnNames.forEach((columnName, index) => {
+                checkpointElement.querySelector(columnName).textContent = checkpointDataValues[index];
+                checkpointElement.classList.add('line-through');
+            })
         })
     }
 }
 
-navigator.geolocation.getCurrentPosition((success) => {
+/**
+ * Loads all the checkpoints that have yet to be completed by
+ * the courier.
+ *
+ * @param routingData data containing the route that this courier
+ * should take in the correct order.
+ * @param checkpointColumnNames list of column names representing the
+ * columns of every checkpoint for reference
+ */
+const loadUncompletedCheckpoints = (routingData, checkpointColumnNames) => {
 
-    //TODO: Use the 'pending' state of the fetch request
-    // to give a loading effect to the checkpoints table
+    //Retrieves the checkpoint table
+    const checkpointsTable = document.querySelector("#checkpointsTable");
 
-    //TODO: Place more comments
+    //Display the to-be-passed checkpoints
+    if (routingData.checkpoints.length !== 0)
+        routingData.checkpoints.forEach((checkpointData, index) => {
 
-    fetch(`/api/ORS/${success.coords.longitude}/${success.coords.latitude}`, {
-        method: 'GET',
-        headers: {
-            "Content-Type" : "application/json"
-        }
-    }).then(response => response.json())
-        .then((data) => {
+            //Move the checkpoints to a lower point in the table. This way, we take
+            //into account the rows occupied by the completed checkpoints
+            if (document.cookie !== 'empty' && document.cookie.length)
+                index += JSON.parse(document.cookie).completedCheckpoints.length;
 
-            loadCompletedCheckpoints();
+            //Get the checkpoint element
+            const checkpointElement = checkpointsTable.children[index];
 
-            document.querySelector("#button-container").classList.remove("hidden");
+            //Define the values that are used to fill in the data fields of the checkpoint row
+            const checkpointDataValues =
+                [`${index + 1}`, checkpointData.type, checkpointData.location.address,
+                    checkpointData.location.postal_code, checkpointData.location.city,
+                    checkpointData.location.country, checkpointData.order_id, checkpointData.time];
 
-            const checkpointsTable = document.querySelector("#checkpointsTable");
-            checkpointsTable.classList.remove("animate-pulse");
-            checkpointsTable.classList.replace("bg-slate-100", "bg-white");
+            //Remove the loading effect of this checkpoint
+            checkpointElement.classList.remove("bg-slate-300");
+            checkpointElement.querySelectorAll(".loading-pulse")
+                .forEach(loadingPulse => loadingPulse.remove());
 
-            if(data.checkpoints.length !== 0)
-            data.checkpoints.forEach((checkpointData, index) => {
-
-                //Move the checkpoints to a lower point in the table. This way, we take
-                //into account the rows occupied by the completed checkpoints
-                if(document.cookie !== 'empty' && document.cookie.length){
-                    index += JSON.parse(document.cookie).completedCheckpoints.length;
-                }
-                const checkpointElement = checkpointsTable.children[index];
-                checkpointElement.classList.remove("bg-slate-300");
-                checkpointElement.querySelectorAll(".loading-pulse")
-                    .forEach(loadingPulse => loadingPulse.remove());
-
-                const checkpointIndex = checkpointElement.querySelector(".indexContainer");
-                checkpointIndex.textContent = index+1;
-
-                const checkpointType = checkpointElement.querySelector(".typeContainer");
-                checkpointType.textContent = checkpointData.type;
-
-                const checkpointAddress = checkpointElement.querySelector(".addressContainer");
-                checkpointAddress.textContent = checkpointData.location.address;
-
-                const checkpointPostalCode = checkpointElement.querySelector(".postalCodeContainer")
-                checkpointPostalCode.textContent = checkpointData.location.postal_code;
-
-                const checkpointCity = checkpointElement.querySelector(".cityContainer");
-                    checkpointCity.textContent = checkpointData.location.city;
-
-                const checkpointCountry = checkpointElement.querySelector(".countryContainer");
-                    checkpointCountry.textContent = checkpointData.location.country;
-
-                const checkpointOrderId = checkpointElement.querySelector(".orderIdContainer");
-                    checkpointOrderId.textContent = checkpointData.order_id;
-
-                const checkpointTime = checkpointElement.querySelector(".timeContainer");
-                checkpointTime.textContent = checkpointData.time;
+            //Use the values defined above to fill in the data fields.
+            checkpointColumnNames.forEach((columnName, index) => {
+                checkpointElement.querySelector(columnName).textContent = checkpointDataValues[index];
             });
 
-            for (let i = 0; i < checkpointsTable.children.length; i++) {
-                if (checkpointsTable.children[i].children[0].children[0].classList.contains('animate-pulse')){
-                    checkpointsTable.children[i].setAttribute("style", "background-color: rgb(252 165 165);");
-
-                    checkpointsTable.children[i].querySelector(".indexContainer").textContent = 'FAILED';
-                    checkpointsTable.children[i].querySelector(".typeContainer").textContent = '-';
-                    checkpointsTable.children[i].querySelector(".addressContainer").textContent = '-';
-                    checkpointsTable.children[i].querySelector(".postalCodeContainer").textContent = '-';
-                    checkpointsTable.children[i].querySelector(".cityContainer").textContent = '-';
-                    checkpointsTable.children[i].querySelector(".countryContainer").textContent = '-';
-                    checkpointsTable.children[i].querySelector(".orderIdContainer").textContent = '-';
-                    checkpointsTable.children[i].querySelector(".timeContainer").textContent = '-';
-
-                    for (let j = 0; j < checkpointsTable.children[i].children.length; j++) {
-                        checkpointsTable.children[i].children[j].children[0].remove();
-                    }
-                }
-            }
-
-            const ordersTable = document.querySelector("#ordersTable");
-            const orders = ordersTable.children;
-
-            for (let i = 0; i < orders.length; i++) {
-                const id = orders[i].querySelector(".order-id-attribute").textContent;
-                const status = orders[i].querySelector(".status-attribute");
-
-                const checkpoints = checkpointsTable.children;
-                let sum = 0;
-                for (let j = 0; j < checkpoints.length; j++) {
-                    if(checkpoints[j].querySelector(".orderIdContainer").textContent === id)
-                        sum++;
-                }
-                if(sum !== 2){
-                    status.classList.remove('bg-green-100');
-                    status.classList.remove('text-green-800');
-                    status.classList.remove('bg-yellow-100');
-                    status.classList.remove('text-yellow-800');
-                    status.classList.remove('bg-slate-100');
-                    status.classList.remove('text-slate-800');
-                    status.classList.remove('bg-slate-100');
-                    status.classList.remove('text-slate-800');
-                    status.classList.add('bg-red-100');
-                    status.classList.add('text-red-800');
-                    status.textContent = 'FAILED';
-                }
-            }
-
-            //Temporarily hard-coded. In the future, the travelmode should be
-            //obtained from the back-end as the page loads.
-            const travelMode = 'bicycling';
-
-            //Creates a string representing all the locations from the first to
-            //second-to-last
-            let waypoints = '';
-            const checkpoints = document.querySelectorAll(".checkpoint");
-            let previousLocation = '';
-
-            checkpoints.forEach((checkpoint, index) => {
-                const checkpointIndex = checkpoint.querySelector(".indexContainer");
-                if(!checkpointIndex.classList.contains('line-through') && index !== (checkpoints.length-1) && checkpointIndex.textContent !== 'FAILED'){
-                    const address = checkpoint.querySelector(".addressContainer").textContent;
-                    const postalCode = checkpoint.querySelector(".postalCodeContainer").textContent;
-                    const city = checkpoint.querySelector(".cityContainer").textContent;
-
-                    const newLocation = `${address},${postalCode},${city}|`;
-
-                    if(newLocation !== previousLocation){
-                        waypoints += newLocation;
-                        previousLocation = newLocation;
-                    }
-                }
-            });
-
-            let i = 0;
-
-            for (let j = 0; j < checkpoints.length; j++) {
-                if(checkpoints[j].querySelector(".indexContainer").textContent === 'FAILED'){
-                    i = j-1;
-                    break;
-                }
-            }
-
-            let lastIndex;
-            for (let j = 0; j < checkpoints.length; j++) {
-                if(checkpoints[j].querySelector(".indexContainer").textContent !== 'FAILED' &&
-                    !checkpoints[j].querySelector(".indexContainer").classList.contains('line-through') &&
-                    j === checkpoints.length-1){
-                    lastIndex = j;
-                    break;
-                }
-            }
-
-            //Retrieve the location data from the last checkpoint
-            const lastCheckpoint = checkpoints[lastIndex];
-
-            lastCheckpoint.location = {
-                address: lastCheckpoint.querySelector(".addressContainer").textContent,
-                postal_code: lastCheckpoint.querySelector(".postalCodeContainer").textContent,
-                city: lastCheckpoint.querySelector(".cityContainer").textContent
-            };
-
-            //Destination. This is simply the last checkpoint. To be potentially changed later to a defined end location.
-            const destination = `${lastCheckpoint.location.address},${lastCheckpoint.location.postal_code},${lastCheckpoint.location.city}`;
-            const url = encodeURI(`https://www.google.com/maps/dir/?api=1&travelmode=${travelMode}&waypoints=${waypoints}&destination=${destination}`
-                .replaceAll(',', '+'));
-
-
-            //Adds a click event to a button that opens the google maps url in a new window
-            document.querySelector("#viewRouteButton").addEventListener("click", () => {
-                window.open(url);
-            });
-
-        }).catch((err) => {
-            console.log(`Fetch error: could not retrieve routing
-             data from the server. Errormessage: ${err}`);
-            //TODO: Display the error in the UI
         });
-
-}, (error) => {
-    console.log(`Caught error while trying to get position. Error message: ${error}`);
-});
-
-const publicVapidKey = 'BLxVvjwWFJLXU0nqPOxRB_cZZiDMMTeD6c-7gTDvatl3gak50_jM9AhpWMwmn3sOkd8Ga-xhnzhq-zYpVqueOnI';
-
-//Converts an base64 string to an unsigned 8 bit array
-//Source: https://github.com/bradtraversy/node_push_notifications/blob/master/client/client.js
-function urlBase64ToUint8Array(base64String) {
-    const padding = "=".repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-        .replace(/\-/g, "+")
-        .replace(/_/g, "/");
-
-    const rawData = self.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
 }
 
-//Register the serviceWorker
-if('serviceWorker' in navigator){
-    await navigator.serviceWorker.register('../assets/js/pages/courier/sw.js', {
-        scope: "../assets/js/pages/courier/"
-    }).then(async (registrationObject) => {
+/**
+ * Checks whether some checkpoints are failed and updates
+ * the status corresponding order order in the order table.
+ * The updating of the order status is purely a visual and
+ * does not actually update the order in the database.
+ */
+const updateFailedOrderStatus = () => {
 
-        const currentSubscription = await registrationObject.pushManager.getSubscription();
-        if(currentSubscription !== null)
-            return;
+    //Get all the orders from the orders table
+    const orders = document.querySelector("#ordersTable").children;
 
-        const subscribeButtonContainer = document.querySelector("#subscribeButtonContainer");
-        const subscribeButton = document.querySelector("#subscribeButton");
+    //Get the checkpoints table for reference
+    const checkpoints = document.querySelector(".checkpointsTable").children;
 
-        subscribeButtonContainer.classList.remove("hidden");
-        subscribeButton.addEventListener("click", () => {
-            registrationObject.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
-            }).then(async (subscriptionObject) => {
-                await fetch('/api/ORS/subscribe', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(subscriptionObject)
-                }).then((response) => response.json())
-                    .then((data) => {
-                        console.log('Response data: ' + data);
-                        subscribeButtonContainer.classList.add("hidden");
-                    }).catch((err) => console.error(`Fetch error: ${err}`));
+    //Loop through every order
+    for (let i = 0; i < orders.length; i++) {
 
-            }).catch((err) => console.error(`Error: could not
-         subscribe service worker. Error message: ${err}`));
-        })
-    }).catch((err) => {
-        console.error(`Error: could not
-         register service worker. Error message: ${err}`);
-        return;
+        //Obtain the ID and status of the order
+        const id = orders[i].querySelector(".order-id-attribute").textContent;
+        const status = orders[i].querySelector(".status-attribute");
+
+        //We figure out whether the order is failed by checking how many
+        // times its ID is visible in the checkpoints table.
+        let idCount = 0;
+        for (let j = 0; j < checkpoints.length; j++) {
+            if (checkpoints[j].querySelector(".orderIdContainer").textContent === id)
+                idCount++;
+        }
+
+        //If the ID was visible for anything less than 2, it is clear that
+        // this order's status should be set to false as we now know that
+        // the order cannot be delivered anymore.
+        if (idCount < 2) {
+
+            //List if styling properties that should be removed
+            // from the 'status' datacell
+            const oldStatusStyling = ['bg-green-100', 'text-green-800',
+                'bg-yellow-100', 'text-yellow-800', 'bg-slate-100',
+                'text-slate-800', 'bg-slate-100', 'text-slate-800'];
+
+            //Remove the styling from status datacell
+            oldStatusStyling.forEach((token) => {
+                status.classList.remove(token);
+            });
+
+            //Add the new styling to signify that this order is failed
+            const newStatusStyling = ['bg-red-100', 'text-red-800'];
+            newStatusStyling.forEach((token) => {
+                status.classList.add(token);
+            });
+
+            //Finally, set the status textcontent to 'FAILED'
+            status.textContent = 'FAILED';
+        }
+    }
+}
+
+/**
+ * Loads all the checkpoints that are considered 'failed'
+ * by the server.
+ *
+ * @param checkpointColumnNames list of column names representing the
+ * columns of every checkpoint for reference
+ */
+const loadFailedCheckpoints = (checkpointColumnNames) => {
+
+    //Retrieves the checkpoint table
+    const checkpointsTable = document.querySelector("#checkpointsTable");
+
+    //Display the failed checkpoints
+    for (let i = 0; i < checkpointsTable.children.length; i++) {
+
+        //Extract the checkpoint row
+        const checkpoint = checkpointsTable.children[i];
+
+        //Categorize loading checkpoitns as 'failed'
+        const checkpointsIsLoading = checkpoint.children[0]
+            .children[0].classList.contains('animate-pulse');
+
+        //In case the checkpoint is still loading, change its appearance to look 'FAILED'
+        if (checkpointsIsLoading) {
+
+            //Give this row a red background to signify that it's a 'failed' checkpoint
+            checkpoint.setAttribute("style", "background-color: rgb(252 165 165);");
+
+            //For each datacell of this row and column, set the textcontent
+            // of the 'first' index on 'FAILED' and put a '-' symbol in the rest
+            checkpointColumnNames.forEach((columnName) => {
+                if (columnName === '.indexContainer')
+                    checkpoint.querySelector(columnName).textContent = 'FAILED';
+                else
+                    checkpoint.querySelector(columnName).textContent = '-';
+            });
+
+            //Remove the loading effect from every data-cell of this checkpoint row
+            for (let j = 0; j < checkpoint.children.length; j++) {
+                checkpoint.children[j].children[0].remove();
+            }
+        }
+    }
+
+    //Update the status column value of failed orders to 'FAILED'
+    updateFailedOrderStatus();
+}
+
+/**
+ * Constructs a google maps link based on the waypoints
+ * in the dashboard overview and ties it to a clickable
+ * button that opens the link.
+ */
+const loadGoogleMapsRedirect = () => {
+
+    //Temporarily hard-coded. In the future, the travelmode should be
+    //obtained from the back-end as the page loads.
+    const travelMode = 'bicycling';
+
+    //Creates a string representing all the locations from the first to
+    //second-to-last
+    let waypoints = '';
+
+    //'previous location' variable to use in preventing the adding of
+    // the same location multiple times
+    let previousLocation = '';
+
+    //Loop through the checkpoints to construct the URL string
+    const checkpoints = document.querySelectorAll(".checkpoint");
+    checkpoints.forEach((checkpoint, index) => {
+
+        //Take the indexcontainer of this checkpoint to infer the status of
+        const checkpointIndex = checkpoint.querySelector(".indexContainer");
+
+        //If the checkpoint is uncompleted, is not the final checkpoint
+        // and is not failed, add its location to the waypoints string
+        if (!checkpointIndex.classList.contains('line-through') &&
+            index !== (checkpoints.length - 1) &&
+            checkpointIndex.textContent !== 'FAILED') {
+
+            //Extract the location information
+            const address = checkpoint
+                .querySelector(".addressContainer").textContent;
+            const postalCode = checkpoint
+                .querySelector(".postalCodeContainer").textContent;
+            const city = checkpoint
+                .querySelector(".cityContainer").textContent;
+
+            //Declare the new location and compare it with the old one
+            const newLocation = `${address},${postalCode},${city}|`;
+            if (newLocation !== previousLocation) {
+                waypoints += newLocation;
+                previousLocation = newLocation;
+            }
+        }
+    });
+
+    //Retrieve the index of the last (unfailed) checkpoint
+    let lastIndex;
+    for (let j = 0; j < checkpoints.length; j++) {
+        if (checkpoints[j].querySelector(".indexContainer")
+                .textContent !== 'FAILED' &&
+            !checkpoints[j].querySelector(".indexContainer")
+                .classList.contains('line-through') &&
+            j === checkpoints.length - 1) {
+            lastIndex = j;
+            break;
+        }
+    }
+
+    //Retrieve the location data from the last checkpoint
+    const lastCheckpoint = checkpoints[lastIndex];
+
+    //Define the location attribute of the last checkpoint
+    lastCheckpoint.location = {
+        address: lastCheckpoint
+            .querySelector(".addressContainer").textContent,
+        postal_code: lastCheckpoint
+            .querySelector(".postalCodeContainer").textContent,
+        city: lastCheckpoint
+            .querySelector(".cityContainer").textContent
+    };
+
+    //Destination. This is simply the last checkpoint. To be potentially
+    // changed later to a defined end location.
+    const destination = `${lastCheckpoint.location.address},${
+        lastCheckpoint.location.postal_code},${lastCheckpoint.location.city}`;
+
+    //Place the data within the URL and encode it properly
+    const url = encodeURI(`https://www.google.com/maps/dir/?api=1&travelmode=${
+        travelMode}&waypoints=${waypoints}&destination=${destination}`
+        .replaceAll(',', '+'));
+
+    //Display the 'see route in gmaps' and 'update order' buttons
+    document.querySelector("#button-container")
+        .classList.remove("hidden");
+
+    //Adds a click event to a button that opens the google maps
+    // url in a new window.
+    document.querySelector("#viewRouteButton")
+        .addEventListener("click", () => {
+        window.open(url);
     });
 }
 
+/**
+ * Loads all the navigational checkpoints in the dashboard
+ * overview.
+ */
+const loadCheckpoints = () => {
 
+    //Retrieves the current location of the user. The browser may ask the user for his
+    //permission to give his location.
+    navigator.geolocation.getCurrentPosition((geoLocation) => {
 
+        //Retrieves the most efficient route that this user should take based on his current
+        // location and the orders that he should take care of. This is done by a specific call
+        //to the server API.
+        fetch(`/api/ORS/${geoLocation.coords.longitude}/${geoLocation.coords.latitude}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => response.json())
+            .then((routeData) => {
 
+                //Array of all the columns within a checkpoint row.
+                //Listed for the sake of avoiding repetitive code.
+                const checkpointColumnNames = ['.indexContainer', '.typeContainer',
+                    '.addressContainer', '.postalCodeContainer', '.cityContainer',
+                    '.countryContainer', '.orderIdContainer', '.timeContainer'];
 
+                //Loads the already passed (cookie-stored) checkpoints
+                loadCompletedCheckpoints();
 
+                //Load the checkpoints that are neither completed nor failed
+                loadUncompletedCheckpoints(routeData, checkpointColumnNames);
 
+                //Load checkpoints that are considered 'failed' by the server
+                loadFailedCheckpoints(checkpointColumnNames);
 
+                //Sets up the button functionality to open the route in google maps
+                loadGoogleMapsRedirect();
+
+            }).catch((err) => {
+            console.log(`Fetch error: could not retrieve routing
+             data from the server. Errormessage: ${err}`);
+        });
+
+    }, (error) => {
+        console.log(`Caught error while trying to get position. Error message: ${error}`);
+    });
+}
+
+/**
+ * Sets up push notification functionality between a service
+ * worker running on this client and an external server
+ *
+ * @returns {Promise<void>}
+ */
+const setupPushNotifications = async () => {
+
+    //Public vapid key that represents the identity of the server
+    const publicVapidKey = 'BLxVvjwWFJLXU0nqPOxRB_cZZiDMMT' +
+        'eD6c-7gTDvatl3gak50_jM9AhpWMwmn3sOkd8Ga-xhnzhq-zYpVqueOnI';
+
+    /**
+     * Local function that converts a base64 string to an unsigned 8 bit array.
+     * Used in changing the format of the public vapid key.
+     *
+     * //Source: https://github.com/bradtraversy/node_push_notifications/blob/master/client/client.js
+     *
+     * @param base64String string in base64 format
+     * @returns {Uint8Array} converted 8 bit array
+     */
+    const urlBase64ToUint8Array = (base64String) => {
+        const padding = "=".repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding)
+            .replace(/\-/g, "+")
+            .replace(/_/g, "/");
+
+        const rawData = self.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+
+    /**
+     * Sends a POST HTTP request to the server that passes a push subscription
+     * object which can be kept and used by the server to identify this client
+     * device.
+     *
+     * @param subscriptionObject the subscription object of this service worker
+     * @returns {Promise<*>} the response of the server
+     */
+    const passSubscriptionToServer = (subscriptionObject) => {
+        return fetch('/api/ORS/subscribe', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(subscriptionObject)
+        }).then((response) => response.json());
+    }
+
+    //Check whether this browser makes use of service workers
+    // and then register one.
+    if ('serviceWorker' in navigator) {
+
+        //Register a new service worker
+        await navigator.serviceWorker.register('../assets/js/pages/courier/sw.js', {
+            scope: "../assets/js/pages/courier/"
+        }).then(async (registrationObject) => {
+
+            //If a push subscription already exist, simply return
+            const currentSubscription = await registrationObject.pushManager.getSubscription();
+            if (currentSubscription !== null)
+                return;
+
+            //Retrieve the subscribe button and its container
+            const subscribeButton = document.querySelector("#subscribeButton");
+            const subscribeButtonContainer = document.querySelector("#subscribeButtonContainer");
+
+            //Un-hide the button and add a click event to it which subscribes this client to
+            //receive push notifications from the server using the public vapid key
+            subscribeButtonContainer.classList.remove("hidden");
+            subscribeButton.addEventListener("click", () => {
+
+                //Subscribe the client using the registration object's pushmanager
+                registrationObject.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+                }).then(async (subscriptionObject) => {
+
+                    //Pass the subscription object to the server so that
+                    // it can send notifications to this client
+                    passSubscriptionToServer(subscriptionObject)
+                        .then((data) => {
+                            console.log('Response data: ' + data);
+                            subscribeButtonContainer.classList.add("hidden");
+                        }).catch((err) => console.error(`Fetch error: ${err}`));
+
+                }).catch((err) => console.error(`Error: could not
+                subscribe service worker. Error message: ${err}`));
+            })
+        }).catch((err) => {
+            console.error(`Error: could not
+         register service worker. Error message: ${err}`);
+        });
+    }
+}
+
+//Then load the checkpoints
+loadCheckpoints();
+
+//Load/subscribe the service worker to the server
+// to receive push notifications
+await setupPushNotifications();

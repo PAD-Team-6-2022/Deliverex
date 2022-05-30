@@ -1,97 +1,101 @@
-console.log('service worker loaded');
 
 //Array that stores incoming order request notifications
 //to keep track of them across events
 const activeRequestNotifications = [];
 
-//TODO: Try to find a use for the (below) activate event later
-/*
-self.addEventListener('activate', () => {
-    self.registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
-    }).then(async (subscriptionObject) => {
-        await fetch('/api/ORS/subscribe', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(subscriptionObject)
-        }).then((response) => response.json())
-            .then((data) => {
-                console.log('Response data: ' + data)
-            }).catch((err) => console.error(`Fetch error: ${err}`));
-
-    }).catch((err) => console.error(`Error: could not
-         subscribe service worker. Error message: ${err}`));
-})*/
-
+/**
+ * Listens for a 'push' message from the server, interprets it, and
+ * displays it as a notification based on the data sent.
+ */
 self.addEventListener('push', async (event) => {
-    const data = event.data.json();
 
+    //First, extract the data
+    const pushData = event.data.json();
+
+    //Declare and define a default object that counts as a notification
     let notificationOptions = {
-        body: data.body,
+        body: pushData.body,
         vibrate: [100, 50, 100],
         timestamp: new Date().getTime(),
         data: {
-            type: data.type,
+            type: pushData.type,
             userHasInteracted: false,
-            eventData: data
+            eventData: pushData
         },
         icon: '../../../../favicon.ico'
     };
 
-    if(data.type === 'deliveryRequest'){
-        notificationOptions.data.order = data.order;
+    //If the pushMessage was meant as a delivery request, add
+    // some extra relevant data to the notificationOptions object
+    if(pushData.type === 'deliveryRequest'){
+        notificationOptions.data.order = pushData.order;
         notificationOptions.actions = [
-            {action: 'accepted', title: 'Accept'/*, icon: 'example.png'*/},
-            {action: 'denied', title: 'Deny'/*, icon: 'example.png'*/}
+            {action: 'accepted', title: 'Accept'},
+            {action: 'denied', title: 'Deny'}
         ];
     }
 
-    self.registration.showNotification(data.title, notificationOptions)
+    //Show the notification with the title and all the defined options
+    self.registration.showNotification(pushData.title, notificationOptions)
         .then(() => {
+
             //Have the notification close itself after a set amount of seconds
-            if(data.type === 'deliveryRequest'){
+            if(pushData.type === 'deliveryRequest'){
                 self.registration.getNotifications().then((notifications) => {
+
+                    //Get the last taken notification (the one that was just shown)
                     const newNotification = notifications[notifications.length-1];
 
+                    //Push it to the list of active notifications
                     activeRequestNotifications.push(newNotification);
+
+                    //Take its order ID
                     const order_id = newNotification.data.order.id;
 
+                    //Set a timeout that will automatically send out a 'deny'
+                    // answer to the server in case the user has not reacted
+                    // after a set amount of time
                     setTimeout(() => {
-                        activeRequestNotifications.forEach((not, index) => {
-                            if(not.data.order.id === order_id){
-                                console.log('Info about the notification that is being cronned:');
-                                console.log(not);
-                                if(!not.data.userHasInteracted)
-                                    submitAnswerToServer('denied', not.data.eventData);
+                        activeRequestNotifications
+                            .forEach((notification, index) => {
+                            if(notification.data.order.id === order_id){
+                                if(!notification.data.userHasInteracted)
+                                    submitAnswerToServer('denied',
+                                        notification.data.eventData);
+
                                 activeRequestNotifications.splice(index, 1);
-                                not.close();
+                                notification.close();
                             }
                         })
-                    }, data.expirationTime*1000);
+                    }, pushData.expirationTime*1000);
                 });
             }
         }).catch((err) => console.error(
         `Could not show notification: ${err}`));
 });
 
+/**
+ * Listens for if the user clicks on a certain notification that was
+ * shown by this serviceworker. The event is trigged specifically if
+ * the user presses on 'accept' or on the notification message itself.
+ */
 self.addEventListener('notificationclick',  async (event) => {
+
+    //First, extract the notification
     const notification = event.notification;
 
+    //In case the user did not click on a delivery request
+    // notification, do nothing and return.
     if(notification.data.type !== 'deliveryRequest')
         return;
 
-    console.log('CLICKED THE ORDER REQUEST!');
-
     //Signify to the global object the user has interacted with this notification
-    activeRequestNotifications.forEach((activeNotification, index) => {
-        if(activeNotification.data.order.id === notification.data.order.id){
+    activeRequestNotifications.forEach((activeNotification) => {
+        if(activeNotification.data.order.id === notification.data.order.id)
             activeNotification.data.userHasInteracted = true;
-        }
     });
 
+    //Obtain the notification action (defined in the 'push' eventhandler)
     let action = event.action;
 
     //The request is also considered 'accepted' in case the user
@@ -99,38 +103,56 @@ self.addEventListener('notificationclick',  async (event) => {
     if(action.length === 0)
         action = 'accepted';
 
-
+    //Submit the answer to the server
     event.waitUntil(submitAnswerToServer(action, notification.data.eventData)
         .catch((err) => console.error(`Error: could not submit request
          answer to server. Errormessage: ${err}`)));
 
     //TODO: Change this to the live-deployed domain link
+    //If no 'denied' message was interpreted, open the 'dashboard' window
     if(action !== 'denied')
         clients.openWindow('http://145.109.136.58:3000/dashboard/overview')
             .catch((err) => console.error(`Could not open new window: ${err}`));
 
+    //Close the notification
     notification.close();
 })
 
+/**
+ * Listens for if the user either presses 'deny' on a notification or
+ * swipes it away.
+ */
 self.addEventListener('notificationclose', (event) => {
 
+    //First, extract the notification
     const notification = event.notification;
 
+    //In case the user did not click on a delivery request
+    // notification, do nothing and return.
     if(notification.data.type !== 'deliveryRequest')
         return;
 
     //Signify to the global object the user has interacted with this notification
-    activeRequestNotifications.forEach((activeNotification, index) => {
-        if(activeNotification.data.order.id === notification.data.order.id){
+    activeRequestNotifications.forEach((activeNotification) => {
+        if(activeNotification.data.order.id === notification.data.order.id)
             activeNotification.data.userHasInteracted = true;
-        }
     });
 
-    submitAnswerToServer('denied', notification.data.eventData).then(() => {
+    //Submit a 'denied' message to the server
+    submitAnswerToServer('denied', notification.data.eventData)
+        .then(() => {
         //Do nothing
     });
 });
 
+/**
+ * Submits an answer to a delivery request to the server. This
+ * answer can either be 'accepted' or 'denied'.
+ *
+ * @param userResponse answer message to the server
+ * @param orderRequestData the data identifying the order
+ * @returns {Promise<T | void>} server response
+ */
 const submitAnswerToServer = (userResponse, orderRequestData) => {
     return fetch('/api/ORS/submitSpontaneousDeliveryResponse', {
         method: 'PUT',

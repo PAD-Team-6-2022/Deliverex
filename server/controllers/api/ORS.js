@@ -157,7 +157,8 @@ const sendRequestNotification = (subscriptionObject, requestMetadata) => {
             return;
 
         //Convert the traveltime to minutes
-        const travelTime = Math.round(moment.duration(routingData.routes[0].duration, 's').as('m'));
+        const travelTime = Math.round(moment.duration(
+            routingData.routes[0].duration, 's').as('m'));
 
         //Convert the distance to kilometers
         const distance = Math.round((routingData.routes[0].distance / 1000) * 10) / 10;
@@ -191,7 +192,6 @@ const sendRequestNotification = (subscriptionObject, requestMetadata) => {
  * the available active couriers in the right order
  */
 const initiateOrderRequestCycle = async (orderId) => {
-    //TODO: rewrite below query to use conventional sequalize methods
 
     //Get an object representing the current workload of all the
     // active couriers ordered from least to heaviest
@@ -562,7 +562,7 @@ const calculateRoute = async (orders, courierLocation) => {
     const vehicle = {
         id: courierId, profile: 'cycling-regular',
         start: courierLocation, capacity: [4],
-        skills: [1], time_window: working_hours
+        skills: [1], time_window: working_hours //[0,80000]
     };
 
     //Pass the constructed jobs, shipments and vehicle data to the
