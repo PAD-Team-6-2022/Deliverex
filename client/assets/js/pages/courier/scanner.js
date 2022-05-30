@@ -1,4 +1,13 @@
 /**
+ * Scanner.js provides the scanner page of QR code scanning
+ * functionality and manages the updating and status-checking
+ * of orders. To achieve this, it uses the 'Html5QrCode'
+ * library.
+ *
+ * @Author: Thomas Linssen
+ */
+
+/**
  *Uses the front-end camera of a mobile device to scan a QR code. The data
  * from the QR code is then subsequently sent to the server to fetch the order
  * details that come with it.
@@ -19,10 +28,10 @@ Html5Qrcode.getCameras().then((cameras) => {
 
         //Start the scanner with certain options defined
         qrCodeScanner.start(
-            { facingMode: "environment" },
+            {facingMode: "environment"},
             {
                 fps: 60,
-                qrbox: { width: boxLength, height: boxLength },
+                qrbox: {width: boxLength, height: boxLength},
                 aspectRatio: 1.0
             },
             async (decodedText, decodedResult) => {
@@ -39,7 +48,7 @@ Html5Qrcode.getCameras().then((cameras) => {
                     qrCodeScanner.pause();
 
                     //In case no order was found, display a 'not found' message
-                    if (response.status === 404){
+                    if (response.status === 404) {
                         document.querySelector("#not-found-message")
                             .classList.remove("hidden");
                         document.querySelector("#button-container")
@@ -50,8 +59,7 @@ Html5Qrcode.getCameras().then((cameras) => {
                             .replace("justify-between", "justify-center");
                         document.querySelector("#update-order-button")
                             .classList.add("hidden");
-                    }
-                    else {
+                    } else {
                         //Get the JSON body from the response
                         const order = await response.json();
 
@@ -61,7 +69,7 @@ Html5Qrcode.getCameras().then((cameras) => {
 
                         //In case this order is already assigned to a certain user,
                         // show the extra information
-                        if (order.isNotAuthorized){
+                        if (order.isNotAuthorized) {
                             document.querySelector("#occupied-order-message")
                                 .classList.remove("hidden");
                             document.querySelector("#order-id-container-occupied")
@@ -151,97 +159,96 @@ document.querySelector("#update-order-button")
 
         //Attempt to update the scanned order
         await fetch(`/api/orders/${id}/scan`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({id}),
-    }).then((response) => {
-        if(response.status === 200){
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({id}),
+        }).then((response) => {
+            if (response.status === 200) {
 
-            //Get the current date
-            const currentDate = new Date();
-            const today = currentDate.getFullYear()+'-'+
-                (currentDate.getMonth()+1)+'-'+
-                currentDate.getDate();
+                //Get the current date
+                const currentDate = new Date();
+                const today = currentDate.getFullYear() + '-' +
+                    (currentDate.getMonth() + 1) + '-' +
+                    currentDate.getDate();
 
-            //List to keep track of the loaded checkpoints (in the cookie)
-            let completedCheckpoints = [];
+                //List to keep track of the loaded checkpoints (in the cookie)
+                let completedCheckpoints = [];
 
-            //Clear the cookie in case the data is not from today
-            if(document.cookie !== 'empty' && document.cookie.length){
+                //Clear the cookie in case the data is not from today
+                if (document.cookie !== 'empty' && document.cookie.length) {
 
-                //In case the date mentioned in the cookie is from today, fill
-                // the array with the checkpoint data that is included in it
-                const cookieData = JSON.parse(document.cookie);
-                if(cookieData.date === today)
-                    completedCheckpoints = completedCheckpoints.concat(cookieData.completedCheckpoints);
-            }
+                    //In case the date mentioned in the cookie is from today, fill
+                    // the array with the checkpoint data that is included in it
+                    const cookieData = JSON.parse(document.cookie);
+                    if (cookieData.date === today)
+                        completedCheckpoints = completedCheckpoints.concat(cookieData.completedCheckpoints);
+                }
 
-            //Get the checkpoints status
-            const status = document.querySelector("#order-status-container").textContent;
+                //Get the checkpoints status
+                const status = document.querySelector("#order-status-container").textContent;
 
-            //Set a 'type' property based on whether the status is 'READY' or 'DELIVERY'
-            let type;
-            if(status === 'READY')
-                type = 'pickup';
-            else if (status === 'TRANSIT')
-                type = 'delivery';
+                //Set a 'type' property based on whether the status is 'READY' or 'DELIVERY'
+                let type;
+                if (status === 'READY')
+                    type = 'pickup';
+                else if (status === 'TRANSIT')
+                    type = 'delivery';
 
-            //Get the information about this checkpoint
-            const address = document.querySelector(
-                "#order-address-container").textContent;
-            const city = document.querySelector(
-                "#order-city-container").textContent;
-            const postal_code = document.querySelector(
-                "#order-postal-code-container").textContent;
-            const country = document.querySelector(
-                "#order-country-container").textContent;
+                //Get the information about this checkpoint
+                const address = document.querySelector(
+                    "#order-address-container").textContent;
+                const city = document.querySelector(
+                    "#order-city-container").textContent;
+                const postal_code = document.querySelector(
+                    "#order-postal-code-container").textContent;
+                const country = document.querySelector(
+                    "#order-country-container").textContent;
 
-            //Obtain the current time
-            const time = (() => {
-                const hours = currentDate.getHours() < 10 ? '0'+
-                    currentDate.getHours() : currentDate.getHours();
-                const minutes = currentDate.getMinutes() < 10 ? '0'+
-                    currentDate.getMinutes() : currentDate.getMinutes();
-                const seconds = currentDate.getSeconds() < 10 ? '0'+
-                    currentDate.getSeconds() : currentDate.getSeconds();
-                return `${hours}:${minutes}:${seconds}`;
-            })();
+                //Obtain the current time
+                const time = (() => {
+                    const hours = currentDate.getHours() < 10 ? '0' +
+                        currentDate.getHours() : currentDate.getHours();
+                    const minutes = currentDate.getMinutes() < 10 ? '0' +
+                        currentDate.getMinutes() : currentDate.getMinutes();
+                    const seconds = currentDate.getSeconds() < 10 ? '0' +
+                        currentDate.getSeconds() : currentDate.getSeconds();
+                    return `${hours}:${minutes}:${seconds}`;
+                })();
 
-            //Take all the above-calculated information and push it to the
-            // 'completedCheckpoints' array as a newly created record
-            completedCheckpoints.push({
-                order_id: id,
-                type,
-                location: {
-                    address,
-                    city,
-                    postal_code,
-                    country
-                },
-                time
-            });
+                //Take all the above-calculated information and push it to the
+                // 'completedCheckpoints' array as a newly created record
+                completedCheckpoints.push({
+                    order_id: id,
+                    type,
+                    location: {
+                        address,
+                        city,
+                        postal_code,
+                        country
+                    },
+                    time
+                });
 
-            //Update/overwrite the cookie data with the completedCheckpoints array
-            document.cookie = JSON.stringify({date: today, completedCheckpoints});
+                //Update/overwrite the cookie data with the completedCheckpoints array
+                document.cookie = JSON.stringify({date: today, completedCheckpoints});
 
-            //Change the page back to the previous page (presumably the dashboard)
-            location.href = location.href.replace("/scan", "");
-        }
-        else if(response.status === 500)
-            document.querySelector("#server-error-message")
-                .classList.remove("hidden");
-    }).catch((error) => {
-        console.error(`Fetch error: could not fulfill post request
+                //Change the page back to the previous page (presumably the dashboard)
+                location.href = location.href.replace("/scan", "");
+            } else if (response.status === 500)
+                document.querySelector("#server-error-message")
+                    .classList.remove("hidden");
+        }).catch((error) => {
+            console.error(`Fetch error: could not fulfill post request
          to update order assignment. Errormessage: ${error}`)
-    });
-})
+        });
+    })
 
 /**
  * Reloads the page if the user presses on 'scan again'.
  */
 document.querySelector("#scan-again-button")
-    .addEventListener("click",() => {
-    location.reload();
-});
+    .addEventListener("click", () => {
+        location.reload();
+    });

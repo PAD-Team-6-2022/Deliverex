@@ -1,4 +1,12 @@
 /**
+ * Overview.js provides the main functionality of the courier dashboard.
+ * This includes loading and managing the checkpoints/orders tables,
+ * and setting up a service worker for push notifications.
+ *
+ * @Author: Thomas Linssen
+ */
+
+/**
  * Loads all the 'passed' or 'checked-off' checkpoints that
  * are marked in the cookie. This is done because the server
  * doesn't provide the client with already passed checkpoints.
@@ -300,8 +308,8 @@ const loadGoogleMapsRedirect = () => {
     // url in a new window.
     document.querySelector("#viewRouteButton")
         .addEventListener("click", () => {
-        window.open(url);
-    });
+            window.open(url);
+        });
 }
 
 /**

@@ -1,5 +1,29 @@
+/**
+ * ORS.js does the heavy lifting behind the functionality of the
+ * courier dashboard. In summary, it is mainly responsible for
+ * the following tasks:
+ *
+ * 1. Managing order assignments to couriers that may or may not
+ * involve route calculations made by ORS.
+ * 2. Providing couriers of the route that they should take based
+ * on their current location, the  orders that are assigned to them,
+ * and the calculations made by ORS.
+ * 3. Utilizing the database-stored week-schedules of both the
+ * organisation and the individual couriers to set timed events
+ * such as automatic order-assignments in the morning, hourly
+ * order requests of pending orders, and the automatic 'failing'
+ * of undelivered orders when the workday is over.
+ *
+ * Additionally, ORS.js also establishes two-way communications
+ * with every active courier by use of push-notifications and
+ * (client-side) serviceworkers. This is necessary to make the
+ * order-request system work.
+ *
+ * @Author: Thomas Linssen
+ */
+
 const router = require('express').Router();
-const {Op, QueryTypes} = require('sequelize');
+const {Op} = require('sequelize');
 const convert = require('convert-units');
 const web_push = require('web-push');
 const cron = require('node-cron');
@@ -763,7 +787,9 @@ router.get('/:longitude/:latitude', (req, res) => {
             model: User, as: 'userCreated', required: true,
             include: [{
                 model: Company, as: 'company', required: true, include: [
-                    {model: Location, as: 'location', required: true}]}]},
+                    {model: Location, as: 'location', required: true}]
+            }]
+        },
             {
                 model: User, as: 'courier', required: true,
                 include: [{model: WeekSchedule, as: 'schedule', required: true}]
@@ -792,10 +818,10 @@ router.get('/:longitude/:latitude', (req, res) => {
             total_duration: routingData.duration,
         });
     }).catch((err) => {
-            console.error(
-                `Failed to retrieve orders from database. Errormessage: ${err}`,
-            );
-        });
+        console.error(
+            `Failed to retrieve orders from database. Errormessage: ${err}`,
+        );
+    });
 });
 
 //Array to keeps track of currently-active couriers
