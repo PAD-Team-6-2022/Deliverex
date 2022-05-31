@@ -18,5 +18,6 @@ router.use("/ORS", require("./ORS"));
 router.use("/goals", require('./goals'));
 router.use("/votes", require('./votes'));
 router.use("/courier", require('./courier'));
+router.use("/settings", require('./settings'));
 
 module.exports = router;
