@@ -323,7 +323,7 @@ const loadCheckpoints = () => {
         //Retrieves the most efficient route that this user should take based on his current
         // location and the orders that he should take care of. This is done by a specific call
         //to the server API.
-        fetch(`/api/ORS/${geoLocation.coords.longitude}/${geoLocation.coords.latitude}`, {
+        fetch(`/api/ORS/coords/${geoLocation.coords.longitude}/${geoLocation.coords.latitude}`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json"
