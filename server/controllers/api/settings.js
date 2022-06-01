@@ -110,3 +110,5 @@ router.put('/editStore', async (req, res) => {
         { where: { location_id: company[0].id } },
     );
 });
+
+module.exports = router;
