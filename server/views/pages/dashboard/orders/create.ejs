@@ -18,7 +18,7 @@
             <div class="flex flex-col mb-4 mx-2">
               <label
                 class="mb-2 font-bold text-sm text-slate-900"
-                for="first_name"
+                for="email"
                 >Email-Address</label
               >
               <input
@@ -35,7 +35,7 @@
             </div>
 
             <div class="flex flex-col mb-4 mx-2">
-              <label class="mb-2 font-bold text-sm text-slate-900" for="country"
+              <label class="mb-2 font-bold text-sm text-slate-900" for="address"
                 >Address</label
               >
               <table class="border border-t-0 py-2 px-3 text-slate-800 rounded-lg">
@@ -211,6 +211,25 @@
                 <% }); %>
                 </select>
               </div>
+            </div>
+
+            <div class="flex flex-col mb-4 mx-2">
+              <label
+                class="mb-2 font-bold text-sm text-slate-900"
+                for="delivery_date"
+                >Delivery date</label
+              >
+              <input
+                class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                type="date"
+                name="delivery_date"
+                id="delivery_date"
+              />
+              <p
+              class="text-red-500 text-sm"
+              id="delivery_date_p"
+              ></p
+              >
             </div>
 
             <div class="flex justify-end mb-6">
