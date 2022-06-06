@@ -66,8 +66,9 @@ router.get('/track/:postal_code/:id', async (req, res) => {
 /**
  * Get all types of goals needed for the tracking page
  * 
+ * @author Dylan Weijgertze
  * @param {number} id The id of the order you want the votedGoal for
- * @returns current goal, actively voted on goals and what goal is voted on in this order
+ * @returns {Object} current goal, actively voted on goals and what goal is voted on in this order
  */
 const getGoals = async (id) => {
     // Get the current goal(the goal that's being collected for) with the sum of donations
