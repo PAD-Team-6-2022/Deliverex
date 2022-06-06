@@ -419,12 +419,14 @@ router.get('/settings', async (req, res) => {
         // we assume that there is one organisation since its just us
         const organisation = await Organisation.findOne();
         const organisationSchedule = await WeekSchedule.findByPk(organisation.operating_schedule_id);
+        const location = await Location.findByPk(user.locationId);
 
         res.render("dashboard/courier/settings", {
             title: "Settings",
             user,
             schedule,
-            organisationSchedule
+            organisationSchedule,
+            location
         });
     } else {
         const company = await Company.findByPk(req.user.companyId);
