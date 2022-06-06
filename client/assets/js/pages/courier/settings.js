@@ -1,7 +1,5 @@
 import { delay } from "../../util.js";
 
-const API_KEY = "5b3ce3597851110001cf62482d328da4ad724df196a3e2f0af3e15f3";
-
 // const id = document.querySelector("[data-user-id]").getAttribute("data-user-id");
 const scheduleId = document.querySelector("[data-schedule-id]").getAttribute("data-schedule-id");
 
@@ -297,14 +295,17 @@ postalCodeInput.addEventListener("keyup", delay((e) => {
     }
 }, 500));
 
-addressInput.addEventListener("keyup", delay((e) => {
+addressInput.addEventListener("keyup", delay(async (e) => {
 
     if(addressInput.value === "") return;
 
-    fetch(`https://api.openrouteservice.org/geocode/autocomplete?api_key=${API_KEY}&text=${addressInput.value}&boundary.country=NL`)
-        .then(res => res.json())
-        .then(data => {
-
+    await fetch(`/api/ORS/find/${addressInput.value}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }).then((res) => res.json())
+        .then((data) => {
             const table = document.getElementById("addresses");
             table.innerHTML = "";
 
@@ -332,7 +333,10 @@ addressInput.addEventListener("keyup", delay((e) => {
                 });
 
             }
+    }).catch((error) => {
+        console.error(`Fetch error: could not fulfill get request
+        to get addresses. Errormessage: ${error}`);
+    });
 
-        }).catch(err => console.log(err));
 }, 500));
 

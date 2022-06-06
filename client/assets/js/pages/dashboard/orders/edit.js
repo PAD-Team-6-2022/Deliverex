@@ -1,8 +1,6 @@
 import { delay } from '../../../util.js';
 import '../../../tooltip.js';
 
-const API_KEY = '5b3ce3597851110001cf62482d328da4ad724df196a3e2f0af3e15f3';
-
 const id = document.querySelector('[name="id"]').value;
 const emailInput = document.getElementById('email');
 const postalCodeInput = document.getElementById('postal_code');
@@ -129,51 +127,47 @@ postalCodeInput.addEventListener(
 
 addressInput.addEventListener(
     'keyup',
-    delay((e) => {
+    delay(async (e) => {
         if (addressInput.value === '') return;
 
-        fetch(
-            `https://api.openrouteservice.org/geocode/autocomplete?api_key=${API_KEY}&text=${addressInput.value}&boundary.country=NL`,
-        )
-            .then((res) => res.json())
+        await fetch(`/api/ORS/find/${addressInput.value}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then((res) => res.json())
             .then((data) => {
-                const table = document.getElementById('addresses');
-                table.innerHTML = '';
+                const table = document.getElementById("addresses");
+                table.innerHTML = "";
 
-                if (data.features.length > 0) {
+                if(data.features.length > 0) {
+
                     data.features.forEach((address) => {
-                        if (
-                            address.properties.housenumber &&
-                            address.properties.postalcode
-                        ) {
-                            let tr = document.createElement('tr');
-                            tr.classList.add(
-                                'hover:bg-gray-200',
-                                'hover:cursor-pointer',
-                            );
-                            tr.addEventListener('click', async () => {
-                                postalCodeInput.value =
-                                    address.properties.postalcode;
+                        if(address.properties.housenumber && address.properties.postalcode) {
+                            let tr = document.createElement("tr");
+                            tr.classList.add("hover:bg-gray-200", "hover:cursor-pointer");
+                            tr.addEventListener("click", async () => {
+                                postalCodeInput.value = address.properties.postalcode;
                                 streetInput.value = address.properties.street;
-                                houseNumberInput.value =
-                                    address.properties.housenumber;
+                                houseNumberInput.value = address.properties.housenumber;
                                 cityInput.value = address.properties.locality;
                                 countryInput.value = address.properties.country;
-                                table.innerHTML = '';
-                                coordinates = {
-                                    lat: address.geometry.coordinates[0],
-                                    long: address.geometry.coordinates[1],
-                                };
+                                table.innerHTML = "";
+                                coordinates = {long: address.geometry.coordinates[1], lat: address.geometry.coordinates[0]};
                             });
-                            let newAddress = document.createElement('td');
+                            let newAddress = document.createElement("td");
                             newAddress.innerHTML = address.properties.label;
-                            newAddress.classList.add('py-1', 'px-3');
+                            newAddress.classList.add("py-1", "px-3");
                             tr.appendChild(newAddress);
                             table.appendChild(tr);
                         }
                     });
+
                 }
-            })
-            .catch((err) => console.log(err));
+            }).catch((error) => {
+                console.error(`Fetch error: could not fulfill get request
+        to get addresses. Errormessage: ${error}`);
+            });
+
     }, 500),
 );
