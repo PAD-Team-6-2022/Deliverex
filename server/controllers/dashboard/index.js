@@ -59,7 +59,6 @@ router.get(
                           'status',
                       ]),
                   });
-
         /**
          * Gets the money donated from this month of the current company
          * @param {number} companyId the id of the company
@@ -97,7 +96,7 @@ router.get(
         //We first assume the courier doesn't work today
         let daySchedule = null;
 
-        let aprilDelivered,
+        let delivered,
             meiDelivered,
             juniDelivered,
             aprilSorting,
@@ -149,19 +148,29 @@ router.get(
                     daySchedule = courierWeekSchedule.sunday;
                     break;
             }
+
         } else {
-            aprilDelivered = await Order.count({
-                where: {
-                    status: 'DELIVERED',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-04-01 23:00:00')),
-                            new Date(Date.parse('2022-04-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            meiDelivered = await Order.count({
+
+            delivered = await Order.findAll({ where: {status: 'DELIVERED',}, attributes: [
+                        [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
+                        [Order.sequelize.fn('COUNT', Order.sequelize.col('id')), 'orders']
+                    ], group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))]},
+                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}})
+               .catch((err) => {
+                });
+            console.log('order list');
+            console.log(delivered);
+            console.log(delivered[0].dataValues.month);
+
+            totaalOmzet =  await Order.findAll({ attributes: [
+                        [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
+                        [Order.sequelize.fn('SUM', Order.sequelize.col('price')), 'omzet']
+                    ], group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))]},
+                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}})
+                .catch((err) => {
+                });
+            console.log(totaalOmzet);
+           /* meiDelivered = await Order.count({
                 where: {
                     status: 'DELIVERED',
                     updated_at: {
@@ -314,7 +323,7 @@ router.get(
                         ],
                     },
                 },
-            });
+            });*/
         }
 
         orders.forEach((order) => {
@@ -347,7 +356,7 @@ router.get(
             ordersAmount,
             deliverdAmount,
             donatedAmount,
-            aprilDelivered,
+            delivered,
             meiDelivered,
             juniDelivered,
             aprilSorting,
