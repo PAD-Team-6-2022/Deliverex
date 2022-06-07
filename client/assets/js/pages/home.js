@@ -6,9 +6,11 @@ const postalCode = document.querySelector("[data-input-postal_code]");
 
 /**
  * Show an error for the given field with the given message
- * @param {Element} elem 
- * @param {boolean} error 
- * @param {string} message 
+ * 
+ * @author Dylan Weijgertze
+ * @param {Element} elem the input wrapper element
+ * @param {boolean} error if it should display the error
+ * @param {string} message what you want the error to say
  */
 const showError = (elem, error, message) => {
     const input = elem.querySelector("input");

@@ -141,9 +141,6 @@ router.post('/', (req, res) => {
 
     let pickup_status = req.body.is_pickup != null;
 
-    //TODO: Remove this hard-coded deliveryDate with one sent by the front-end
-    req.body.deliveryDate = moment().format('YYYY-MM-DD');
-
     //Generate a unique QR code for this order
     let qrCode = '';
     const possibleCharacters =
@@ -177,7 +174,7 @@ router.post('/', (req, res) => {
                 JSON.parse(req.body.coordinates),
             ).reverse(),
         },
-        delivery_date: req.body.deliveryDate,
+        delivery_date: req.body.delivery_date,
     })
         .then(async (order) => {
             console.log(req.user.id);
@@ -298,115 +295,6 @@ router.post('/edit', async (req, res) => {
         .catch((err) => {
             res.status(500).json(err);
         });
-});
-
-router.put('/editFormat/:id', (req, res) => {
-    Format.update(
-        {
-            height: req.body.height,
-            length: req.body.length,
-            width: req.body.width,
-            nameformat: req.body.nameformat,
-        },
-        { where: { id: req.params.id } },
-    )
-        .then((affectedRows) => {
-            res.status(200).json({
-                message: `${affectedRows} rows updated`,
-            });
-        })
-        .catch((err) => {
-            res.status(500).json(err);
-        });
-});
-
-router.post('/setting', auth(true), (req, res) => {
-    Format.create({
-        length: req.body.length,
-        height: req.body.height,
-        nameformat: req.body.name,
-        width: req.body.width,
-        userId: req.user.id,
-    })
-        .then((format) => {
-            res.status(200).json({
-                format,
-                message: `format ${format.id} created`,
-            });
-        })
-        .catch((err) => {
-            res.status(500).json(err);
-        });
-});
-
-router.put('/editAccount', (req, res) => {
-    console.log(req);
-    User.update(
-        {
-            username: req.body.username,
-            email: req.body.email,
-        },
-        { where: { id: req.user.id } },
-    )
-        .then((affectedRows) => {
-            res.status(200).json({
-                message: `${affectedRows} rows updated`,
-            });
-        })
-        .catch((err) => {
-            res.status(500).json(err);
-        });
-});
-
-router.put('/editDoelPercentage', (req, res) => {
-    Company.update(
-        {
-            percentageToGoal: req.body.percentage,
-        },
-        { where: { id: req.user.company_id } },
-    )
-        .then((affectedRows) => {
-            res.status(200).json({
-                message: `${affectedRows} rows updated`,
-            });
-        })
-        .catch((err) => {
-            res.status(500).json(err);
-        });
-});
-
-router.put('/editStore', async (req, res) => {
-    Company.update(
-        {
-            name: req.body.name,
-            email: req.body.email,
-        },
-        { where: { id: req.user.company_id } },
-    )
-        .then((affectedRows) => {
-            res.status(200).json({
-                message: `${affectedRows} rows updated`,
-            });
-        })
-        .catch((err) => {
-            res.status(500).json(err);
-        });
-
-    const company = await Company.findAll({
-        where: {
-            id: 1,
-        },
-    });
-
-    Location.update(
-        {
-            streethouse_number: req.body.streethouseNumber,
-            postal_code: req.body.postalCode,
-            city: req.body.city,
-            country: req.body.country,
-        },
-        { where: { location_id: company[0].id } },
-    );
 });
 
 router.get('/deliveryDates', (req, res) => {

@@ -59,7 +59,6 @@ router.get(
                           'status',
                       ]),
                   });
-
         /**
          * Gets the money donated from this month of the current company
          * @param {number} companyId the id of the company
@@ -97,7 +96,7 @@ router.get(
         //We first assume the courier doesn't work today
         let daySchedule = null;
 
-        let aprilDelivered,
+        let chart,
             meiDelivered,
             juniDelivered,
             aprilSorting,
@@ -149,19 +148,35 @@ router.get(
                     daySchedule = courierWeekSchedule.sunday;
                     break;
             }
+
         } else {
-            aprilDelivered = await Order.count({
-                where: {
-                    status: 'DELIVERED',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-04-01 23:00:00')),
-                            new Date(Date.parse('2022-04-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            meiDelivered = await Order.count({
+
+            delivered = await Order.findAll({ where: {status: 'DELIVERED',}, attributes: [
+                        [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
+                        [Order.sequelize.fn('COUNT', Order.sequelize.col('id')), 'orders']
+                    ], group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))]},
+                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}});
+
+                console.log(delivered)
+
+            chart = [];
+
+                for(let i = 0; i < 11; i++) {
+                    const month = delivered.find(x => x.getDataValue("month") === i);
+
+                    chart.push(month ? month.getDataValue("orders") : 0);
+                }
+
+            totaalOmzet =  await Order.findAll({ attributes: [
+                        [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
+                        [Order.sequelize.fn('SUM', Order.sequelize.col('price')), 'omzet']
+                    ], group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))]},
+                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}
+                })
+                .catch((err) => {
+                })
+
+           /* meiDelivered = await Order.count({
                 where: {
                     status: 'DELIVERED',
                     updated_at: {
@@ -314,7 +329,7 @@ router.get(
                         ],
                     },
                 },
-            });
+            });*/
         }
 
         orders.forEach((order) => {
@@ -347,7 +362,7 @@ router.get(
             ordersAmount,
             deliverdAmount,
             donatedAmount,
-            aprilDelivered,
+            chart,
             meiDelivered,
             juniDelivered,
             aprilSorting,
@@ -419,12 +434,14 @@ router.get('/settings', async (req, res) => {
         // we assume that there is one organisation since its just us
         const organisation = await Organisation.findOne();
         const organisationSchedule = await WeekSchedule.findByPk(organisation.operating_schedule_id);
+        const location = await Location.findByPk(user.locationId);
 
         res.render("dashboard/courier/settings", {
             title: "Settings",
             user,
             schedule,
-            organisationSchedule
+            organisationSchedule,
+            location
         });
     } else {
         const company = await Company.findByPk(req.user.companyId);

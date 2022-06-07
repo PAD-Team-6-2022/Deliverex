@@ -778,7 +778,9 @@ router.put('/submitSpontaneousDeliveryResponse', (req, res) => {
  * Calculates and returns a list of location checkpoints for a courier
  * based on his current location and list of assigned orders.
  */
-router.get('/:longitude/:latitude', (req, res) => {
+router.get('/coords/:longitude/:latitude', (req, res) => {
+
+    console.log("test ors");
 
     //Pak alle orders van vandaag die bij deze koerier horen
     Order.findAll({
@@ -822,6 +824,22 @@ router.get('/:longitude/:latitude', (req, res) => {
             `Failed to retrieve orders from database. Errormessage: ${err}`,
         );
     });
+});
+
+router.get("/find/:query", (req, res) => {
+
+    fetch(
+        `https://api.openrouteservice.org/geocode/search?api_key=${ORS_API_KEY}&text=${req.params.query}&boundary.country=NL`,
+    )
+        .then((res) => res.json())
+        .then((data) => {
+
+            res.status(200).json({
+                features: data.features
+            });
+
+        }).catch((err) => res.status(500).json({ err }));
+
 });
 
 //Array to keeps track of currently-active couriers

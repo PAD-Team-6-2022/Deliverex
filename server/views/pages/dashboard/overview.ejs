@@ -22,6 +22,7 @@
                 <div class="flex gap-3 flex-col sm:flex-row">
                     <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
                         <h1 id="ordersAmount" class="font-bold text-4xl text-slate-800"><%= ordersAmount %></h1>
+
                         <p class="font-medium text-slate-500 text-xl mt-2">Orders</p>
                     </div>
                     <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
@@ -38,22 +39,65 @@
             <%- include('../../partials/dashboard/orders') %> 
         </div>
         <div class="bg-white rounded-md border border-slate-200 p-4 flex-1 hidden">
-            <p id="aprilDelivered" class="max-h-0"  ><%= aprilDelivered %></p>
-            <p id="meiDelivered" class="max-h-0"  ><%= meiDelivered %></p>
-            <p id="juniDelivered" class="max-h-0"  ><%= juniDelivered %></p>
-            <p id="aprilSorting" class="max-h-0"  ><%= aprilSorting %></p>
-            <p id="meiSorting" class="max-h-0"  ><%= meiSorting %></p>
-            <p id="juniSorting" class="max-h-0"  ><%= juniSorting %></p>
-            <p id="aprilReady" class="max-h-0"  ><%= aprilReady %></p>
-            <p id="meiReady" class="max-h-0"  ><%= meiReady %></p>
-            <p id="juniReady" class="max-h-0"  ><%= juniReady %></p>
-            <p id="aprilTransit" class="max-h-0"  ><%= aprilTransit %></p>
-            <p id="meiTransit" class="max-h-0"  ><%= meiTransit %></p>
-            <p id="juniTransit" class="max-h-0"  ><%= juniTransit %></p>
-            <p id="aprilFailed" class="max-h-0"  ><%= aprilFailed %></p>
-            <p id="meiFailed" class="max-h-0"  ><%= meiFailed %></p>
-            <p id="juniFailed" class="max-h-0"  ><%= juniFailed %></p>
+
         </div>
     </div>
+<script>
+   // const delivered = []; //call the backend and get the data
+   // const data = [0, 0, 0, 0, 0, 0, 0, 0,0,0, 0, 0];
+    //delivered.forEach(monthData => {
+     //   data[monthData.month + 1] = monthData.orders;
+   // })
+
+    // dataValues: { month: 4, orders: 7 };
+    //je krijgt een array terug. Die kan je mappen: je loopt over de array
+    //delivered.forEach(element => {
+    //month 0, 11 en orders is de value
+    //[0, 1, 2, ..., 11] => orders
+    // })
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December',
+            ],
+            datasets: [
+                {
+                    label: 'Number of Deliveries per month',
+                    data: [<%= chart %>],
+                    borderColor: '#4dc9f6',
+                    backgroundColor: '#f67019',
+                    tension: 0.2,
+                },
+            ],
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Chart.js Line Chart',
+                    },
+                },
+            },
+        },
+    });
+
+
+</script>
 </body>
 </html>

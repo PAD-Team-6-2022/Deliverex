@@ -4,9 +4,9 @@ import order from '../fixtures/order.json';
 describe('Hij logt in en dan gaat die naar settings', () => {
     it('Shows all form errors', () => {
         cy.visit('/')
-        cy.visit('/dashboard/signin')
-        cy.get('#username').type("Ondernemer");
-        cy.get('#password').type("test");
+        cy.visit('http://localhost:3000/dashboard/signin')
+        cy.get('#username-input').type("Ondernemer");
+        cy.get('#password-input').type("test");
         cy.get('#submitSign').click();
 
     });
