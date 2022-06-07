@@ -138,7 +138,6 @@ document
                 });
         } else {
             wrongInputs.forEach((input) => {
-                console.log(input.id)
                 input.classList.add('bg-red-50', 'border-red-500');
                 document.getElementById(`${input.id}_p`).innerHTML =
                     "This field can't be empty!";
