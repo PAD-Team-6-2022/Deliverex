@@ -752,10 +752,6 @@ router.put('/submitSpontaneousDeliveryResponse', (req, res) => {
         let nextQueuedCourier;
         nextQueuedCourier = pushMessageData.courierQueue[0];
 
-        //TODO: Remove these loggings later:
-        console.log(`RECEIVED DENIED MESSAGE!\nFrom: ${req.user.id}`);
-        console.log(`Next queued courier: ${nextQueuedCourier}`);
-
         //Find the courier among active couriers, and take its subscription.
         let courierSubscription;
         activeCouriers.forEach((courier) => {
@@ -779,8 +775,6 @@ router.put('/submitSpontaneousDeliveryResponse', (req, res) => {
  * based on his current location and list of assigned orders.
  */
 router.get('/coords/:longitude/:latitude', (req, res) => {
-
-    console.log("test ors");
 
     //Pak alle orders van vandaag die bij deze koerier horen
     Order.findAll({
@@ -826,20 +820,21 @@ router.get('/coords/:longitude/:latitude', (req, res) => {
     });
 });
 
+/**
+ * Uses ORS to return a list of locations based on a given
+ * search query string.
+ *
+ * @Author: Niels Peetoom
+ */
 router.get("/find/:query", (req, res) => {
-
-    fetch(
-        `https://api.openrouteservice.org/geocode/search?api_key=${ORS_API_KEY}&text=${req.params.query}&boundary.country=NL`,
-    )
+    fetch(`https://api.openrouteservice.org/geocode/search?api_key=${
+            ORS_API_KEY}&text=${req.params.query}&boundary.country=NL`)
         .then((res) => res.json())
         .then((data) => {
-
             res.status(200).json({
                 features: data.features
             });
-
         }).catch((err) => res.status(500).json({ err }));
-
 });
 
 //Array to keeps track of currently-active couriers

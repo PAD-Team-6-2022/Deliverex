@@ -52,7 +52,7 @@ app.get('*', (req, res) => {
     res.status(404).render('error', { title: '404 - Niet gevonden' });
 });
 
-const PORT = process.env.NODE_ENV === 'development' ? 3000 : 80;
+const PORT = process.env.NODE_ENV === 'development' ? process.env.PORT : 80;
 
 // Start server
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
