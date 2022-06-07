@@ -10,9 +10,14 @@ const cityInput = document.getElementById("city");
 const addressInput = document.getElementById("address");
 const countryInput = document.getElementById("country");
 
+const locationId = document.querySelector("[data-loc-id]").getAttribute("data-loc-id");
+const userId = document.querySelector("[data-user-id]").getAttribute("data-user-id");
+
 const addressButton = document.getElementById("saveAddress");
 
 const addressInputs = document.querySelectorAll("[data-input-address]");
+
+let coordinates = [];
 
 addressButton.addEventListener("click", async (event) => {
 
@@ -34,9 +39,31 @@ addressButton.addEventListener("click", async (event) => {
 
    if(wrongInputs.length === 0) {
 
-       console.log("sucess")
+       const values = {
+           postalCode: postalCodeInput.value,
+           city: cityInput.value,
+           country: countryInput.value,
+           street: streetInput.value,
+           houseNumber: houseNumberInput.value,
+           coordinates: JSON.stringify(coordinates),
+       }
 
-       // TODO: change address in db
+       await fetch(`/api/courier/location/${userId}/${locationId ? locationId : "nan"}`, {
+           method: "POST",
+           headers: {
+               "Content-Type": "application/json",
+           },
+           body: JSON.stringify(values),
+       }).then((response) => {
+           if(response.status === 200) {
+               window.location.href = `/dashboard/settings`;
+           }
+       }).catch((error) => {
+           console.error(`Fetch error: could not fulfill post request
+             to change schedule. Errormessage: ${error}`);
+       });
+
+       alert("test");
 
    } else {
        wrongInputs.forEach((input) => {
@@ -224,10 +251,6 @@ scheduleButton.addEventListener("click", async (event) => {
         if(!saturdayStart || !saturdayEnd || document.getElementById("saturday_span").innerHTML === "Closed") values.saturday = null;
         if(!sundayStart || !sundayEnd || document.getElementById("sunday_span").innerHTML === "Closed") values.sunday = null;
 
-        console.log(values);
-
-        console.log("Succes");
-
         await fetch(`/api/courier/schedule/${scheduleId}`, {
             method: "POST",
             headers: {
@@ -240,7 +263,7 @@ scheduleButton.addEventListener("click", async (event) => {
             }
         }).catch((error) => {
             console.error(`Fetch error: could not fulfill post request
-             to create order. Errormessage: ${error}`);
+             to change schedule. Errormessage: ${error}`);
         });
 
     } else {
@@ -271,8 +294,6 @@ scheduleButton.addEventListener("click", async (event) => {
     }
 
 })
-
-let coordinates = [];
 
 postalCodeInput.addEventListener("keyup", delay((e) => {
     const postal_code_regex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;

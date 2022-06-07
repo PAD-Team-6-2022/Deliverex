@@ -3,7 +3,7 @@
 <head>
     <%- include("../../../partials/head", { js: "courier/settings" }) %>
 </head>
-<body data-user-id="<%= user.id %>" data-schedule-id="<%= schedule.id ? schedule.id : null %>">
+<body data-user-id="<%= user.id %>" data-schedule-id="<%= schedule.id ? schedule.id : null %>" data-loc-id="<%= user.locationId ? user.locationId : null %>">
 <!-- include("../../../partials/modal", { id: "delete-format", type: "warning", actions: { confirm: { type: "warning", label: "Delete" } }, title: "Are you sure?", description: "Are you sure you want to delete order " + formats.id + "? You cannot go back." })  -->
 <div class="flex">
     <%- include("../../../partials/dashboard/sidebar", {isShopOwner: false}) %>
@@ -83,6 +83,7 @@
                     type="text"
                     name="country"
                     id="country"
+                    value="<%= location?.country %>"
                   />
                   <p
                   class="text-red-500 text-sm"
@@ -103,7 +104,7 @@
                       type="text"
                       name="postal_code"
                       id="postal_code"
-
+                        value="<%= location?.postal_code %>"
                     />
                     <p
                     class="text-red-500 text-sm"
@@ -122,7 +123,7 @@
                       type="text"
                       name="city"
                       id="city"
-
+                        value="<%= location?.city %>"
                     />
                     <p
                     class="text-red-500 text-sm"
@@ -144,6 +145,7 @@
                       type="text"
                       name="street"
                       id="street"
+                       value="<%= location?.street %>"
                     />
                     <p
                     class="text-red-500 text-sm"
@@ -162,7 +164,7 @@
                       type="text"
                       name="house_number"
                       id="house_number"
-
+                        value="<%= location?.house_number %>"
                     />
                     <p
                     class="text-red-500 text-sm"

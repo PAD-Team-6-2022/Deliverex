@@ -45,6 +45,10 @@ const User = sequelize.define(
         companyId: {
             type: DataTypes.INTEGER,
         },
+        locationId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        }
     },
     {
         underscored: true,

@@ -141,9 +141,6 @@ router.post('/', (req, res) => {
 
     let pickup_status = req.body.is_pickup != null;
 
-    //TODO: Remove this hard-coded deliveryDate with one sent by the front-end
-    req.body.deliveryDate = moment().format('YYYY-MM-DD');
-
     //Generate a unique QR code for this order
     let qrCode = '';
     const possibleCharacters =
@@ -177,7 +174,7 @@ router.post('/', (req, res) => {
                 JSON.parse(req.body.coordinates),
             ).reverse(),
         },
-        delivery_date: req.body.deliveryDate,
+        delivery_date: req.body.delivery_date,
     })
         .then(async (order) => {
             console.log(req.user.id);

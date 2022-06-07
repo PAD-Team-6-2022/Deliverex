@@ -12,8 +12,60 @@ const weightInput = document.getElementById('weight');
 const sizeFormatInput = document.getElementById('sizeFormat');
 const priceInput = document.getElementById('price');
 const pickupInput = document.getElementById('is_pickup');
+const deliveryDateInput = document.getElementById('delivery_date');
 
 let coordinates = [];
+
+/**
+ * Checks if date is within organisation opening days
+ */
+async function checkDate(dateStr) {
+
+    if(dateStr === null || dateStr === "") return false;
+
+    const today = Date.now();
+
+    const date = new Date(dateStr);
+
+    if(today > date) return false;
+
+    await fetch(`/api/orders/deliveryDates`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }).then((res) => res.json())
+        .then((data) => {
+
+            const day = date.getDay();
+
+            const days = data.schedulingData.availableDays;
+
+            switch(day) {
+                case 1:
+                    return days.monday;
+                case 2:
+                    return days.tuesday;
+                case 3:
+                    return days.wednesday;
+                case 4:
+                    return days.thursday;
+                case 5:
+                    return days.friday;
+                case 6:
+                    return days.saturday;
+                case 0:
+                    return days.sunday;
+            }
+
+
+        }).catch((error) => {
+            console.error(`Fetch error: could not fulfill get request
+        to get addresses. Errormessage: ${error}`);
+            return false;
+        });
+
+}
 
 document
     .getElementById('submitButton')
@@ -21,15 +73,23 @@ document
         event.preventDefault();
 
         let wrongInputs = [];
+        let wrongDateInput = [];
 
         const inputs = document.querySelectorAll('input');
-        inputs.forEach((input) => {
+        await inputs.forEach(async (input) => {
             input.classList.remove('bg-red-50', 'border-red-500');
-            if (input.id !== 'address' && input.type !== 'checkbox') {
+            if (input.id !== 'address' && input.type !== 'checkbox' && input.type !== 'date') {
                 document.getElementById(`${input.id}_p`).innerHTML = '';
                 if (input.value === '') {
                     wrongInputs.push(input);
                 }
+            } else if(input.type === 'date') {
+                document.getElementById(`${input.id}_p`).innerHTML = '';
+                let isCorrectDate = await checkDate(input.value);
+                if(input.value === null || input.value === "" || !isCorrectDate) {
+                    wrongDateInput.push(input);
+                }
+
             }
         });
 
@@ -41,7 +101,7 @@ document
             sizeFormatInput.classList.remove('bg-red-50', 'border-red-500');
         }
 
-        if (wrongInputs.length === 0) {
+        if (wrongInputs.length === 0 && wrongDateInput.length === 0) {
             const values = {
                 email: emailInput.value,
                 weight: weightInput.value,
@@ -54,6 +114,7 @@ document
                 is_pickup: pickupInput.checked,
                 price: priceInput.value,
                 coordinates: JSON.stringify(coordinates),
+                delivery_date: deliveryDateInput.value,
             };
 
             await fetch(`/api/orders/`, {
@@ -66,6 +127,9 @@ document
                 .then((response) => {
                     if (response.status === 200) {
                         window.location.href = `/dashboard/overview`;
+                    } else if(response.status === 500) {
+                        emailInput.classList.add("bg-red-50", "border-red-500");
+                        document.querySelector("#email_p").innerHTML = "Wrong email-address!";
                     }
                 })
                 .catch((error) => {
@@ -74,10 +138,18 @@ document
                 });
         } else {
             wrongInputs.forEach((input) => {
+                console.log(input.id)
                 input.classList.add('bg-red-50', 'border-red-500');
                 document.getElementById(`${input.id}_p`).innerHTML =
                     "This field can't be empty!";
             });
+
+            wrongDateInput.forEach(input => {
+                input.classList.add('bg-red-50', 'border-red-500');
+                document.getElementById(`${input.id}_p`).innerHTML =
+                    "Date is either in the past or outside of opening days!";
+            })
+
         }
     });
 
