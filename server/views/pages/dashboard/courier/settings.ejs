@@ -4,7 +4,7 @@
     <%- include("../../../partials/head", { js: "courier/settings" }) %>
 </head>
 <body data-user-id="<%= user.id %>" data-schedule-id="<%= schedule.id ? schedule.id : null %>" data-loc-id="<%= user.locationId ? user.locationId : null %>">
-<!-- include("../../../partials/modal", { id: "delete-format", type: "warning", actions: { confirm: { type: "warning", label: "Delete" } }, title: "Are you sure?", description: "Are you sure you want to delete order " + formats.id + "? You cannot go back." })  -->
+
 <div class="flex">
     <%- include("../../../partials/dashboard/sidebar", {isShopOwner: false}) %>
     <div class="p-10 flex-1 overflow-hidden">

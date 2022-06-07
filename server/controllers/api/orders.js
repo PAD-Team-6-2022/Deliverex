@@ -263,38 +263,61 @@ router.post('/edit', async (req, res) => {
 
     let pickup_status = req.body.is_pickup != null;
 
-    Order.update(
-        {
-            weight: req.body.weight,
-            email: req.body.email,
-            street: req.body.street,
-            house_number: req.body.house_number,
-            postal_code: req.body.postal_code,
-            city: req.body.city,
-            formatId: req.body.format_id,
-            status: req.body.status,
-            is_pickup: pickup_status,
-            updated_at: Date.now(),
-            price: req.body.price,
-            // coordinates: { type: 'Point', coordinates: Object.values(JSON.parse(req.body.coordinates)).reverse()}
-        },
-        { where: { id: req.body.id } },
-    )
-        .then(async (affectedRows) => {
-            //Though the status might not actually have been changed, we
-            //still assume as such to be sure.
-            notifyOrderStatusChange(req.body.id, req.body.status);
-            console.log('ID in orders.js: ' + req.body.id);
+    let order;
 
-            await updateDonation(req.body.id, req.body.price);
+    if(req.body.coordinates.length > 2) {
+        order = Order.update(
+            {
+                weight: req.body.weight,
+                email: req.body.email,
+                street: req.body.street,
+                house_number: req.body.house_number,
+                postal_code: req.body.postal_code,
+                city: req.body.city,
+                formatId: req.body.format_id,
+                status: req.body.status,
+                is_pickup: pickup_status,
+                updated_at: Date.now(),
+                price: req.body.price,
+                coordinates: { type: 'Point', coordinates: Object.values(JSON.parse(req.body.coordinates)).reverse()}
+            },
+            { where: { id: req.body.id } },
+        )
+    } else {
+        order = Order.update(
+            {
+                weight: req.body.weight,
+                email: req.body.email,
+                street: req.body.street,
+                house_number: req.body.house_number,
+                postal_code: req.body.postal_code,
+                city: req.body.city,
+                formatId: req.body.format_id,
+                status: req.body.status,
+                is_pickup: pickup_status,
+                updated_at: Date.now(),
+                price: req.body.price,
+            },
+            { where: { id: req.body.id } },
+        )
+    }
 
-            res.status(200).json({
-                message: `${affectedRows} rows updated`,
-            });
-        })
+    order.then(async (affectedRows) => {
+        //Though the status might not actually have been changed, we
+        //still assume as such to be sure.
+        notifyOrderStatusChange(req.body.id, req.body.status);
+        console.log('ID in orders.js: ' + req.body.id);
+
+        await updateDonation(req.body.id, req.body.price);
+
+        res.status(200).json({
+            message: `${affectedRows} rows updated`,
+        });
+    })
         .catch((err) => {
             res.status(500).json(err);
         });
+
 });
 
 router.get('/deliveryDates', (req, res) => {

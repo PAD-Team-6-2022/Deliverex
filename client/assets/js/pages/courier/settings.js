@@ -1,6 +1,5 @@
 import { delay } from "../../util.js";
 
-// const id = document.querySelector("[data-user-id]").getAttribute("data-user-id");
 const scheduleId = document.querySelector("[data-schedule-id]").getAttribute("data-schedule-id");
 
 const postalCodeInput = document.getElementById("postal_code");
@@ -62,8 +61,6 @@ addressButton.addEventListener("click", async (event) => {
            console.error(`Fetch error: could not fulfill post request
              to change schedule. Errormessage: ${error}`);
        });
-
-       alert("test");
 
    } else {
        wrongInputs.forEach((input) => {
@@ -185,10 +182,6 @@ scheduleButton.addEventListener("click", async (event) => {
 
             let orgTimeEnd = input.getAttribute("data-org-time");
 
-            console.log(orgTimeEnd);
-
-            console.log(!compareOrganisationTime(input.value, orgTimeEnd));
-
             if(!compareTime(t1, input.value)) wrongTimeInputs.push(input);
             else if(orgTimeEnd != null && !compareOrganisationTime(input.value, orgTimeEnd)) wrongOrganisationTimeInputs.push(input);
 
@@ -267,7 +260,6 @@ scheduleButton.addEventListener("click", async (event) => {
         });
 
     } else {
-        console.log("wrong inputs!");
         wrongInputs.forEach((input) => {
             input.classList.add(
                 "bg-red-50",
