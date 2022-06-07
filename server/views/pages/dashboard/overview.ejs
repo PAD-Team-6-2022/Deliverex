@@ -43,8 +43,6 @@
         </div>
     </div>
 <script>
-    const test = <%= delivered[0].dataValues.month %>;
-
    // const delivered = []; //call the backend and get the data
    // const data = [0, 0, 0, 0, 0, 0, 0, 0,0,0, 0, 0];
     //delivered.forEach(monthData => {
@@ -78,7 +76,7 @@
             datasets: [
                 {
                     label: 'Number of Deliveries per month',
-                    data: [],
+                    data: [<%= chart %>],
                     borderColor: '#4dc9f6',
                     backgroundColor: '#f67019',
                     tension: 0.2,

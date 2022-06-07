@@ -96,7 +96,7 @@ router.get(
         //We first assume the courier doesn't work today
         let daySchedule = null;
 
-        let delivered,
+        let chart,
             meiDelivered,
             juniDelivered,
             aprilSorting,
@@ -155,21 +155,27 @@ router.get(
                         [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
                         [Order.sequelize.fn('COUNT', Order.sequelize.col('id')), 'orders']
                     ], group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))]},
-                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}})
-               .catch((err) => {
-                });
-            console.log('order list');
-            console.log(delivered);
-            console.log(delivered[0].dataValues.month);
+                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}});
+
+                console.log(delivered)
+
+            chart = [];
+
+                for(let i = 0; i < 11; i++) {
+                    const month = delivered.find(x => x.getDataValue("month") === i);
+
+                    chart.push(month ? month.getDataValue("orders") : 0);
+                }
 
             totaalOmzet =  await Order.findAll({ attributes: [
                         [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
                         [Order.sequelize.fn('SUM', Order.sequelize.col('price')), 'omzet']
                     ], group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))]},
-                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}})
+                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}
+                })
                 .catch((err) => {
-                });
-            console.log(totaalOmzet);
+                })
+
            /* meiDelivered = await Order.count({
                 where: {
                     status: 'DELIVERED',
@@ -356,7 +362,7 @@ router.get(
             ordersAmount,
             deliverdAmount,
             donatedAmount,
-            delivered,
+            chart,
             meiDelivered,
             juniDelivered,
             aprilSorting,
