@@ -97,20 +97,7 @@ router.get(
         let daySchedule = null;
 
         let chart,
-            meiDelivered,
-            juniDelivered,
-            aprilSorting,
-            meiSorting,
-            juniSorting,
-            aprilReady,
-            meiReady,
-            juniReady,
-            aprilTransit,
-            meiTransit,
-            juniTransit,
-            aprilFailed,
-            meiFailed,
-            juniFailed;
+            chartOmzet
 
         if (req.user.role === 'COURIER') {
             const currentDayOfTheWeek = moment().format('dddd').toLowerCase();
@@ -161,7 +148,7 @@ router.get(
 
             chart = [];
 
-                for(let i = 0; i < 11; i++) {
+                for(let i = 1; i < 13; i++) {
                     const month = delivered.find(x => x.getDataValue("month") === i);
 
                     chart.push(month ? month.getDataValue("orders") : 0);
@@ -330,6 +317,15 @@ router.get(
                     },
                 },
             });*/
+                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}})
+
+            chartOmzet = [];
+
+            for(let i = 1; i < 13; i++) {
+                const month = totaalOmzet.find(x => x.getDataValue("month") === i);
+
+                chartOmzet.push(month ? month.getDataValue("omzet") : 0);
+            }
         }
 
         orders.forEach((order) => {
