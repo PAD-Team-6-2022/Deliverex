@@ -37,7 +37,7 @@ document
             length: document.querySelector('#length2').value,
             nameformat: document.querySelector('#nameformat2').value,
         };
-        await fetch(`/api/orders/editFormat/${id}`, {
+        await fetch(`/api/settings/editFormat/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
