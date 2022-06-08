@@ -794,6 +794,10 @@ router.get('/coords/:longitude/:latitude', (req, res) => {
             }],
     }).then(async (orders) => {
 
+        //In case this courier has no orders, simply return
+        if(!orders.length)
+            return;
+
         //Take the user's coordinates from the query arguments
         const userCoordinates = [
             Number(req.params.longitude),
@@ -854,9 +858,8 @@ setTimingActions();
 
 module.exports = router;
 
-//For debugging purposes. Comment it out if
-//necessary but don't remove.
-/*
+//Status reports. These are purely to keep a
+//server-admin oversight.
 cron.schedule(
     '0,10,20,30,40,50 * * * * *',
     () => {
@@ -875,4 +878,3 @@ cron.schedule(
     },
     {scheduled: true},
 );
-*/

@@ -356,7 +356,6 @@ const loadCheckpoints = () => {
 
     }, (error) => {
         console.error(`Caught error while trying to get position. Error message: ${error}`);
-        console.log(error)
     });
 }
 
