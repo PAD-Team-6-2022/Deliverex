@@ -84,20 +84,7 @@ router.get(
         let daySchedule = null;
 
         let chart,
-            meiDelivered,
-            juniDelivered,
-            aprilSorting,
-            meiSorting,
-            juniSorting,
-            aprilReady,
-            meiReady,
-            juniReady,
-            aprilTransit,
-            meiTransit,
-            juniTransit,
-            aprilFailed,
-            meiFailed,
-            juniFailed;
+            chartOmzet
 
         if (req.user.role === 'COURIER') {
             const currentDayOfTheWeek = moment().format('dddd').toLowerCase();
@@ -153,12 +140,19 @@ router.get(
                 },
             );
 
+<<<<<<< HEAD
             console.log(delivered);
 
             chart = [];
 
             for (let i = 0; i < 11; i++) {
                 const month = delivered.find((x) => x.getDataValue('month') === i);
+=======
+            chart = [];
+
+                for(let i = 1; i < 13; i++) {
+                    const month = delivered.find(x => x.getDataValue("month") === i);
+>>>>>>> 28f4e7a98e97c93a7c39f89b371f041740fcfb54
 
                 chart.push(month ? month.getDataValue('orders') : 0);
             }
@@ -167,6 +161,7 @@ router.get(
                 {
                     attributes: [
                         [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
+<<<<<<< HEAD
                         [Order.sequelize.fn('SUM', Order.sequelize.col('price')), 'omzet'],
                     ],
                     group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))],
@@ -333,6 +328,19 @@ router.get(
                     },
                 },
             });*/
+=======
+                        [Order.sequelize.fn('SUM', Order.sequelize.col('price')), 'omzet']
+                    ], group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))]},
+                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}})
+
+            chartOmzet = [];
+
+            for(let i = 1; i < 13; i++) {
+                const month = totaalOmzet.find(x => x.getDataValue("month") === i);
+
+                chartOmzet.push(month ? month.getDataValue("omzet") : 0);
+            }
+>>>>>>> 28f4e7a98e97c93a7c39f89b371f041740fcfb54
         }
 
         orders.forEach((order) => {
@@ -366,20 +374,7 @@ router.get(
             deliverdAmount,
             donatedAmount,
             chart,
-            meiDelivered,
-            juniDelivered,
-            aprilSorting,
-            meiSorting,
-            juniSorting,
-            aprilReady,
-            meiReady,
-            juniReady,
-            aprilTransit,
-            meiTransit,
-            juniTransit,
-            aprilFailed,
-            meiFailed,
-            juniFailed,
+            chartOmzet,
         };
 
         // Render the page, pass on the order array

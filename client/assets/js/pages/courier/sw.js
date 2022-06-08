@@ -125,7 +125,7 @@ self.addEventListener('notificationclick', async (event) => {
     //TODO: Change this to the live-deployed domain link
     //If no 'denied' message was interpreted, open the 'dashboard' window
     if (action !== 'denied')
-        clients.openWindow('http://145.109.136.58:3000/dashboard/overview')
+        clients.openWindow('http://deliverex.herokuapp.com/dashboard/overview')
             .catch((err) => console.error(`Could not open new window: ${err}`));
 
     //Close the notification

@@ -177,7 +177,7 @@ const sendRequestNotification = (subscriptionObject, requestMetadata) => {
                  optimization API call. Errormessage: ${err}`)
             });
 
-        if (!routingData.length)
+        if (routingData === null || routingData === undefined)
             return;
 
         //Convert the traveltime to minutes
@@ -192,12 +192,7 @@ const sendRequestNotification = (subscriptionObject, requestMetadata) => {
         const notificationPayload = JSON.stringify({
             title: 'Request for delivery',
             type: 'deliveryRequest',
-            body: `From: ${pickupLocation.city}, 
-                ${pickupLocation.street} 
-                ${pickupLocation.house_number}
-                \nTo: ${order.city}, 
-                ${order.street} ${order.house_number}\n\nApproximately ${distance} kilometers or ${
-                travelTime} minutes.\nThis request will expire in ${requestExpirationTime} seconds.`,
+            body: `From: ${pickupLocation.city}, ${pickupLocation.street} ${pickupLocation.house_number}\nTo: ${order.city}, ${order.street} ${order.house_number}\n\nApproximately ${distance} kilometers or ${travelTime} minutes.\nThis request will expire in ${requestExpirationTime} seconds.`,
             expirationTime: requestExpirationTime,
             order,
             courierQueue: requestMetadata.courierQueue,
@@ -219,14 +214,14 @@ const initiateOrderRequestCycle = async (orderId) => {
 
     //Get an object representing the current workload of all the
     // active couriers ordered from least to heaviest
-    const courierOrderAmounts = calculateCourierWorkLoads();
+    const courierOrderAmounts = await calculateCourierWorkLoads();
 
     //Extract the (ordered) courier ID's and put them in a separate array
     //representing a queue
     const courierQueue = [];
-    courierOrderAmounts.forEach((courierLoadData) => {
-        courierQueue.push(courierLoadData.courier_id);
-    });
+    for (let i = 0; i < courierOrderAmounts.length; i++) {
+        courierQueue.push(courierOrderAmounts[i].courier_id);
+    }
 
     //Finally, construct an object containing both the ID of the order
     // and the queue of couriers that delivery requests should be send to
@@ -243,7 +238,8 @@ const initiateOrderRequestCycle = async (orderId) => {
             courierSubscription = courierData.subscription;
     });
 
-    console.log(`Will send first notification of order ${requestMetadata.orderId} to courier ${requestMetadata.courierQueue[0]}`);
+    console.log(`Will send first notification of order ${
+        requestMetadata.orderId} to courier ${requestMetadata.courierQueue[0]}`);
 
     //Send the initial notification with the subscription and queue object
     sendRequestNotification(courierSubscription, requestMetadata);
@@ -689,6 +685,8 @@ router.post('/subscribe', auth(true), (req, res) => {
             activeCouriers.splice(i, 1);
     }
 
+    console.log(`COURER ACTIVATED: ${req.user.id}`);
+
     //Retrieve courier data
     const courierData = {
         subscription: req.body, id: req.user.id,
@@ -740,8 +738,12 @@ router.put('/submitSpontaneousDeliveryResponse', (req, res) => {
             if (sameDayDelivery === pushMessageData.order.id)
                 pendingOrderQueue.splice(index, 1);
         });
+        console.log('SUCCESFULLY ACCEPTED');
+
     } else if (req.body.answer === 'denied') {
         pushMessageData.courierQueue.shift();
+
+        console.log('SUCCESFULLY DENIED');
 
         //In case there are no more available couriers to send the message to, simply return.
         //FYI: The hourly cronjob will (eventually) take care of this order
@@ -751,10 +753,6 @@ router.put('/submitSpontaneousDeliveryResponse', (req, res) => {
         //Retrieve the courier next in the queue for this order
         let nextQueuedCourier;
         nextQueuedCourier = pushMessageData.courierQueue[0];
-
-        //TODO: Remove these loggings later:
-        console.log(`RECEIVED DENIED MESSAGE!\nFrom: ${req.user.id}`);
-        console.log(`Next queued courier: ${nextQueuedCourier}`);
 
         //Find the courier among active couriers, and take its subscription.
         let courierSubscription;
@@ -780,8 +778,6 @@ router.put('/submitSpontaneousDeliveryResponse', (req, res) => {
  */
 router.get('/coords/:longitude/:latitude', (req, res) => {
 
-    console.log("test ors");
-
     //Pak alle orders van vandaag die bij deze koerier horen
     Order.findAll({
         where: {courier_id: req.user.id, delivery_date: moment().format('YYYY-MM-DD')},
@@ -797,6 +793,10 @@ router.get('/coords/:longitude/:latitude', (req, res) => {
                 include: [{model: WeekSchedule, as: 'schedule', required: true}]
             }],
     }).then(async (orders) => {
+
+        //In case this courier has no orders, simply return
+        if(!orders.length)
+            return;
 
         //Take the user's coordinates from the query arguments
         const userCoordinates = [
@@ -826,20 +826,21 @@ router.get('/coords/:longitude/:latitude', (req, res) => {
     });
 });
 
+/**
+ * Uses ORS to return a list of locations based on a given
+ * search query string.
+ *
+ * @Author: Niels Peetoom
+ */
 router.get("/find/:query", (req, res) => {
-
-    fetch(
-        `https://api.openrouteservice.org/geocode/search?api_key=${ORS_API_KEY}&text=${req.params.query}&boundary.country=NL`,
-    )
+    fetch(`https://api.openrouteservice.org/geocode/search?api_key=${
+            ORS_API_KEY}&text=${req.params.query}&boundary.country=NL`)
         .then((res) => res.json())
         .then((data) => {
-
             res.status(200).json({
                 features: data.features
             });
-
         }).catch((err) => res.status(500).json({ err }));
-
 });
 
 //Array to keeps track of currently-active couriers
@@ -857,9 +858,8 @@ setTimingActions();
 
 module.exports = router;
 
-//For debugging purposes. Comment it out if
-//necessary but don't remove.
-/*
+//Status reports. These are purely to keep a
+//server-admin oversight.
 cron.schedule(
     '0,10,20,30,40,50 * * * * *',
     () => {
@@ -878,4 +878,3 @@ cron.schedule(
     },
     {scheduled: true},
 );
-*/

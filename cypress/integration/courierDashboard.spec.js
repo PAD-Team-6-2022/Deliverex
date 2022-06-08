@@ -39,10 +39,10 @@ describe('Test of the courier dashboard', () => {
 
         //Scoll the checkpoints table so that we
         // can check if everything is there
-        cy.get('.max-w-7xl > :nth-child(5)')
+        cy.get('#checkpointsTableContainer')
             .scrollTo('right', {duration: 1000});
         cy.wait(1500);
-        cy.get('.max-w-7xl > :nth-child(5)')
+        cy.get('#checkpointsTableContainer')
             .scrollTo('left', {duration: 1000});
 
         //Scroll below to the orders table
@@ -51,10 +51,10 @@ describe('Test of the courier dashboard', () => {
 
         //Scroll the orders table from left to right and
         // back so we can check if everything is there
-        cy.get('.mb-8').scrollTo('right',
+        cy.get('#ordersTableContainer').scrollTo('right',
             {duration: 1000});
         cy.wait(1500);
-        cy.get('.mb-8').scrollTo('left',
+        cy.get('#ordersTableContainer').scrollTo('left',
             {duration: 1000});
 
         //Scroll back to the top
