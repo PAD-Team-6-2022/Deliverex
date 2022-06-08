@@ -6,10 +6,10 @@ const pagination = require('../../middleware/pagination');
 const ordering = require('../../middleware/ordering');
 const convert = require('convert-units');
 const searching = require('../../middleware/searching');
-const { searchQueryToWhereClause } = require('../../util');
+const {searchQueryToWhereClause} = require('../../util');
 const moment = require('moment');
-const { User, Company, Location, WeekSchedule, Order, Organisation } = require('../../models');
-const { Op } = require('sequelize');
+const {User, Company, Location, WeekSchedule, Order, Organisation} = require('../../models');
+const {Op} = require('sequelize');
 const sequelize = require('../../db/connection');
 
 router.get('/', auth(true), (req, res) => {
@@ -27,27 +27,27 @@ router.get(
         const orders =
             req.user.role === 'COURIER'
                 ? await Order.findAll({
-                      where: {
-                          courier_id: req.user.getDataValue('id'),
-                          delivery_date: moment().format('YYYY-MM-DD'),
-                      },
-                      include: {
-                          model: User,
-                          as: 'courier',
-                          required: true,
-                          include: {
-                              model: WeekSchedule,
-                              as: 'schedule',
-                              required: true,
-                          },
-                      },
-                  })
+                    where: {
+                        courier_id: req.user.getDataValue('id'),
+                        delivery_date: moment().format('YYYY-MM-DD'),
+                    },
+                    include: {
+                        model: User,
+                        as: 'courier',
+                        required: true,
+                        include: {
+                            model: WeekSchedule,
+                            as: 'schedule',
+                            required: true,
+                        },
+                    },
+                })
                 : await Order.findAll({
-                      offset: req.offset,
-                      limit: req.limit,
-                      order: [[req.sort, req.order]],
-                      where: searchQueryToWhereClause(req.search, ['id', 'weight', 'status']),
-                  });
+                    offset: req.offset,
+                    limit: req.limit,
+                    order: [[req.sort, req.order]],
+                    where: searchQueryToWhereClause(req.search, ['id', 'weight', 'status']),
+                });
         /**
          * Gets the money donated from this month of the current company
          * @param {number} companyId the id of the company
@@ -64,7 +64,7 @@ router.get(
                 ON orders.id = donations.order_id
                 WHERE users.company_id = ${companyId} && MONTH(donations.created_at) = MONTH(CURRENT_DATE()) && YEAR(donations.created_at) = YEAR(CURRENT_DATE())
                 GROUP BY users.company_id`,
-                { type: sequelize.QueryTypes.SELECT },
+                {type: sequelize.QueryTypes.SELECT},
             );
 
             return donated.length !== 0 ? donated[0].collected : 0;
@@ -89,7 +89,7 @@ router.get(
             const currentDayOfTheWeek = moment().format('dddd').toLowerCase();
             //We know every order has the same courier, so we just take the first one.
             const user = await User.findOne({
-                where: { id: req.user.id },
+                where: {id: req.user.id},
                 include: {
                     model: WeekSchedule,
                     as: 'schedule',
@@ -124,7 +124,7 @@ router.get(
         } else {
             delivered = await Order.findAll(
                 {
-                    where: { status: 'DELIVERED' },
+                    where: {status: 'DELIVERED'},
                     attributes: [
                         [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
                         [Order.sequelize.fn('COUNT', Order.sequelize.col('id')), 'orders'],
@@ -217,18 +217,11 @@ router.get(
 router.get('/signin', auth(false), (req, res) => {
     res.render('dashboard/signin', {
         title: 'Sign In - Dashboard',
-    });
-});
-
-router.get('/signup', auth(false), (req, res) => {
-    const { code } = req.query;
-
-    const isCodeValid = code ? true : false;
-
-    res.render('dashboard/signup', {
-        title: 'Sign Up - Dashboard',
-        code,
-        isCodeValid,
+        toasters: req.flash('toasters'),
+        complete: req.flash('complete'),
+        username: req.flash('username'),
+        setup: req.flash('setup'),
+        validated: req.flash('validated'),
     });
 });
 
@@ -236,6 +229,99 @@ router.get('/signup', auth(false), (req, res) => {
 router.post(
     '/signin',
     auth(false),
+    async (req, res, next) => {
+        const {username, password, setup_password, setup_confirm_password} = req.body;
+
+        // Continue if a password was provided
+        if (password) return next();
+
+        if (setup_password) {
+            const validated = [];
+
+            if (!setup_confirm_password)
+                validated.push({id: 'confirm-password', message: 'Confirm password is required'});
+            if (setup_password !== setup_confirm_password)
+                validated.push({id: 'password-match', message: 'Passwords do not match'});
+
+            if (validated.length > 0) {
+                req.flash('validated', validated);
+
+                req.session.save(() => {
+                    res.redirect('/dashboard/signin');
+                });
+
+                return;
+            }
+
+            try {
+                await User.update(
+                    {
+                        password: setup_password,
+                    },
+                    {
+                        where: {
+                            username,
+                        },
+                    },
+                );
+                req.flash('toasters', [
+                    {
+                        type: 'SUCCES',
+                        message: "You've successfully set your password. You may now log in.",
+                    },
+                ]);
+                req.session.save(() => {
+                    res.redirect('/dashboard/signin');
+                });
+            } catch (err) {
+                console.log(err);
+                req.flash('toasters', [
+                    {
+                        type: 'ERROR',
+                        message:
+                            'Something went wrong while trying to set your password. Please try again later.',
+                    },
+                ]);
+                req.session.save(() => {
+                    res.redirect('/dashboard/signin');
+                });
+            }
+
+            return;
+        }
+
+        const user = await User.findOne({where: {username}, attributes: ['password']});
+
+        if (!user) {
+            req.flash('toasters', [
+                {
+                    type: 'ERROR',
+                    message: 'There is no user with this username',
+                },
+            ]);
+            req.session.save(() => {
+                res.redirect('/dashboard/signin');
+            });
+            return;
+        }
+
+        if (!user.password) {
+            req.flash('complete', 'false');
+            req.flash('setup', 'true');
+            req.flash('username', username);
+
+            req.session.save(() => {
+                res.redirect('/dashboard/signin');
+            });
+        } else {
+            req.flash('complete', 'true');
+            req.flash('username', username);
+
+            req.session.save(() => {
+                res.redirect('/dashboard/signin');
+            });
+        }
+    },
     passport.authenticate('local', {
         failureRedirect: '/dashboard/signin',
     }),
@@ -261,6 +347,7 @@ router.get('/signout', auth(true), (req, res) => {
 router.get('/settings', async (req, res) => {
     const formats = await Format.findAll();
     const user = await User.findByPk(req.user.id);
+
 
     if (req.user.role === 'COURIER') {
         const schedule = await WeekSchedule.findByPk(user.scheduleId);
