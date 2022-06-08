@@ -58,7 +58,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-slate-200">
                         <% orders.forEach(order => { %>
-                        <tr data-order-code=<%= order.id %> class="text-slate-500 hover:bg-slate-100 cursor-pointer">
+                        <tr data-order-code="<%= order.id %>" class="text-slate-500 hover:bg-slate-100 cursor-pointer">
                             <td class="px-8 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="text-sm font-medium text-slate-900"><%= order.id %></div>

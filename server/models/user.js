@@ -31,7 +31,7 @@ const User = sequelize.define(
                 max: 255,
             },
             set(value) {
-                this.setDataValue('password', hashSync(value, 10));
+                if (value) this.setDataValue('password', hashSync(value, 10));
             },
         },
         role: {
@@ -48,7 +48,7 @@ const User = sequelize.define(
         locationId: {
             type: DataTypes.INTEGER,
             allowNull: true,
-        }
+        },
     },
     {
         underscored: true,

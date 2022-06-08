@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../../partials/head", { js: "dashboard/signup" }) %>
+  </head>
+  <body class="flex">
+    <div class="flex-1 p-10 flex items-center">
+      <div class="flex-1 space-y-10">
+        <% if(!isCodeValid) { %>
+        <div class="rounded-md bg-red-50 border border-red-200 p-4 gap-6 flex items-center">
+            <div class="p-2 rounded-full text-red-500 bg-red-100 inline-flex justify-center items-center">
+                <svg viewBox="-2 -3 24 24" class="w-6 h-6" fill="currentColor">
+                    <path d="M12.8 1.613l6.701 11.161c.963 1.603.49 3.712-1.057 4.71a3.213 3.213 0 0 1-1.743.516H3.298C1.477 18 0 16.47 0 14.581c0-.639.173-1.264.498-1.807L7.2 1.613C8.162.01 10.196-.481 11.743.517c.428.276.79.651 1.057 1.096zm-2.22.839a1.077 1.077 0 0 0-1.514.365L2.365 13.98a1.17 1.17 0 0 0-.166.602c0 .63.492 1.14 1.1 1.14H16.7c.206 0 .407-.06.581-.172a1.164 1.164 0 0 0 .353-1.57L10.933 2.817a1.12 1.12 0 0 0-.352-.365zM10 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0-9a1 1 0 0 1 1 1v4a1 1 0 0 1-2 0V6a1 1 0 0 1 1-1z"></path>
+                </svg>
+            </div>
+            <p class="font-medium text-md text-red-400">Wrong code provided. Please try again</p>
+        </div>
+        <% } %>
+        <div class="space-y-6">
+          <div class="flex space-x-4 items-center">
+            <div class="h-16 w-16 rounded-md bg-slate-200 p-2">
+              <img src="/favicon.ico" alt="Logo" class="object-cover">
+            </div>
+            <h1 class="font-bold text-slate-900 text-3xl">Deliverex</h1>
+          </div>
+          <p class="font-medium text-xl text-slate-500">
+            <% if(isCodeValid) { %>
+            Please choose a password for your account below
+            <% } else { %>
+            If you've received a code, you can sign up with it here
+            <% } %>
+          </p>
+        </div>
+        <% if(!isCodeValid) { %>
+        <form method="GET" class="space-y-6">
+          <div>
+            <label for="code-input" class="block mb-2 font-medium text-md text-slate-900">Code</label>
+            <input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 w-full" id="code-input" type="text" name="code" required>
+          </div>
+          <button class="flex gap-2 bg-cyan-500 hover:bg-cyan-700 text-white rounded-md px-5 py-3 transition-colors font-medium" id="submitSign" type="submit">
+            <svg viewBox="-5 -7 24 24" class="w-6 h-6" fill="currentColor">
+                <path d="M5.486 9.73a.997.997 0 0 1-.707-.292L.537 5.195A1 1 0 1 1 1.95 3.78l3.535 3.535L11.85.952a1 1 0 0 1 1.415 1.414L6.193 9.438a.997.997 0 0 1-.707.292z"></path>
+            </svg>
+            Retry
+          </button>
+        </form>
+        <% } else { %>
+        <form method="POST" class="space-y-6">
+          <div class="flex gap-2">
+            <div class="flex-1">
+                <label for="password-input" class="block mb-2 font-medium text-md text-slate-900">Password</label>
+                <input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 w-full" id="password-input" type="password" name="password" required>
+            </div>
+            <div class="flex-1">
+                <label for="confirm-password-input" class="block mb-2 font-medium text-md text-slate-900">Confirm Password</label>
+                <input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 w-full" id="confirm-password-input" type="password" name="confirm_password" required>
+            </div>
+          </div>
+          <button class="flex gap-2 bg-cyan-500 hover:bg-cyan-700 text-white rounded-md px-5 py-3 transition-colors font-medium" id="submitSign" type="submit">
+            <svg viewBox="-5 -7 24 24" class="w-6 h-6" fill="currentColor">
+                <path d="M5.486 9.73a.997.997 0 0 1-.707-.292L.537 5.195A1 1 0 1 1 1.95 3.78l3.535 3.535L11.85.952a1 1 0 0 1 1.415 1.414L6.193 9.438a.997.997 0 0 1-.707.292z"></path>
+            </svg>
+            Sign Up
+          </button>
+        </form>
+        <% } %>
+      </div>
+    </div>
+    <div class="flex-1 bg-slate-200 hidden md:block">
+      <img src="https://source.unsplash.com/random/960x1080/?parcel" alt="Banner Image" class="object-cover min-h-screen">
+    </div>
+  </body>
+</html>

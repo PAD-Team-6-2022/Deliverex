@@ -16,17 +16,13 @@ router.get(
     pagination([25, 50, 100]),
     ordering('id', 'desc', ['id', 'weight', 'status', 'created_at']),
     searching,
-    allowedTypes(['SHOP_OWNER']),
+    allowedTypes(['SHOP_OWNER', 'ADMIN']),
     async (req, res) => {
         const orders = await Order.findAll({
             offset: req.offset,
             limit: req.limit,
             order: [[req.sort, req.order]],
-            where: searchQueryToWhereClause(req.search, [
-                'id',
-                'weight',
-                'status',
-            ]),
+            where: searchQueryToWhereClause(req.search, ['id', 'weight', 'status']),
         });
 
         orders.forEach((order) => {
@@ -52,16 +48,21 @@ router.get(
     },
 );
 
-router.get('/editFormat/:id', auth(true), async (req, res) => {
-    const format = await Format.findByPk(req.params.id);
+router.get(
+    '/editFormat/:id',
+    auth(true),
+    allowedTypes(['ADMIN', 'SHOP_OWNER']),
+    async (req, res) => {
+        const format = await Format.findByPk(req.params.id);
 
-    res.render('dashboard/orders/editFormat', {
-        title: 'Edit Page- Formats',
-        format,
-    });
-});
+        res.render('dashboard/orders/editFormat', {
+            title: 'Edit Page- Formats',
+            format,
+        });
+    },
+);
 
-router.get('/create', auth(true), async (req, res) => {
+router.get('/create', auth(true), allowedTypes(['SHOP_OWNER', 'ADMIN']), async (req, res) => {
     const formats = await Format.findAll({
         where: { userId: req.user.id },
     });
@@ -72,7 +73,7 @@ router.get('/create', auth(true), async (req, res) => {
     });
 });
 
-router.get('/:id/edit', auth(true), async (req, res) => {
+router.get('/:id/edit', auth(true), allowedTypes(['SHOP_OWNER', 'ADMIN']), async (req, res) => {
     const { id } = req.params;
     const order = await Order.findByPk(id);
 
@@ -81,7 +82,7 @@ router.get('/:id/edit', auth(true), async (req, res) => {
     });
 
     if (!order) {
-        res.redirect('/dashboard/overview');
+        res.redirect('/dashboard/orders');
         return;
     }
 
@@ -92,7 +93,7 @@ router.get('/:id/edit', auth(true), async (req, res) => {
     });
 });
 
-router.get('/:id', auth(true), async (req, res) => {
+router.get('/:id', auth(true), allowedTypes(['ADMIN', 'SHOP_OWNER']), async (req, res) => {
     const { id } = req.params;
     const order = await Order.findByPk(id, { include: Format });
 
