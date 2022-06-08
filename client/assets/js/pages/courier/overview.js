@@ -41,6 +41,7 @@ const loadCompletedCheckpoints = (checkpointColumnNames) => {
 
     //For each completed checkpoint, represent this visually in the table
     if (checkpointsMetadata.completedCheckpoints.length) {
+
         checkpointsMetadata.completedCheckpoints.forEach((completedCheckpoint, index) => {
 
             //Retrieve the checkpoint and remove all loading effects
@@ -338,7 +339,7 @@ const loadCheckpoints = () => {
                     '.countryContainer', '.orderIdContainer', '.timeContainer'];
 
                 //Loads the already passed (cookie-stored) checkpoints
-                loadCompletedCheckpoints();
+                loadCompletedCheckpoints(checkpointColumnNames);
 
                 //Load the checkpoints that are neither completed nor failed
                 loadUncompletedCheckpoints(routeData, checkpointColumnNames);
