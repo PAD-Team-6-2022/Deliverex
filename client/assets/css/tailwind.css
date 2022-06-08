@@ -1081,10 +1081,6 @@ select {
   max-height: 20rem;
 }
 
-.max-h-0 {
-  max-height: 0px;
-}
-
 .max-h-72 {
   max-height: 18rem;
 }

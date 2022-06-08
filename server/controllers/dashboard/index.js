@@ -422,7 +422,6 @@ router.get('/settings', async (req, res) => {
     const user = await User.findByPk(req.user.id);
 
     if(req.user.role === "COURIER") {
-
         const schedule = await WeekSchedule.findByPk(user.scheduleId);
 
         // we assume that there is one organisation since its just us

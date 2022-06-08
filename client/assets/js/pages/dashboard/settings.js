@@ -16,7 +16,7 @@ document.getElementById('saveGoal').addEventListener('click', async (event) => {
         percentage: document.getElementById('rangeDoel').value,
     };
 
-    await fetch(`/api/orders/editDoelPercentage`, {
+    await fetch(`/api/settings/editDoelPercentage`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ document
             ).value,
         };
 
-        await fetch(`/api/orders/editAccount`, {
+        await fetch(`/api/settings/editAccount`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ document
             country: document.getElementById('Country').value,
         };
 
-        await fetch(`/api/orders/editStore`, {
+        await fetch(`/api/settings/editStore`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -148,7 +148,7 @@ document
             values[input.name] = input.value;
         });
         // needs validation
-        await fetch(`/api/orders/setting`, {
+        await fetch(`/api/settings/setting`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
