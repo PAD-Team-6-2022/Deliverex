@@ -118,12 +118,12 @@ const calculateCourierWorkLoads = async () => {
 
     //Remove couriers from the list of possible couriers
     //to assign this order to
-    courierLoads.forEach((courierLoadData, index) => {
-        if (activeCourierIds.includes(courierLoadData.courier_id))
+    courierLoads.forEach((courierLoad, index) => {
+        if (activeCourierIds.includes(courierLoad.courier_id))
             activeCourierLoads.push(courierLoads[index]);
     });
     return activeCourierLoads.sort((a, b) => {
-        return a.count - b.count;
+        return Number(a.count) - Number(b.count);
     });
 }
 
