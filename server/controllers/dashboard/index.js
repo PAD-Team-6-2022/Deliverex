@@ -217,18 +217,11 @@ router.get(
 router.get('/signin', auth(false), (req, res) => {
     res.render('dashboard/signin', {
         title: 'Sign In - Dashboard',
-    });
-});
-
-router.get('/signup', auth(false), (req, res) => {
-    const { code } = req.query;
-
-    const isCodeValid = code ? true : false;
-
-    res.render('dashboard/signup', {
-        title: 'Sign Up - Dashboard',
-        code,
-        isCodeValid,
+        toasters: req.flash('toasters'),
+        complete: req.flash('complete'),
+        username: req.flash('username'),
+        setup: req.flash('setup'),
+        validated: req.flash('validated'),
     });
 });
 
@@ -236,6 +229,99 @@ router.get('/signup', auth(false), (req, res) => {
 router.post(
     '/signin',
     auth(false),
+    async (req, res, next) => {
+        const { username, password, setup_password, setup_confirm_password } = req.body;
+
+        // Continue if a password was provided
+        if (password) return next();
+
+        if (setup_password) {
+            const validated = [];
+
+            if (!setup_confirm_password)
+                validated.push({ id: 'confirm-password', message: 'Confirm password is required' });
+            if (setup_password !== setup_confirm_password)
+                validated.push({ id: 'password-match', message: 'Passwords do not match' });
+
+            if (validated.length > 0) {
+                req.flash('validated', validated);
+
+                req.session.save(() => {
+                    res.redirect('/dashboard/signin');
+                });
+
+                return;
+            }
+
+            try {
+                await User.update(
+                    {
+                        password: setup_password,
+                    },
+                    {
+                        where: {
+                            username,
+                        },
+                    },
+                );
+                req.flash('toasters', [
+                    {
+                        type: 'SUCCES',
+                        message: "You've successfully set your password. You may now log in.",
+                    },
+                ]);
+                req.session.save(() => {
+                    res.redirect('/dashboard/signin');
+                });
+            } catch (err) {
+                console.log(err);
+                req.flash('toasters', [
+                    {
+                        type: 'ERROR',
+                        message:
+                            'Something went wrong while trying to set your password. Please try again later.',
+                    },
+                ]);
+                req.session.save(() => {
+                    res.redirect('/dashboard/signin');
+                });
+            }
+
+            return;
+        }
+
+        const user = await User.findOne({ where: { username }, attributes: ['password'] });
+
+        if (!user) {
+            req.flash('toasters', [
+                {
+                    type: 'ERROR',
+                    message: 'There is no user with this username',
+                },
+            ]);
+            req.session.save(() => {
+                res.redirect('/dashboard/signin');
+            });
+            return;
+        }
+
+        if (!user.password) {
+            req.flash('complete', 'false');
+            req.flash('setup', 'true');
+            req.flash('username', username);
+
+            req.session.save(() => {
+                res.redirect('/dashboard/signin');
+            });
+        } else {
+            req.flash('complete', 'true');
+            req.flash('username', username);
+
+            req.session.save(() => {
+                res.redirect('/dashboard/signin');
+            });
+        }
+    },
     passport.authenticate('local', {
         failureRedirect: '/dashboard/signin',
     }),
