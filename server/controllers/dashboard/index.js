@@ -8,14 +8,7 @@ const convert = require('convert-units');
 const searching = require('../../middleware/searching');
 const { searchQueryToWhereClause } = require('../../util');
 const moment = require('moment');
-const {
-    User,
-    Company,
-    Location,
-    WeekSchedule,
-    Order,
-    Organisation,
-} = require('../../models');
+const { User, Company, Location, WeekSchedule, Order, Organisation } = require('../../models');
 const { Op } = require('sequelize');
 const sequelize = require('../../db/connection');
 
@@ -53,11 +46,7 @@ router.get(
                       offset: req.offset,
                       limit: req.limit,
                       order: [[req.sort, req.order]],
-                      where: searchQueryToWhereClause(req.search, [
-                          'id',
-                          'weight',
-                          'status',
-                      ]),
+                      where: searchQueryToWhereClause(req.search, ['id', 'weight', 'status']),
                   });
         /**
          * Gets the money donated from this month of the current company
@@ -89,9 +78,7 @@ router.get(
             },
         });
         const donatedAmount =
-            req.user.role === 'SHOP_OWNER'
-                ? await getDonatedMoney(req.user.companyId)
-                : 0;
+            req.user.role === 'SHOP_OWNER' ? await getDonatedMoney(req.user.companyId) : 0;
 
         //We first assume the courier doesn't work today
         let daySchedule = null;
@@ -148,35 +135,51 @@ router.get(
                     daySchedule = courierWeekSchedule.sunday;
                     break;
             }
-
         } else {
-
-            delivered = await Order.findAll({ where: {status: 'DELIVERED',}, attributes: [
+            delivered = await Order.findAll(
+                {
+                    where: { status: 'DELIVERED' },
+                    attributes: [
                         [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
-                        [Order.sequelize.fn('COUNT', Order.sequelize.col('id')), 'orders']
-                    ], group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))]},
-                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}});
+                        [Order.sequelize.fn('COUNT', Order.sequelize.col('id')), 'orders'],
+                    ],
+                    group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))],
+                },
+                {
+                    where: {
+                        [Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]:
+                            moment().format('YYYY'),
+                    },
+                },
+            );
 
-                console.log(delivered)
+            console.log(delivered);
 
             chart = [];
 
-                for(let i = 0; i < 11; i++) {
-                    const month = delivered.find(x => x.getDataValue("month") === i);
+            for (let i = 0; i < 11; i++) {
+                const month = delivered.find((x) => x.getDataValue('month') === i);
 
-                    chart.push(month ? month.getDataValue("orders") : 0);
-                }
+                chart.push(month ? month.getDataValue('orders') : 0);
+            }
 
-            totaalOmzet =  await Order.findAll({ attributes: [
+            totaalOmzet = await Order.findAll(
+                {
+                    attributes: [
                         [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
-                        [Order.sequelize.fn('SUM', Order.sequelize.col('price')), 'omzet']
-                    ], group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))]},
-                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}
-                })
-                .catch((err) => {
-                })
+                        [Order.sequelize.fn('SUM', Order.sequelize.col('price')), 'omzet'],
+                    ],
+                    group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))],
+                },
+                {
+                    where: {
+                        [Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]:
+                            moment().format('YYYY'),
+                    },
+                },
+            ).catch((err) => {});
 
-           /* meiDelivered = await Order.count({
+            /* meiDelivered = await Order.count({
                 where: {
                     status: 'DELIVERED',
                     updated_at: {
@@ -381,12 +384,8 @@ router.get(
 
         // Render the page, pass on the order array
         res.render(
-            req.user.role === 'COURIER'
-                ? 'dashboard/courier/overview'
-                : 'dashboard/overview',
-            req.user.role === 'COURIER'
-                ? courierRenderData
-                : shopOwnerRenderData,
+            req.user.role === 'COURIER' ? 'dashboard/courier/overview' : 'dashboard/overview',
+            req.user.role === 'COURIER' ? courierRenderData : shopOwnerRenderData,
         );
     },
 );
@@ -394,6 +393,18 @@ router.get(
 router.get('/signin', auth(false), (req, res) => {
     res.render('dashboard/signin', {
         title: 'Sign In - Dashboard',
+    });
+});
+
+router.get('/signup', auth(false), (req, res) => {
+    const { code } = req.query;
+
+    const isCodeValid = code ? true : false;
+
+    res.render('dashboard/signup', {
+        title: 'Sign Up - Dashboard',
+        code,
+        isCodeValid,
     });
 });
 
@@ -427,21 +438,22 @@ router.get('/settings', async (req, res) => {
     const formats = await Format.findAll();
     const user = await User.findByPk(req.user.id);
 
-    if(req.user.role === "COURIER") {
-
+    if (req.user.role === 'COURIER') {
         const schedule = await WeekSchedule.findByPk(user.scheduleId);
 
         // we assume that there is one organisation since its just us
         const organisation = await Organisation.findOne();
-        const organisationSchedule = await WeekSchedule.findByPk(organisation.operating_schedule_id);
+        const organisationSchedule = await WeekSchedule.findByPk(
+            organisation.operating_schedule_id,
+        );
         const location = await Location.findByPk(user.locationId);
 
-        res.render("dashboard/courier/settings", {
-            title: "Settings",
+        res.render('dashboard/courier/settings', {
+            title: 'Settings',
             user,
             schedule,
             organisationSchedule,
-            location
+            location,
         });
     } else {
         const company = await Company.findByPk(req.user.companyId);

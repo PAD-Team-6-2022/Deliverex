@@ -30,6 +30,7 @@ router.get(
             user: req.user,
             search: req.search,
             page: req.page,
+            toasters: req.flash('toasters'),
         });
     },
 );
@@ -37,35 +38,78 @@ router.get(
 router.get('/add', auth(true), async (req, res) => {
     res.render('dashboard/users/add', {
         title: 'Add User - Dashboard',
+        validated: req.flash('validated'),
+        toasters: req.flash('toasters'),
+        values: req.flash('values'),
     });
 });
 
 router.post('/add', auth(true), async (req, res) => {
-    const { type, role, username, email, password, confirm_password, notify } =
-        req.body;
-    const errors = [];
+    const { type, role, username, email, password, confirm_password, notify } = req.body;
+    const validated = [];
 
-    if (password !== confirm_password) errors.push("Passwords don't match");
-    if (type === 'create' && !password) errors.push('Password is required');
+    // ** START VALIDATION **
+    // Validate the form and pass on an id for easy error passing to the DOM
+    if (!type) validated.push({ id: 'type', message: 'Please select an authentication type' });
+    if (!role) validated.push({ id: 'role', message: 'Please select a role' });
+    if (!username) validated.push({ id: 'username', message: 'Please enter a username' });
+    if (!email) validated.push({ id: 'email', message: 'Please enter an email' });
 
-    try {
-        const user = await User.create({
-            username,
-            email,
-            role,
-            // Only insert the password if the user decided
-            // to set a password for the user himself instead
-            // of letting the new user decide for themselves.
-            password: type === 'create' ? password : null,
+    // Only validate if the password has to be created for the user
+    // since the type has been set on 'create'
+    if (type === 'create') {
+        if (!password) validated.push({ id: 'password', message: 'Please enter a password' });
+        if (!confirm_password)
+            validated.push({ id: 'confirm-password', message: 'Please confirm your password' });
+        if (password !== confirm_password)
+            validated.push({ id: 'password-match', message: 'Passwords do not match' });
+    }
+    // ** END VALIDATION **
+
+    if (validated.length > 0) {
+        req.flash('validated', validated);
+        req.flash('values', req.body);
+
+        // Save before redirecting because we've
+        // added something to the flash
+        req.session.save(() => {
+            res.redirect('/dashboard/users/add');
         });
-    } catch (err) {
-        errors.push(err);
+
+        return;
     }
 
-    if (errors.length > 0) {
-        req.flash('errors', errors);
+    try {
+        await User.create({
+            type,
+            role,
+            username,
+            email,
+            password,
+        });
+        req.flash('toasters', [
+            {
+                type: 'SUCCES',
+                message: 'User created successfully',
+            },
+        ]);
+        req.session.save(() => {
+            res.redirect('/dashboard/users');
+        });
+    } catch (err) {
+        req.flash('toasters', [
+            {
+                type: 'ERROR',
+                message: 'A user with this username or email already exists',
+            },
+        ]);
+        req.flash('values', req.body);
 
-        console.log(errors);
+        // Save before redirecting because we've
+        // added something to the flash
+        req.session.save(() => {
+            res.redirect('/dashboard/users/add');
+        });
     }
 });
 
