@@ -177,7 +177,7 @@ const sendRequestNotification = (subscriptionObject, requestMetadata) => {
                  optimization API call. Errormessage: ${err}`)
             });
 
-        if (!routingData.length)
+        if (routingData === null || routingData === undefined)
             return;
 
         //Convert the traveltime to minutes
@@ -192,12 +192,7 @@ const sendRequestNotification = (subscriptionObject, requestMetadata) => {
         const notificationPayload = JSON.stringify({
             title: 'Request for delivery',
             type: 'deliveryRequest',
-            body: `From: ${pickupLocation.city}, 
-                ${pickupLocation.street} 
-                ${pickupLocation.house_number}
-                \nTo: ${order.city}, 
-                ${order.street} ${order.house_number}\n\nApproximately ${distance} kilometers or ${
-                travelTime} minutes.\nThis request will expire in ${requestExpirationTime} seconds.`,
+            body: `From: ${pickupLocation.city}, ${pickupLocation.street} ${pickupLocation.house_number}\nTo: ${order.city}, ${order.street} ${order.house_number}\n\nApproximately ${distance} kilometers or ${travelTime} minutes.\nThis request will expire in ${requestExpirationTime} seconds.`,
             expirationTime: requestExpirationTime,
             order,
             courierQueue: requestMetadata.courierQueue,
@@ -219,14 +214,14 @@ const initiateOrderRequestCycle = async (orderId) => {
 
     //Get an object representing the current workload of all the
     // active couriers ordered from least to heaviest
-    const courierOrderAmounts = calculateCourierWorkLoads();
+    const courierOrderAmounts = await calculateCourierWorkLoads();
 
     //Extract the (ordered) courier ID's and put them in a separate array
     //representing a queue
     const courierQueue = [];
-    courierOrderAmounts.forEach((courierLoadData) => {
-        courierQueue.push(courierLoadData.courier_id);
-    });
+    for (let i = 0; i < courierOrderAmounts.length; i++) {
+        courierQueue.push(courierOrderAmounts[i].courier_id);
+    }
 
     //Finally, construct an object containing both the ID of the order
     // and the queue of couriers that delivery requests should be send to
@@ -690,6 +685,8 @@ router.post('/subscribe', auth(true), (req, res) => {
             activeCouriers.splice(i, 1);
     }
 
+    console.log(`COURER ACTIVATED: ${req.user.id}`);
+
     //Retrieve courier data
     const courierData = {
         subscription: req.body, id: req.user.id,
@@ -741,8 +738,12 @@ router.put('/submitSpontaneousDeliveryResponse', (req, res) => {
             if (sameDayDelivery === pushMessageData.order.id)
                 pendingOrderQueue.splice(index, 1);
         });
+        console.log('SUCCESFULLY ACCEPTED');
+
     } else if (req.body.answer === 'denied') {
         pushMessageData.courierQueue.shift();
+
+        console.log('SUCCESFULLY DENIED');
 
         //In case there are no more available couriers to send the message to, simply return.
         //FYI: The hourly cronjob will (eventually) take care of this order

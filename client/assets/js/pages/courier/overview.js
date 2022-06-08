@@ -350,12 +350,13 @@ const loadCheckpoints = () => {
                 loadGoogleMapsRedirect();
 
             }).catch((err) => {
-            console.log(`Fetch error: could not retrieve routing
+            console.error(`Fetch error: could not retrieve routing
              data from the server. Errormessage: ${err}`);
         });
 
     }, (error) => {
-        console.log(`Caught error while trying to get position. Error message: ${error}`);
+        console.error(`Caught error while trying to get position. Error message: ${error}`);
+        console.log(error)
     });
 }
 

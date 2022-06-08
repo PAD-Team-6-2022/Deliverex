@@ -121,7 +121,7 @@ document
         } else {
             sizeFormatInput.classList.remove('bg-red-50', 'border-red-500');
         }
-        
+
         if (wrongInputs.length === 0 && wrongDateInput.length === 0) {
             const values = {
                 email: emailInput.value,

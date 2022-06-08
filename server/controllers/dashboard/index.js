@@ -144,8 +144,6 @@ router.get(
                     ], group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))]},
                 {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}});
 
-                console.log(delivered)
-
             chart = [];
 
                 for(let i = 1; i < 13; i++) {
