@@ -103,16 +103,23 @@ const calculateCourierWorkLoads = async () => {
         .catch((err) => console.error(`Could not obtain order
          counts of couriers. Errormessage: ${err}`));
 
+    console.log('this place is loaded')
+
     if (!courierLoadData.length)
         return;
 
     const courierLoads = courierLoadData[0];
+    console.log('(all) courier loads');
+    console.log(courierLoads)
 
     //Helper array that narrows couriers down to their ID's
     let activeCourierIds = [];
     activeCouriers.forEach((courierData) => {
         activeCourierIds.push(courierData.id);
     });
+
+    console.log('Active courier IDs');
+    console.log(activeCourierIds);
 
     let activeCourierLoads = [];
 
@@ -122,9 +129,15 @@ const calculateCourierWorkLoads = async () => {
         if (activeCourierIds.includes(courierLoad.courier_id))
             activeCourierLoads.push(courierLoads[index]);
     });
-    return activeCourierLoads.sort((a, b) => {
+
+    console.log('courierLoads')
+    console.log(courierLoads)
+    activeCourierLoads = activeCourierLoads.sort((a, b) => {
         return Number(a.count) - Number(b.count);
     });
+    console.log('active courier loads');
+    console.log(activeCourierLoads);
+    return activeCourierLoads;
 }
 
 /**
