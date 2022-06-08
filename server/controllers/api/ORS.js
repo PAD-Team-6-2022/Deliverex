@@ -122,11 +122,9 @@ const calculateCourierWorkLoads = async () => {
         if (activeCourierIds.includes(courierLoadData.courier_id))
             activeCourierLoads.push(courierLoads[index]);
     });
-    activeCourierLoads.sort((a, b) => {
+    return activeCourierLoads.sort((a, b) => {
         return a.count - b.count;
     });
-
-    return activeCourierLoads;
 }
 
 /**
