@@ -320,6 +320,11 @@ router.post('/edit', async (req, res) => {
 
 });
 
+/**
+ * Returns a list of available dates that an order could be delivered on
+ *
+ * @Author: Thomas Linssen
+ */
 router.get('/deliveryDates', (req, res) => {
     Organisation.findOne().then((organisation) => {
         const plannedMode = organisation.getDataValue('plannedMode');
@@ -347,7 +352,7 @@ router.get('/deliveryDates', (req, res) => {
                 sunday: organisationSchedule.getDataValue('sunday') !== null,
             };
 
-            if (plannedMode) {
+            if (!plannedMode) {
                 let deliveryMessage;
                 if (sameDayDeliverable)
                     deliveryMessage = `The order is expected to be delivered today.`;
@@ -359,12 +364,9 @@ router.get('/deliveryDates', (req, res) => {
                         0,
                         Object.keys(availableDays).indexOf(currentDay),
                     );
-                    availableDaysEntries.splice(
-                        0,
-                        Object.keys(availableDays).indexOf(currentDay) + 1,
-                    );
-                    availableDaysEntries =
-                        availableDaysEntries.concat(daysBefore);
+                    availableDaysEntries.splice(0,
+                        Object.keys(availableDays).indexOf(currentDay) + 1);
+                    availableDaysEntries = availableDaysEntries.concat(daysBefore);
 
                     for (let i = 0; i < availableDaysEntries.length; i++) {
                         if (availableDaysEntries[i][1] !== false) {

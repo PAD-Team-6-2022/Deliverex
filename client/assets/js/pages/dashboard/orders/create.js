@@ -1,4 +1,4 @@
-import { delay } from '../../../util.js';
+import {delay} from '../../../util.js';
 import '../../../tooltip.js';
 
 const emailInput = document.getElementById('email');
@@ -23,13 +23,19 @@ async function checkDate(dateStr) {
 
     if(dateStr === null || dateStr === "") return false;
 
-    const today = Date.now();
+    const today = new Date(
+        `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`);
 
     const date = new Date(dateStr);
 
+    console.log(today);
+    console.log(date);
+
+    console.log(today > date)
+
     if(today > date) return false;
 
-    await fetch(`/api/orders/deliveryDates`, {
+    return await fetch(`/api/orders/deliveryDates`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -41,7 +47,7 @@ async function checkDate(dateStr) {
 
             const days = data.schedulingData.availableDays;
 
-            switch(day) {
+            switch (day) {
                 case 1:
                     return days.monday;
                 case 2:
@@ -58,7 +64,6 @@ async function checkDate(dateStr) {
                     return days.sunday;
             }
 
-
         }).catch((error) => {
             console.error(`Fetch error: could not fulfill get request
         to get addresses. Errormessage: ${error}`);
@@ -66,6 +71,20 @@ async function checkDate(dateStr) {
         });
 
 }
+
+//Un-hides the 'delivery date' option depending on whether
+// 'planned mode' is enabled or not.
+await fetch(`/api/orders/deliveryDates`, {
+    method: "GET",
+    headers: {
+        "Content-Type": "application/json",
+    },
+}).then((res) => res.json())
+    .then((data) => {
+        if(data.schedulable)
+            document.querySelector("#deliveryDateContainer")
+                .classList.remove("hidden");
+    });
 
 document
     .getElementById('submitButton')
@@ -76,22 +95,24 @@ document
         let wrongDateInput = [];
 
         const inputs = document.querySelectorAll('input');
-        await inputs.forEach(async (input) => {
-            input.classList.remove('bg-red-50', 'border-red-500');
-            if (input.id !== 'address' && input.type !== 'checkbox' && input.type !== 'date') {
-                document.getElementById(`${input.id}_p`).innerHTML = '';
-                if (input.value === '') {
-                    wrongInputs.push(input);
+
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].classList.remove('bg-red-50', 'border-red-500');
+            if (inputs[i].id !== 'address' && inputs[i].type !== 'checkbox' && inputs[i].type !== 'date') {
+                document.getElementById(`${inputs[i].id}_p`).innerHTML = '';
+                if (inputs[i].value === '') {
+                    wrongInputs.push(inputs[i]);
                 }
-            } else if(input.type === 'date') {
-                document.getElementById(`${input.id}_p`).innerHTML = '';
-                let isCorrectDate = await checkDate(input.value);
-                if(input.value === null || input.value === "" || !isCorrectDate) {
-                    wrongDateInput.push(input);
+            } else if(inputs[i].type === 'date') {
+                document.getElementById(`${inputs[i].id}_p`).innerHTML = '';
+                let isCorrectDate = await checkDate(inputs[i].value);
+                if(inputs[i].value === null || inputs[i].value === "" || !isCorrectDate) {
+                    console.log('adding input to wrongDateInputs')
+                    wrongDateInput.push(inputs[i]);
                 }
 
             }
-        });
+        }
 
         // check if format is selected
         if (sizeFormatInput.value === '') {
@@ -100,7 +121,7 @@ document
         } else {
             sizeFormatInput.classList.remove('bg-red-50', 'border-red-500');
         }
-
+        
         if (wrongInputs.length === 0 && wrongDateInput.length === 0) {
             const values = {
                 email: emailInput.value,
@@ -126,7 +147,7 @@ document
             })
                 .then((response) => {
                     if (response.status === 200) {
-                        window.location.href = `/dashboard/overview`;
+                      window.location.href = `/dashboard/overview`;
                     } else if(response.status === 500) {
                         emailInput.classList.add("bg-red-50", "border-red-500");
                         document.querySelector("#email_p").innerHTML = "Wrong email-address!";

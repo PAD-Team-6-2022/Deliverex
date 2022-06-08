@@ -243,7 +243,8 @@ const initiateOrderRequestCycle = async (orderId) => {
             courierSubscription = courierData.subscription;
     });
 
-    console.log(`Will send first notification of order ${requestMetadata.orderId} to courier ${requestMetadata.courierQueue[0]}`);
+    console.log(`Will send first notification of order ${
+        requestMetadata.orderId} to courier ${requestMetadata.courierQueue[0]}`);
 
     //Send the initial notification with the subscription and queue object
     sendRequestNotification(courierSubscription, requestMetadata);
