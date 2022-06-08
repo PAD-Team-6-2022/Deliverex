@@ -6,10 +6,10 @@ const pagination = require('../../middleware/pagination');
 const ordering = require('../../middleware/ordering');
 const convert = require('convert-units');
 const searching = require('../../middleware/searching');
-const { searchQueryToWhereClause } = require('../../util');
+const {searchQueryToWhereClause} = require('../../util');
 const moment = require('moment');
-const { User, Company, Location, WeekSchedule, Order, Organisation } = require('../../models');
-const { Op } = require('sequelize');
+const {User, Company, Location, WeekSchedule, Order, Organisation} = require('../../models');
+const {Op} = require('sequelize');
 const sequelize = require('../../db/connection');
 
 router.get('/', auth(true), (req, res) => {
@@ -27,27 +27,27 @@ router.get(
         const orders =
             req.user.role === 'COURIER'
                 ? await Order.findAll({
-                      where: {
-                          courier_id: req.user.getDataValue('id'),
-                          delivery_date: moment().format('YYYY-MM-DD'),
-                      },
-                      include: {
-                          model: User,
-                          as: 'courier',
-                          required: true,
-                          include: {
-                              model: WeekSchedule,
-                              as: 'schedule',
-                              required: true,
-                          },
-                      },
-                  })
+                    where: {
+                        courier_id: req.user.getDataValue('id'),
+                        delivery_date: moment().format('YYYY-MM-DD'),
+                    },
+                    include: {
+                        model: User,
+                        as: 'courier',
+                        required: true,
+                        include: {
+                            model: WeekSchedule,
+                            as: 'schedule',
+                            required: true,
+                        },
+                    },
+                })
                 : await Order.findAll({
-                      offset: req.offset,
-                      limit: req.limit,
-                      order: [[req.sort, req.order]],
-                      where: searchQueryToWhereClause(req.search, ['id', 'weight', 'status']),
-                  });
+                    offset: req.offset,
+                    limit: req.limit,
+                    order: [[req.sort, req.order]],
+                    where: searchQueryToWhereClause(req.search, ['id', 'weight', 'status']),
+                });
         /**
          * Gets the money donated from this month of the current company
          * @param {number} companyId the id of the company
@@ -64,7 +64,7 @@ router.get(
                 ON orders.id = donations.order_id
                 WHERE users.company_id = ${companyId} && MONTH(donations.created_at) = MONTH(CURRENT_DATE()) && YEAR(donations.created_at) = YEAR(CURRENT_DATE())
                 GROUP BY users.company_id`,
-                { type: sequelize.QueryTypes.SELECT },
+                {type: sequelize.QueryTypes.SELECT},
             );
 
             return donated.length !== 0 ? donated[0].collected : 0;
@@ -89,7 +89,7 @@ router.get(
             const currentDayOfTheWeek = moment().format('dddd').toLowerCase();
             //We know every order has the same courier, so we just take the first one.
             const user = await User.findOne({
-                where: { id: req.user.id },
+                where: {id: req.user.id},
                 include: {
                     model: WeekSchedule,
                     as: 'schedule',
@@ -124,7 +124,7 @@ router.get(
         } else {
             delivered = await Order.findAll(
                 {
-                    where: { status: 'DELIVERED' },
+                    where: {status: 'DELIVERED'},
                     attributes: [
                         [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
                         [Order.sequelize.fn('COUNT', Order.sequelize.col('id')), 'orders'],
@@ -230,7 +230,7 @@ router.post(
     '/signin',
     auth(false),
     async (req, res, next) => {
-        const { username, password, setup_password, setup_confirm_password } = req.body;
+        const {username, password, setup_password, setup_confirm_password} = req.body;
 
         // Continue if a password was provided
         if (password) return next();
@@ -239,9 +239,9 @@ router.post(
             const validated = [];
 
             if (!setup_confirm_password)
-                validated.push({ id: 'confirm-password', message: 'Confirm password is required' });
+                validated.push({id: 'confirm-password', message: 'Confirm password is required'});
             if (setup_password !== setup_confirm_password)
-                validated.push({ id: 'password-match', message: 'Passwords do not match' });
+                validated.push({id: 'password-match', message: 'Passwords do not match'});
 
             if (validated.length > 0) {
                 req.flash('validated', validated);
@@ -290,7 +290,7 @@ router.post(
             return;
         }
 
-        const user = await User.findOne({ where: { username }, attributes: ['password'] });
+        const user = await User.findOne({where: {username}, attributes: ['password']});
 
         if (!user) {
             req.flash('toasters', [
@@ -348,11 +348,8 @@ router.get('/settings', async (req, res) => {
     const formats = await Format.findAll();
     const user = await User.findByPk(req.user.id);
 
-<<<<<<< HEAD
-    if(req.user.role === "COURIER") {
-=======
+
     if (req.user.role === 'COURIER') {
->>>>>>> 7f28c4085b6780c1ed60d318c70692c281a87287
         const schedule = await WeekSchedule.findByPk(user.scheduleId);
 
         // we assume that there is one organisation since its just us
