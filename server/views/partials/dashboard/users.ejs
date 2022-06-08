@@ -53,7 +53,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-slate-200">
                         <% users.forEach(user => { %>
-                        <tr data-user-code=<%= user.id %> class="text-slate-500 hover:bg-slate-100 cursor-pointer transition-colors">
+                        <tr data-user-id="<%= user.id %>" data-user-username="<%= user.username %>" class="text-slate-500 hover:bg-slate-100 cursor-pointer transition-colors">
                             <td class="px-8 py-4 text-sm font-medium text-slate-900"><%= user.username %></td>
                             <td class="px-8 py-4 text-sm font-medium text-slate-900"><%= user.email %></td>
                             <td class="px-8 py-4 text-sm font-medium text-slate-900">

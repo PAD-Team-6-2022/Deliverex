@@ -2,9 +2,10 @@
 <html lang="en" class="bg-slate-50">
 <head>
     <%- include("../../partials/head", { js: "dashboard/overview" }) %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js" ></script>
 </head>
 <body>
-    <%- include("../../partials/modal", { id: "delete-order", type: "warning", actions: { confirm: { type: "warning", label: "Delete" } }, title: "Are you sure?", description: "Are you sure you want to delete this order? You cannot go back." }) %>
+    <%- include("../../partials/modal", { id: "delete-order", type: "warning", actions: { confirm: { type: "warning", label: "Delete" } }, head: "Delete Order", title: "Are you sure?", description: "Are you sure you want to delete this order? You cannot go back." }) %>
     <div class="flex">
         <%- include("../../partials/dashboard/sidebar", {isShopOwner: true}) %>
         <div class="p-10 flex-1 overflow-hidden space-y-10">
@@ -13,11 +14,15 @@
                 <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Welcome back, <%= user.username %>!</h1>
                 <p class="text-lg sm:text-xl font-medium text-slate-500 max-w-sm inline-block">See how your business is doing by looking at the statistics below</p>
             </div>
-            <div class="space-y-3">
+            <div class="space-y-3 ">
                 <h2 class="font-medium text-2xl text-slate-800">Statistics</h2>
-                <div>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-                    <canvas id="myChart" class="max-h-200"></canvas>
+                <div class="hidden md:grid grid-cols-2 gap-4">
+                    <div class="p-4 bg-white rounded-md border border-slate-200">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                    <div class="p-4 bg-white rounded-md border border-slate-200">
+                        <canvas id="myChart2"></canvas>
+                    </div>
                 </div>
                 <div class="flex gap-3 flex-col sm:flex-row">
                     <div class="bg-white rounded-md border border-slate-200 p-4 flex-1">
@@ -43,20 +48,6 @@
         </div>
     </div>
 <script>
-    const test = <%= delivered[0].dataValues.month %>;
-
-   // const delivered = []; //call the backend and get the data
-   // const data = [0, 0, 0, 0, 0, 0, 0, 0,0,0, 0, 0];
-    //delivered.forEach(monthData => {
-     //   data[monthData.month + 1] = monthData.orders;
-   // })
-
-    // dataValues: { month: 4, orders: 7 };
-    //je krijgt een array terug. Die kan je mappen: je loopt over de array
-    //delivered.forEach(element => {
-    //month 0, 11 en orders is de value
-    //[0, 1, 2, ..., 11] => orders
-    // })
     const ctx = document.getElementById('myChart').getContext('2d');
     const myChart = new Chart(ctx, {
         type: 'line',
@@ -77,10 +68,10 @@
             ],
             datasets: [
                 {
-                    label: 'Number of Deliveries per month',
-                    data: [],
-                    borderColor: '#4dc9f6',
-                    backgroundColor: '#f67019',
+                    label: 'Deliveries per month',
+                    data: [<%= chart %>],
+                    borderColor: '#06B6D4',
+                    backgroundColor: '#06B6D433',
                     tension: 0.2,
                 },
             ],
@@ -98,7 +89,47 @@
             },
         },
     });
-
+    const ctx2 = document.getElementById('myChart2').getContext('2d');
+    const myChart2 = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December',
+            ],
+            datasets: [
+                {
+                    label: 'Number of Revenue per month',
+                    data: [<%= chartOmzet %>],
+                    borderColor: '#06B6D4',
+                    backgroundColor: '#06B6D433',
+                    tension: 0.2,
+                },
+            ],
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Chart.js Line Chart',
+                    },
+                },
+            },
+        },
+    });
 
 </script>
 </body>

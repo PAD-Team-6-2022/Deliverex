@@ -263,40 +263,68 @@ router.post('/edit', async (req, res) => {
 
     let pickup_status = req.body.is_pickup != null;
 
-    Order.update(
-        {
-            weight: req.body.weight,
-            email: req.body.email,
-            street: req.body.street,
-            house_number: req.body.house_number,
-            postal_code: req.body.postal_code,
-            city: req.body.city,
-            formatId: req.body.format_id,
-            status: req.body.status,
-            is_pickup: pickup_status,
-            updated_at: Date.now(),
-            price: req.body.price,
-            // coordinates: { type: 'Point', coordinates: Object.values(JSON.parse(req.body.coordinates)).reverse()}
-        },
-        { where: { id: req.body.id } },
-    )
-        .then(async (affectedRows) => {
-            //Though the status might not actually have been changed, we
-            //still assume as such to be sure.
-            notifyOrderStatusChange(req.body.id, req.body.status);
-            console.log('ID in orders.js: ' + req.body.id);
+    let order;
 
-            await updateDonation(req.body.id, req.body.price);
+    if(req.body.coordinates.length > 2) {
+        order = Order.update(
+            {
+                weight: req.body.weight,
+                email: req.body.email,
+                street: req.body.street,
+                house_number: req.body.house_number,
+                postal_code: req.body.postal_code,
+                city: req.body.city,
+                formatId: req.body.format_id,
+                status: req.body.status,
+                is_pickup: pickup_status,
+                updated_at: Date.now(),
+                price: req.body.price,
+                coordinates: { type: 'Point', coordinates: Object.values(JSON.parse(req.body.coordinates)).reverse()}
+            },
+            { where: { id: req.body.id } },
+        )
+    } else {
+        order = Order.update(
+            {
+                weight: req.body.weight,
+                email: req.body.email,
+                street: req.body.street,
+                house_number: req.body.house_number,
+                postal_code: req.body.postal_code,
+                city: req.body.city,
+                formatId: req.body.format_id,
+                status: req.body.status,
+                is_pickup: pickup_status,
+                updated_at: Date.now(),
+                price: req.body.price,
+            },
+            { where: { id: req.body.id } },
+        )
+    }
 
-            res.status(200).json({
-                message: `${affectedRows} rows updated`,
-            });
-        })
+    order.then(async (affectedRows) => {
+        //Though the status might not actually have been changed, we
+        //still assume as such to be sure.
+        notifyOrderStatusChange(req.body.id, req.body.status);
+        console.log('ID in orders.js: ' + req.body.id);
+
+        await updateDonation(req.body.id, req.body.price);
+
+        res.status(200).json({
+            message: `${affectedRows} rows updated`,
+        });
+    })
         .catch((err) => {
             res.status(500).json(err);
         });
+
 });
 
+/**
+ * Returns a list of available dates that an order could be delivered on
+ *
+ * @Author: Thomas Linssen
+ */
 router.get('/deliveryDates', (req, res) => {
     Organisation.findOne().then((organisation) => {
         const plannedMode = organisation.getDataValue('plannedMode');
@@ -324,7 +352,7 @@ router.get('/deliveryDates', (req, res) => {
                 sunday: organisationSchedule.getDataValue('sunday') !== null,
             };
 
-            if (plannedMode) {
+            if (!plannedMode) {
                 let deliveryMessage;
                 if (sameDayDeliverable)
                     deliveryMessage = `The order is expected to be delivered today.`;
@@ -336,12 +364,9 @@ router.get('/deliveryDates', (req, res) => {
                         0,
                         Object.keys(availableDays).indexOf(currentDay),
                     );
-                    availableDaysEntries.splice(
-                        0,
-                        Object.keys(availableDays).indexOf(currentDay) + 1,
-                    );
-                    availableDaysEntries =
-                        availableDaysEntries.concat(daysBefore);
+                    availableDaysEntries.splice(0,
+                        Object.keys(availableDays).indexOf(currentDay) + 1);
+                    availableDaysEntries = availableDaysEntries.concat(daysBefore);
 
                     for (let i = 0; i < availableDaysEntries.length; i++) {
                         if (availableDaysEntries[i][1] !== false) {

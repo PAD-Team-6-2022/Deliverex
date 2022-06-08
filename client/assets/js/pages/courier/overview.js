@@ -41,6 +41,7 @@ const loadCompletedCheckpoints = (checkpointColumnNames) => {
 
     //For each completed checkpoint, represent this visually in the table
     if (checkpointsMetadata.completedCheckpoints.length) {
+
         checkpointsMetadata.completedCheckpoints.forEach((completedCheckpoint, index) => {
 
             //Retrieve the checkpoint and remove all loading effects
@@ -338,7 +339,7 @@ const loadCheckpoints = () => {
                     '.countryContainer', '.orderIdContainer', '.timeContainer'];
 
                 //Loads the already passed (cookie-stored) checkpoints
-                loadCompletedCheckpoints();
+                loadCompletedCheckpoints(checkpointColumnNames);
 
                 //Load the checkpoints that are neither completed nor failed
                 loadUncompletedCheckpoints(routeData, checkpointColumnNames);
@@ -350,12 +351,12 @@ const loadCheckpoints = () => {
                 loadGoogleMapsRedirect();
 
             }).catch((err) => {
-            console.log(`Fetch error: could not retrieve routing
+            console.error(`Fetch error: could not retrieve routing
              data from the server. Errormessage: ${err}`);
         });
 
     }, (error) => {
-        console.log(`Caught error while trying to get position. Error message: ${error}`);
+        console.error(`Caught error while trying to get position. Error message: ${error}`);
     });
 }
 

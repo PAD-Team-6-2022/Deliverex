@@ -8,14 +8,7 @@ const convert = require('convert-units');
 const searching = require('../../middleware/searching');
 const { searchQueryToWhereClause } = require('../../util');
 const moment = require('moment');
-const {
-    User,
-    Company,
-    Location,
-    WeekSchedule,
-    Order,
-    Organisation,
-} = require('../../models');
+const { User, Company, Location, WeekSchedule, Order, Organisation } = require('../../models');
 const { Op } = require('sequelize');
 const sequelize = require('../../db/connection');
 
@@ -53,11 +46,7 @@ router.get(
                       offset: req.offset,
                       limit: req.limit,
                       order: [[req.sort, req.order]],
-                      where: searchQueryToWhereClause(req.search, [
-                          'id',
-                          'weight',
-                          'status',
-                      ]),
+                      where: searchQueryToWhereClause(req.search, ['id', 'weight', 'status']),
                   });
         /**
          * Gets the money donated from this month of the current company
@@ -89,28 +78,12 @@ router.get(
             },
         });
         const donatedAmount =
-            req.user.role === 'SHOP_OWNER'
-                ? await getDonatedMoney(req.user.companyId)
-                : 0;
+            req.user.role === 'SHOP_OWNER' ? await getDonatedMoney(req.user.companyId) : 0;
 
         //We first assume the courier doesn't work today
         let daySchedule = null;
 
-        let delivered,
-            meiDelivered,
-            juniDelivered,
-            aprilSorting,
-            meiSorting,
-            juniSorting,
-            aprilReady,
-            meiReady,
-            juniReady,
-            aprilTransit,
-            meiTransit,
-            juniTransit,
-            aprilFailed,
-            meiFailed,
-            juniFailed;
+        let chart, chartOmzet;
 
         if (req.user.role === 'COURIER') {
             const currentDayOfTheWeek = moment().format('dddd').toLowerCase();
@@ -148,182 +121,55 @@ router.get(
                     daySchedule = courierWeekSchedule.sunday;
                     break;
             }
-
         } else {
-
-            delivered = await Order.findAll({ where: {status: 'DELIVERED',}, attributes: [
+            delivered = await Order.findAll(
+                {
+                    where: { status: 'DELIVERED' },
+                    attributes: [
                         [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
-                        [Order.sequelize.fn('COUNT', Order.sequelize.col('id')), 'orders']
-                    ], group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))]},
-                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}})
-               .catch((err) => {
-                });
-            console.log('order list');
-            console.log(delivered);
-            console.log(delivered[0].dataValues.month);
+                        [Order.sequelize.fn('COUNT', Order.sequelize.col('id')), 'orders'],
+                    ],
+                    group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))],
+                },
+                {
+                    where: {
+                        [Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]:
+                            moment().format('YYYY'),
+                    },
+                },
+            );
 
-            totaalOmzet =  await Order.findAll({ attributes: [
+            chart = [];
+
+            for (let i = 1; i < 13; i++) {
+                const month = delivered.find((x) => x.getDataValue('month') === i);
+
+                chart.push(month ? month.getDataValue('orders') : 0);
+            }
+
+            totaalOmzet = await Order.findAll(
+                {
+                    attributes: [
                         [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
-                        [Order.sequelize.fn('SUM', Order.sequelize.col('price')), 'omzet']
-                    ], group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))]},
-                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}})
-                .catch((err) => {
-                });
-            console.log(totaalOmzet);
-           /* meiDelivered = await Order.count({
-                where: {
-                    status: 'DELIVERED',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-05-01 23:00:00')),
-                            new Date(Date.parse('2022-05-31 00:00:00')),
-                        ],
+                        [Order.sequelize.fn('SUM', Order.sequelize.col('price')), 'omzet'],
+                    ],
+                    group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))],
+                },
+                {
+                    where: {
+                        [Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]:
+                            moment().format('YYYY'),
                     },
                 },
-            });
-            juniDelivered = await Order.count({
-                where: {
-                    status: 'DELIVERED',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-06-01 23:00:00')),
-                            new Date(Date.parse('2022-06-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            aprilSorting = await Order.count({
-                where: {
-                    status: 'SORTING',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-04-01 23:00:00')),
-                            new Date(Date.parse('2022-04-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            meiSorting = await Order.count({
-                where: {
-                    status: 'SORTING',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-05-01 23:00:00')),
-                            new Date(Date.parse('2022-05-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            juniSorting = await Order.count({
-                where: {
-                    status: 'SORTING',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-06-01 23:00:00')),
-                            new Date(Date.parse('2022-06-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            aprilReady = await Order.count({
-                where: {
-                    status: 'READY',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-04-01 23:00:00')),
-                            new Date(Date.parse('2022-04-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            meiReady = await Order.count({
-                where: {
-                    status: 'READY',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-05-01 23:00:00')),
-                            new Date(Date.parse('2022-05-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            juniReady = await Order.count({
-                where: {
-                    status: 'READY',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-06-01 23:00:00')),
-                            new Date(Date.parse('2022-06-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            meiTransit = await Order.count({
-                where: {
-                    status: 'TRANSIT',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-05-01 23:00:00')),
-                            new Date(Date.parse('2022-05-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            aprilTransit = await Order.count({
-                where: {
-                    status: 'TRANSIT',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-04-01 23:00:00')),
-                            new Date(Date.parse('2022-04-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            juniTransit = await Order.count({
-                where: {
-                    status: 'TRANSIT',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-06-01 23:00:00')),
-                            new Date(Date.parse('2022-06-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            aprilFailed = await Order.count({
-                where: {
-                    status: 'FAILED',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-04-01 23:00:00')),
-                            new Date(Date.parse('2022-04-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            meiFailed = await Order.count({
-                where: {
-                    status: 'FAILED',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-05-01 23:00:00')),
-                            new Date(Date.parse('2022-05-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            juniFailed = await Order.count({
-                where: {
-                    status: 'FAILED',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-06-01 23:00:00')),
-                            new Date(Date.parse('2022-06-31 00:00:00')),
-                        ],
-                    },
-                },
-            });*/
+            );
+
+            chartOmzet = [];
+
+            for (let i = 1; i < 13; i++) {
+                const month = totaalOmzet.find((x) => x.getDataValue('month') === i);
+
+                chartOmzet.push(month ? month.getDataValue('omzet') : 0);
+            }
         }
 
         orders.forEach((order) => {
@@ -356,31 +202,14 @@ router.get(
             ordersAmount,
             deliverdAmount,
             donatedAmount,
-            delivered,
-            meiDelivered,
-            juniDelivered,
-            aprilSorting,
-            meiSorting,
-            juniSorting,
-            aprilReady,
-            meiReady,
-            juniReady,
-            aprilTransit,
-            meiTransit,
-            juniTransit,
-            aprilFailed,
-            meiFailed,
-            juniFailed,
+            chart,
+            chartOmzet,
         };
 
         // Render the page, pass on the order array
         res.render(
-            req.user.role === 'COURIER'
-                ? 'dashboard/courier/overview'
-                : 'dashboard/overview',
-            req.user.role === 'COURIER'
-                ? courierRenderData
-                : shopOwnerRenderData,
+            req.user.role === 'COURIER' ? 'dashboard/courier/overview' : 'dashboard/overview',
+            req.user.role === 'COURIER' ? courierRenderData : shopOwnerRenderData,
         );
     },
 );
@@ -388,6 +217,11 @@ router.get(
 router.get('/signin', auth(false), (req, res) => {
     res.render('dashboard/signin', {
         title: 'Sign In - Dashboard',
+        toasters: req.flash('toasters'),
+        complete: req.flash('complete'),
+        username: req.flash('username'),
+        setup: req.flash('setup'),
+        validated: req.flash('validated'),
     });
 });
 
@@ -395,6 +229,99 @@ router.get('/signin', auth(false), (req, res) => {
 router.post(
     '/signin',
     auth(false),
+    async (req, res, next) => {
+        const { username, password, setup_password, setup_confirm_password } = req.body;
+
+        // Continue if a password was provided
+        if (password) return next();
+
+        if (setup_password) {
+            const validated = [];
+
+            if (!setup_confirm_password)
+                validated.push({ id: 'confirm-password', message: 'Confirm password is required' });
+            if (setup_password !== setup_confirm_password)
+                validated.push({ id: 'password-match', message: 'Passwords do not match' });
+
+            if (validated.length > 0) {
+                req.flash('validated', validated);
+
+                req.session.save(() => {
+                    res.redirect('/dashboard/signin');
+                });
+
+                return;
+            }
+
+            try {
+                await User.update(
+                    {
+                        password: setup_password,
+                    },
+                    {
+                        where: {
+                            username,
+                        },
+                    },
+                );
+                req.flash('toasters', [
+                    {
+                        type: 'SUCCES',
+                        message: "You've successfully set your password. You may now log in.",
+                    },
+                ]);
+                req.session.save(() => {
+                    res.redirect('/dashboard/signin');
+                });
+            } catch (err) {
+                console.log(err);
+                req.flash('toasters', [
+                    {
+                        type: 'ERROR',
+                        message:
+                            'Something went wrong while trying to set your password. Please try again later.',
+                    },
+                ]);
+                req.session.save(() => {
+                    res.redirect('/dashboard/signin');
+                });
+            }
+
+            return;
+        }
+
+        const user = await User.findOne({ where: { username }, attributes: ['password'] });
+
+        if (!user) {
+            req.flash('toasters', [
+                {
+                    type: 'ERROR',
+                    message: 'There is no user with this username',
+                },
+            ]);
+            req.session.save(() => {
+                res.redirect('/dashboard/signin');
+            });
+            return;
+        }
+
+        if (!user.password) {
+            req.flash('complete', 'false');
+            req.flash('setup', 'true');
+            req.flash('username', username);
+
+            req.session.save(() => {
+                res.redirect('/dashboard/signin');
+            });
+        } else {
+            req.flash('complete', 'true');
+            req.flash('username', username);
+
+            req.session.save(() => {
+                res.redirect('/dashboard/signin');
+            });
+        }
+    },
     passport.authenticate('local', {
         failureRedirect: '/dashboard/signin',
     }),
@@ -421,20 +348,26 @@ router.get('/settings', async (req, res) => {
     const formats = await Format.findAll();
     const user = await User.findByPk(req.user.id);
 
+<<<<<<< HEAD
     if(req.user.role === "COURIER") {
+=======
+    if (req.user.role === 'COURIER') {
+>>>>>>> 7f28c4085b6780c1ed60d318c70692c281a87287
         const schedule = await WeekSchedule.findByPk(user.scheduleId);
 
         // we assume that there is one organisation since its just us
         const organisation = await Organisation.findOne();
-        const organisationSchedule = await WeekSchedule.findByPk(organisation.operating_schedule_id);
+        const organisationSchedule = await WeekSchedule.findByPk(
+            organisation.operating_schedule_id,
+        );
         const location = await Location.findByPk(user.locationId);
 
-        res.render("dashboard/courier/settings", {
-            title: "Settings",
+        res.render('dashboard/courier/settings', {
+            title: 'Settings',
             user,
             schedule,
             organisationSchedule,
-            location
+            location,
         });
     } else {
         const company = await Company.findByPk(req.user.companyId);

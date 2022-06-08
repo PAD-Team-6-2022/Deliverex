@@ -1,5 +1,6 @@
 import '../../../password_show.js';
 import '../../../tooltip.js';
+import '../../../toaster.js';
 
 const passwordSection = document.getElementById('password-section');
 

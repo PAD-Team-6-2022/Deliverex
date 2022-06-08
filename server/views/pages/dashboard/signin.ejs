@@ -1,9 +1,15 @@
+<% 
+complete = complete.length > 0 ? complete[0] : 'false';
+username = username.length > 0 ? username[0] : '';
+setup = setup.length > 0 ? setup[0] : 'false';
+%> 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <%- include("../../partials/head", { js: "dashboard/signin" }) %>
   </head>
   <body class="flex">
+    <%- include("../../partials/toaster", { toasters }) %>
     <div class="flex-1 p-10 flex items-center">
       <div class="flex-1 space-y-10">
         <div class="space-y-6">
@@ -13,13 +19,50 @@
             </div>
             <h1 class="font-bold text-slate-900 text-3xl">Deliverex</h1>
           </div>
-          <p class="font-medium text-xl text-slate-500">Sign in using your username and password below</p>
+          <p class="font-medium text-xl text-slate-500">
+            <% if(setup === 'true') { %>
+            You do not have a password yet, make one below
+            <% } else { %>
+              <% if(complete === 'false') { %>
+              Sign in using your username below
+              <% } else { %>
+              Sign in using your password below
+              <% } %>
+            <% } %>
+          </p>
         </div>
         <form method="POST" class="space-y-6">
           <div>
             <label for="username-input" class="block mb-2 font-medium text-md text-slate-900">Username</label>
-            <input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 w-full" id="username-input" type="text" name="username" required>
+            <input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 w-full" id="username-input" type="text" name="username" required value="<%= username %>" <%= (complete === 'true' || setup === 'true') ? 'readonly' : ''%>>
           </div>
+          <% if(complete === 'false') { %>
+            <% if(setup === 'true') { %>
+            <div class="flex space-between gap-2 flex-col sm:flex-row">
+              <div class="flex-1">
+                <label for="setup-password-input" class="block mb-2 font-medium text-md text-slate-900">Password</label>
+                <input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 w-full" id="setup-password-input" type="password" name="setup_password" required data-password-show-input>
+              </div>
+              <div class="flex-1">
+                <label for="setup-confirm-password-input" class="block mb-2 font-medium text-md text-slate-900">Confirm Password</label>
+                <input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 w-full" id="setup-confirm-password-input" type="password" name="setup_confirm_password" required data-password-show-input>
+              </div>
+            </div>
+            <button class="flex gap-2 bg-cyan-500 hover:bg-cyan-700 text-white rounded-md px-5 py-3 transition-colors font-medium" id="submitSign" type="submit">
+              Finish
+              <svg viewBox="-5 -7 24 24" class="w-6 h-6" fill="currentColor">
+                <path d="M5.486 9.73a.997.997 0 0 1-.707-.292L.537 5.195A1 1 0 1 1 1.95 3.78l3.535 3.535L11.85.952a1 1 0 0 1 1.415 1.414L6.193 9.438a.997.997 0 0 1-.707.292z"></path>
+             </svg>
+            </button>
+            <% } else { %>
+            <button class="flex gap-2 bg-cyan-500 hover:bg-cyan-700 text-white rounded-md px-5 py-3 transition-colors font-medium" id="submitSign" type="submit">
+              Continue
+              <svg viewBox="-5 -5 24 24" class="w-6 h-6" fill="currentColor">
+                <path d="M10.586 5.657l-3.95-3.95A1 1 0 0 1 8.05.293l5.657 5.657a.997.997 0 0 1 0 1.414L8.05 13.021a1 1 0 1 1-1.414-1.414l3.95-3.95H1a1 1 0 1 1 0-2h9.586z"></path>
+              </svg>
+            </button>
+            <% } %>
+          <% } else if(complete === 'true') { %>
           <div>
             <label for="password-input" class="block mb-2 font-medium text-md text-slate-900">Password</label>
             <input class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200 w-full" id="password-input" type="password" name="password" required data-password-show-input>
@@ -36,6 +79,7 @@
               Sign In
             </button>
           </div>
+          <% } %>
         </form>
       </div>
     </div>
@@ -44,73 +88,3 @@
     </div>
   </body>
 </html>
-  <%#
-  <body class="w-screen h-screen flex items-center justify-center">
-    <div class="w-full max-w-md">
-      <form
-        class="bg-white rounded-md px-8 pt-6 pb-8 border border-slate-200 space-y-6"
-        method="POST"
-      >
-        <div>
-          <label class="block text-gray-700 text-sm font-medium" for="username">
-            Username
-          </label>
-          <input
-            class="bg-slate-50 appearance-none border border-slate-200 rounded-md w-full py-2 px-3 text-slate-800 focus:outline-cyan-600"
-            id="username"
-            type="text"
-            name="username"
-            required
-          />
-        </div>
-        <div>
-          <label class="block text-gray-700 text-sm font-medium" for="password">
-            Password
-          </label>
-          <input
-            class="bg-slate-50 appearance-none border border-slate-200 rounded-md w-full py-2 px-3 text-slate-800 focus:outline-cyan-600"
-            id="password"
-            type="password"
-            name="password"
-            autocomplete="current-password"
-            required
-          />
-        </div>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <input
-              id="remember-me"
-              name="remember-me"
-              type="checkbox"
-              class="h-4 w-4 text-cyan-600 focus:ring-cyan-700 border-slate-200 rounded-md bg-slate-50"
-            />
-            <label for="remember-me" class="ml-2 block text-sm text-slate-800">
-              Remember me
-            </label>
-          </div>
-          <div class="text-sm">
-            <a href="#" class="font-medium text-cyan-600 hover:text-cyan-700">
-              Forgot your password?
-            </a>
-          </div>
-        </div>
-        <button
-          class="w-full bg-cyan-600 shadow hover:bg-cyan-700 text-white font-medium py-3 px-5 rounded-md focus:outline-none focus:shadow-outline flex justify-between"
-          type="submit " id="submitSign"
-        >
-          Sign in
-          <svg
-            class="ml-2"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="-5 -5 24 24"
-            width="24"
-            fill="currentColor"
-          >
-            <path
-              d="M10.586 5.657l-3.95-3.95A1 1 0 0 1 8.05.293l5.657 5.657a.997.997 0 0 1 0 1.414L8.05 13.021a1 1 0 1 1-1.414-1.414l3.95-3.95H1a1 1 0 1 1 0-2h9.586z"
-            />
-          </svg>
-        </button>
-      </form>
-    </div>
-    #%>
