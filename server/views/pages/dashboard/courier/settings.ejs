@@ -9,16 +9,15 @@
     <%- include("../../../partials/dashboard/sidebar", {isShopOwner: false}) %>
     <div class="p-10 flex-1 overflow-hidden">
         <%- include("../../../partials/breadcrumb", { links: [{ name: "Overview", href: "/dashboard/overview" }, { name: "Settings", href: "/dashboard/" }] }) %>
-        <div class="flex flex-col-reverse md:flex-row mt-10 bg-white rounded-xl border border-slate-200 p-8">
+        <div class="flex flex-col-reverse md:flex-row mt-10 bg-white rounded-xl border border-slate-200 p-3 sm:p-5">
 
             <div class="w-full">
 
                 <form id="formTime">
 
                     <h2 class="font-medium text-2xl text-slate-800 mb-4 flex">
-
-                        <%- include("../../../partials/svg/clock_icon") %>
                         Working times
+                        <%- include("../../../partials/svg/clock_icon") %>
                     </h2>
 
                     <%- include("../../../partials/courier/timeselector", { title: "Monday", schedule: schedule.monday, organisationSchedule: organisationSchedule.monday }) %>
@@ -92,87 +91,92 @@
                   >
                 </div>
 
-                <div class="flex flex-row flex-wrap justify-between grow">
-                  <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
+                <div class="flex flex-col mb-4 mx-2 grow">
                     <label
-                      class="mb-2 font-bold text-sm text-slate-900"
-                      for="postal_code"
-                      >Postal Code</label
+                            class="mb-2 font-bold text-sm text-slate-900"
+                            for="postal_code"
+                    >Postal Code</label
                     >
                     <input data-input-address
-                      class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                      type="text"
-                      name="postal_code"
-                      id="postal_code"
-                        value="<%= location?.postal_code %>"
+                           class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                           type="text"
+                           name="postal_code"
+                           id="postal_code"
+                           value="<%= location?.postal_code %>"
                     />
                     <p
-                    class="text-red-500 text-sm"
-                    id="postal_code_p"
+                            class="text-red-500 text-sm"
+                            id="postal_code_p"
                     ></p
                     >
-                  </div>
-                  <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
+                </div>
+                <div class="flex flex-col mb-4 mx-2 grow">
                     <label
-                      class="mb-2 font-bold text-sm text-slate-900"
-                      for="city"
-                      >City</label
+                            class="mb-2 font-bold text-sm text-slate-900"
+                            for="city"
+                    >City</label
                     >
                     <input data-input-address
-                      class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                      type="text"
-                      name="city"
-                      id="city"
-                        value="<%= location?.city %>"
+                           class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                           type="text"
+                           name="city"
+                           id="city"
+                           value="<%= location?.city %>"
                     />
                     <p
-                    class="text-red-500 text-sm"
-                    id="city_p"
+                            class="text-red-500 text-sm"
+                            id="city_p"
                     ></p
                     >
-                  </div>
+                </div>
+
+                <div class="flex flex-col mb-4 mx-2 grow">
+                    <label
+                            class="mb-2 font-bold text-sm text-slate-900"
+                            for="street"
+                    >Street</label
+                    >
+                    <input data-input-address
+                           class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                           type="text"
+                           name="street"
+                           id="street"
+                           value="<%= location?.street %>"
+                    />
+                    <p
+                            class="text-red-500 text-sm"
+                            id="street_p"
+                    ></p
+                    >
+                </div>
+                <div class="flex flex-col mb-4 mx-2 grow">
+                    <label
+                            class="mb-2 font-bold text-sm text-slate-900"
+                            for="houseNumber"
+                    >House number</label
+                    >
+                    <input data-input-address
+                           class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
+                           type="text"
+                           name="house_number"
+                           id="house_number"
+                           value="<%= location?.house_number %>"
+                    />
+                    <p
+                            class="text-red-500 text-sm"
+                            id="house_number_p"
+                    ></p
+                    >
+                </div>
+
+                <!-- deze het best verwijderen
+                <div class="flex flex-row flex-wrap justify-between grow border border-red-500">
+
                 </div>
 
                 <div class="flex flex-row flex-wrap justify-between grow">
-                  <div class="flex flex-col mb-4 grow w-3/6 mx-2 min-w-min">
-                    <label
-                      class="mb-2 font-bold text-sm text-slate-900"
-                      for="street"
-                      >Street</label
-                    >
-                    <input data-input-address
-                      class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                      type="text"
-                      name="street"
-                      id="street"
-                       value="<%= location?.street %>"
-                    />
-                    <p
-                    class="text-red-500 text-sm"
-                    id="street_p"
-                    ></p
-                    >
-                  </div>
-                  <div class="flex flex-col mb-4 grow w-1/6 mx-2 min-w-min">
-                    <label
-                      class="mb-2 font-bold text-sm text-slate-900"
-                      for="houseNumber"
-                      >House number</label
-                    >
-                    <input data-input-address
-                      class="py-2 px-3 text-slate-800 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 bg-slate-50 border border-slate-200"
-                      type="text"
-                      name="house_number"
-                      id="house_number"
-                        value="<%= location?.house_number %>"
-                    />
-                    <p
-                    class="text-red-500 text-sm"
-                    id="house_number_p"
-                    ></p
-                    >
-                  </div>
-                </div>
+
+                </div> -->
 
                 <div class="flex justify-end">
                   <button class="bg-cyan-500 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex my-4 float-right transition-colors"
