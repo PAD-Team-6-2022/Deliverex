@@ -83,8 +83,7 @@ router.get(
         //We first assume the courier doesn't work today
         let daySchedule = null;
 
-        let chart,
-            chartOmzet
+        let chart, chartOmzet;
 
         if (req.user.role === 'COURIER') {
             const currentDayOfTheWeek = moment().format('dddd').toLowerCase();
@@ -140,19 +139,10 @@ router.get(
                 },
             );
 
-<<<<<<< HEAD
-            console.log(delivered);
-
             chart = [];
 
-            for (let i = 0; i < 11; i++) {
+            for (let i = 1; i < 13; i++) {
                 const month = delivered.find((x) => x.getDataValue('month') === i);
-=======
-            chart = [];
-
-                for(let i = 1; i < 13; i++) {
-                    const month = delivered.find(x => x.getDataValue("month") === i);
->>>>>>> 28f4e7a98e97c93a7c39f89b371f041740fcfb54
 
                 chart.push(month ? month.getDataValue('orders') : 0);
             }
@@ -161,7 +151,6 @@ router.get(
                 {
                     attributes: [
                         [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at')), 'month'],
-<<<<<<< HEAD
                         [Order.sequelize.fn('SUM', Order.sequelize.col('price')), 'omzet'],
                     ],
                     group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))],
@@ -172,175 +161,15 @@ router.get(
                             moment().format('YYYY'),
                     },
                 },
-            ).catch((err) => {});
-
-            /* meiDelivered = await Order.count({
-                where: {
-                    status: 'DELIVERED',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-05-01 23:00:00')),
-                            new Date(Date.parse('2022-05-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            juniDelivered = await Order.count({
-                where: {
-                    status: 'DELIVERED',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-06-01 23:00:00')),
-                            new Date(Date.parse('2022-06-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            aprilSorting = await Order.count({
-                where: {
-                    status: 'SORTING',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-04-01 23:00:00')),
-                            new Date(Date.parse('2022-04-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            meiSorting = await Order.count({
-                where: {
-                    status: 'SORTING',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-05-01 23:00:00')),
-                            new Date(Date.parse('2022-05-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            juniSorting = await Order.count({
-                where: {
-                    status: 'SORTING',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-06-01 23:00:00')),
-                            new Date(Date.parse('2022-06-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            aprilReady = await Order.count({
-                where: {
-                    status: 'READY',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-04-01 23:00:00')),
-                            new Date(Date.parse('2022-04-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            meiReady = await Order.count({
-                where: {
-                    status: 'READY',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-05-01 23:00:00')),
-                            new Date(Date.parse('2022-05-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            juniReady = await Order.count({
-                where: {
-                    status: 'READY',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-06-01 23:00:00')),
-                            new Date(Date.parse('2022-06-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            meiTransit = await Order.count({
-                where: {
-                    status: 'TRANSIT',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-05-01 23:00:00')),
-                            new Date(Date.parse('2022-05-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            aprilTransit = await Order.count({
-                where: {
-                    status: 'TRANSIT',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-04-01 23:00:00')),
-                            new Date(Date.parse('2022-04-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            juniTransit = await Order.count({
-                where: {
-                    status: 'TRANSIT',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-06-01 23:00:00')),
-                            new Date(Date.parse('2022-06-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            aprilFailed = await Order.count({
-                where: {
-                    status: 'FAILED',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-04-01 23:00:00')),
-                            new Date(Date.parse('2022-04-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            meiFailed = await Order.count({
-                where: {
-                    status: 'FAILED',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-05-01 23:00:00')),
-                            new Date(Date.parse('2022-05-31 00:00:00')),
-                        ],
-                    },
-                },
-            });
-            juniFailed = await Order.count({
-                where: {
-                    status: 'FAILED',
-                    updated_at: {
-                        [Op.between]: [
-                            new Date(Date.parse('2022-06-01 23:00:00')),
-                            new Date(Date.parse('2022-06-31 00:00:00')),
-                        ],
-                    },
-                },
-            });*/
-=======
-                        [Order.sequelize.fn('SUM', Order.sequelize.col('price')), 'omzet']
-                    ], group: [Order.sequelize.fn('MONTH', Order.sequelize.col('created_at'))]},
-                {where: {[Order.sequelize.fn('YEAR', Order.sequelize.col('created_at'))]: moment().format('YYYY')}})
+            );
 
             chartOmzet = [];
 
-            for(let i = 1; i < 13; i++) {
-                const month = totaalOmzet.find(x => x.getDataValue("month") === i);
+            for (let i = 1; i < 13; i++) {
+                const month = totaalOmzet.find((x) => x.getDataValue('month') === i);
 
-                chartOmzet.push(month ? month.getDataValue("omzet") : 0);
+                chartOmzet.push(month ? month.getDataValue('omzet') : 0);
             }
->>>>>>> 28f4e7a98e97c93a7c39f89b371f041740fcfb54
         }
 
         orders.forEach((order) => {
