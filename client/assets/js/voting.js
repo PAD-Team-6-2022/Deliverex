@@ -1,5 +1,17 @@
 const orderId = parseInt(document.querySelector("[data-order]").getAttribute("data-order")); // the id of the order
 
+/**
+ * toggle the voting modal
+ * 
+ * @author Dylan Weijgertze
+ * @param {Element} toggle 
+ */
+ const votingModalToggle = (toggle) => {
+    toggle.onclick = () => {
+        document.querySelector("#voting-modal").classList.toggle("hidden");
+    }
+}
+
 // add toggle to all modal toggles
 document.querySelectorAll('[data-modal-toggle="voting-modal"]').forEach(toggle => votingModalToggle(toggle));
 
@@ -25,18 +37,6 @@ document.querySelector("#voting-form").onsubmit = async (e) => {
 
     // send form
     await postGoal(values);
-}
-
-/**
- * toggle the voting modal
- * 
- * @author Dylan Weijgertze
- * @param {Element} toggle 
- */
-const votingModalToggle = (toggle) => {
-    toggle.onclick = () => {
-        document.querySelector("#voting-modal").classList.toggle("hidden");
-    }
 }
 
 /**
