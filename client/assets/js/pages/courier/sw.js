@@ -168,7 +168,7 @@ self.addEventListener('notificationclose', (event) => {
  * @returns {Promise<T | void>} server response
  */
 const submitAnswerToServer = (userResponse, orderRequestData) => {
-    return fetch('/api/ORS/submitSpontaneousDeliveryResponse', {
+    return fetch('/api/ors/submitSpontaneousDeliveryResponse', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'

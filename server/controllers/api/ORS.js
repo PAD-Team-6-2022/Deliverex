@@ -1,5 +1,5 @@
 /**
- * ORS.js does the heavy lifting behind the functionality of the
+ * ors.js does the heavy lifting behind the functionality of the
  * courier dashboard. In summary, it is mainly responsible for
  * the following tasks:
  *
@@ -14,7 +14,7 @@
  *    hourly order requests of pending orders, and the automatic
  *    'failing of undelivered orders when the workday is over.
  *
- * Additionally, ORS.js also establishes two-way communications
+ * Additionally, ors.js also establishes two-way communications
  * with every active courier by use of push-notifications and
  * (client-side) serviceworkers. This is necessary to make the
  * order-request system work.

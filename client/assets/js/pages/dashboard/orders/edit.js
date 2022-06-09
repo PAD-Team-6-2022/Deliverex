@@ -130,7 +130,7 @@ addressInput.addEventListener(
     delay(async (e) => {
         if (addressInput.value === '') return;
 
-        await fetch(`/api/ORS/find/${addressInput.value}`, {
+        await fetch(`/api/ors/find/${addressInput.value}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
