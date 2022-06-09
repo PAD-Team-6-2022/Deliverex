@@ -23,17 +23,15 @@ async function checkDate(dateStr) {
 
     if(dateStr === null || dateStr === "") return false;
 
+    const formattedDate = (() => {
+        const rawDate = new Date(dateStr);
+        return new Date(`${rawDate.getFullYear()}-${rawDate.getMonth()+1}-${rawDate.getDate()}`);
+    })();
+
     const today = new Date(
         `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`);
 
-    const date = new Date(dateStr);
-
-    console.log(today);
-    console.log(date);
-
-    console.log(today > date)
-
-    if(today > date) return false;
+    if(today >= formattedDate) return false;
 
     return await fetch(`/api/orders/deliveryDates`, {
         method: "GET",
@@ -43,7 +41,7 @@ async function checkDate(dateStr) {
     }).then((res) => res.json())
         .then((data) => {
 
-            const day = date.getDay();
+            const day = formattedDate.getDay();
 
             const days = data.schedulingData.availableDays;
 
