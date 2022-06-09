@@ -194,7 +194,11 @@ const sendRequestNotification = (subscriptionObject, requestMetadata) => {
         const notificationPayload = JSON.stringify({
             title: 'Request for delivery',
             type: 'deliveryRequest',
-            body: `From: ${pickupLocation.city}, ${pickupLocation.street} ${pickupLocation.house_number}\nTo: ${order.city}, ${order.street} ${order.house_number}\n\nApproximately ${distance} kilometers or ${travelTime} minutes.\nThis request will expire in ${requestExpirationTime} seconds.`,
+            body: `From: ${pickupLocation.city}, ${pickupLocation.street} `+
+                `${pickupLocation.house_number}\n` +
+                `To: ${order.city}, ${order.street} ${order.house_number}\n\n` +
+                `Approximately ${distance} kilometers or ${travelTime} minutes.\n`+
+                `This request will expire in ${requestExpirationTime} seconds.`,
             expirationTime: requestExpirationTime,
             order,
             courierQueue: requestMetadata.courierQueue,
@@ -688,7 +692,7 @@ router.post('/subscribe', auth(true), (req, res) => {
             activeCouriers.splice(i, 1);
     }
 
-    console.log(`COURER ACTIVATED: ${req.user.id}`);
+    console.log(`COURIER ACTIVATED: ${req.user.id}`);
 
     //Retrieve courier data
     const courierData = {
