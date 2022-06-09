@@ -359,7 +359,7 @@ const configureFailedDeliveries = (workdayEndTime, dayOfTheWeek) => {
     cron.schedule(`${convertToCronFormat(workdayEndTime)} * * ${dayOfTheWeek}`,
         () => {
             Order.update({status: 'FAILED', courier_id: null},
-                {where: {delivery_date: today, status: {[Op.ne]: 'DELIVERED'}}},
+                {where: {delivery_date: {[Op.lte]: today}, status: {[Op.ne]: 'DELIVERED'}}},
             ).then((rowsUpdated) => {
                 console.log(`Updated ${rowsUpdated} orders to 'FAILED' status.`);
             }).catch((err) =>
