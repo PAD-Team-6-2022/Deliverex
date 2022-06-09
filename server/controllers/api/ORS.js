@@ -44,6 +44,7 @@ const {
     convertOrdersToJobs, getTimestampInSeconds
 } = require('../../util');
 
+//API key for the use of the Open Routing Service API
 const ORS_API_KEY = process.env.ORS_API_KEY;
 
 /**
@@ -103,23 +104,16 @@ const calculateCourierWorkLoads = async () => {
         .catch((err) => console.error(`Could not obtain order
          counts of couriers. Errormessage: ${err}`));
 
-    console.log('this place is loaded')
-
     if (!courierLoadData.length)
         return;
 
     const courierLoads = courierLoadData[0];
-    console.log('(all) courier loads');
-    console.log(courierLoads)
 
     //Helper array that narrows couriers down to their ID's
     let activeCourierIds = [];
     activeCouriers.forEach((courierData) => {
         activeCourierIds.push(courierData.id);
     });
-
-    console.log('Active courier IDs');
-    console.log(activeCourierIds);
 
     let activeCourierLoads = [];
 
@@ -130,13 +124,10 @@ const calculateCourierWorkLoads = async () => {
             activeCourierLoads.push(courierLoads[index]);
     });
 
-    console.log('courierLoads')
-    console.log(courierLoads)
     activeCourierLoads = activeCourierLoads.sort((a, b) => {
         return Number(a.count) - Number(b.count);
     });
-    console.log('active courier loads');
-    console.log(activeCourierLoads);
+
     return activeCourierLoads;
 }
 
@@ -446,6 +437,7 @@ const configurePushNotifications = () => {
         'l3gak50_jM9AhpWMwmn3sOkd8Ga-xhnzhq-zYpVqueOnI';
     const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 
+    //Sets the public & private vapid keys. The mail adres below can be seen as redundant.
     web_push.setVapidDetails('mailto:test@test.com', publicVapidKey, privateVapidKey);
 }
 
@@ -867,16 +859,16 @@ configurePushNotifications();
 // the assigning of orders
 setTimingActions();
 
-module.exports = router;
-
-//Status reports. These are purely to keep a
-//server-admin oversight.
+//Status reports. These are necessary to keep a
+//server-admin oversight. Do not remove nor comment
+//out.
 cron.schedule(
     '0,10,20,30,40,50 * * * * *',
     () => {
-        console.log('\nSTATUS REPORT:');
-        console.log(`Time: ${moment().format('HH:mm:ss')}`);
 
+        console.log('\nSTATUS REPORT:');
+
+        console.log(`Time: ${moment().format('HH:mm:ss')}`);
         console.log(`Queued orders:`);
         console.log(pendingOrderQueue);
 
@@ -889,3 +881,5 @@ cron.schedule(
     },
     {scheduled: true},
 );
+
+module.exports = router;

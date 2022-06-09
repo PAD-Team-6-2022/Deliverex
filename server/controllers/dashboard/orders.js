@@ -62,7 +62,8 @@ router.get(
     },
 );
 
-router.get('/create', auth(true), allowedTypes(['SHOP_OWNER', 'ADMIN']), async (req, res) => {
+router.get('/create', auth(true), allowedTypes(['SHOP_OWNER', 'ADMIN']),
+    async (req, res) => {
     const formats = await Format.findAll({
         where: { userId: req.user.id },
     });
@@ -73,7 +74,8 @@ router.get('/create', auth(true), allowedTypes(['SHOP_OWNER', 'ADMIN']), async (
     });
 });
 
-router.get('/:id/edit', auth(true), allowedTypes(['SHOP_OWNER', 'ADMIN']), async (req, res) => {
+router.get('/:id/edit', auth(true), allowedTypes(['SHOP_OWNER', 'ADMIN']),
+    async (req, res) => {
     const { id } = req.params;
     const order = await Order.findByPk(id);
 
@@ -93,7 +95,8 @@ router.get('/:id/edit', auth(true), allowedTypes(['SHOP_OWNER', 'ADMIN']), async
     });
 });
 
-router.get('/:id', auth(true), allowedTypes(['ADMIN', 'SHOP_OWNER']), async (req, res) => {
+router.get('/:id', auth(true), allowedTypes(['ADMIN', 'SHOP_OWNER']),
+    async (req, res) => {
     const { id } = req.params;
     const order = await Order.findByPk(id, { include: Format });
 

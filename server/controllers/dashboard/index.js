@@ -23,7 +23,9 @@ router.get(
     ordering('id', 'desc'),
     searching,
     async (req, res) => {
-        // Get the orders with the calculated offset, limit for pagination and details about the sorting order
+        // Get the orders with the calculated offset, limit for pagination and
+        // details about the sorting order. If the user has a courier role, simply
+        //retrieve his orders for today.
         const orders =
             req.user.role === 'COURIER'
                 ? await Order.findAll({
@@ -80,14 +82,17 @@ router.get(
         const donatedAmount =
             req.user.role === 'SHOP_OWNER' ? await getDonatedMoney(req.user.companyId) : 0;
 
-        //We first assume the courier doesn't work today
+        //Declare the dayschedule of this courier. For safety, we initially assume that
+        // this user is either not a courier or doesn't work today
         let daySchedule = null;
 
         let chart, chartOmzet;
 
+        //In case this user is a courier, retrieve his schedule for today.
         if (req.user.role === 'COURIER') {
             const currentDayOfTheWeek = moment().format('dddd').toLowerCase();
-            //We know every order has the same courier, so we just take the first one.
+            //We know that every order with this courier ID obviously has the same
+            //courier, so we just search for the first one we find.
             const user = await User.findOne({
                 where: {id: req.user.id},
                 include: {
@@ -98,6 +103,8 @@ router.get(
             }); //orders[0].getDataValue('courier').schedule;
             const courierWeekSchedule = user.getDataValue('schedule');
 
+            //See if the 'day string' corresponds with a given day and then
+            //extract it.
             switch (currentDayOfTheWeek) {
                 case 'monday':
                     daySchedule = courierWeekSchedule.monday;
@@ -182,35 +189,39 @@ router.get(
             order.date = moment(order.created_at).format('YYYY-MM-DD');
         });
 
-        const courierRenderData = {
-            title: 'Overzicht - Dashboard',
-            orders,
-            daySchedule,
-            order: req.order,
-            user: req.user,
-        };
+        // Render either the courier dashboard or the shop
+        // owner dashboard with data based on the user's role
+        if(req.user.role === 'COURIER') {
 
-        const shopOwnerRenderData = {
-            title: 'Overzicht - Dashboard',
-            orders,
-            sort: req.sort,
-            order: req.order,
-            limit: req.limit,
-            user: req.user,
-            search: req.search,
-            page: req.page,
-            ordersAmount,
-            deliverdAmount,
-            donatedAmount,
-            chart,
-            chartOmzet,
-        };
+            //Assemble all the gathered data about this courier
+            const courierRenderData = {
+                title: 'Overzicht - Dashboard',
+                orders,
+                daySchedule,
+                order: req.order,
+                user: req.user,
+            };
+            res.render('dashboard/courier/overview', courierRenderData);
+        }else{
 
-        // Render the page, pass on the order array
-        res.render(
-            req.user.role === 'COURIER' ? 'dashboard/courier/overview' : 'dashboard/overview',
-            req.user.role === 'COURIER' ? courierRenderData : shopOwnerRenderData,
-        );
+            //Assemble all the gathered data about this shop owner
+            const shopOwnerRenderData = {
+                title: 'Overzicht - Dashboard',
+                orders,
+                sort: req.sort,
+                order: req.order,
+                limit: req.limit,
+                user: req.user,
+                search: req.search,
+                page: req.page,
+                ordersAmount,
+                deliverdAmount,
+                donatedAmount,
+                chart,
+                chartOmzet,
+            };
+            res.render('dashboard/overview', shopOwnerRenderData);
+        }
     },
 );
 
