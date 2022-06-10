@@ -2,6 +2,10 @@
 
 PAD Team 6 is an application that handles order delivery for local companies efficiently. It comes with a nice dashboard and a tracker page for clients to track their packages in real time.
 
+# Live environment
+
+A live-running environment of the application that uses  Heroku can be found at https://deliverex.herokuapp.com/
+
 ## Installation
 
 Use the package manager [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) to install pad-team6.
