@@ -18,6 +18,9 @@ let coordinates = [];
 
 /**
  * Checks if date is within organisation opening days
+ * 
+ * @param {string} dateStr string with date in it
+ * @returns if the date in dateStr is not in the past or at days that the organisation is closed
  */
 async function checkDate(dateStr) {
 
@@ -33,6 +36,7 @@ async function checkDate(dateStr) {
 
     if(today >= formattedDate) return false;
 
+    // fetch list with all days and if the organisation is open on that days
     return await fetch(`/api/orders/deliveryDates`, {
         method: "GET",
         headers: {
@@ -84,6 +88,7 @@ await fetch(`/api/orders/deliveryDates`, {
                 .classList.remove("hidden");
     });
 
+// adds an eventlistener to validate the form before submitting
 document
     .getElementById('submitButton')
     .addEventListener('click', async (event) => {
@@ -94,6 +99,7 @@ document
 
         const inputs = document.querySelectorAll('input');
 
+        // checks for wrong inputs
         for (let i = 0; i < inputs.length; i++) {
             inputs[i].classList.remove('bg-red-50', 'border-red-500');
             if (inputs[i].id !== 'address' && inputs[i].type !== 'checkbox' && inputs[i].type !== 'date') {
@@ -136,6 +142,7 @@ document
                 delivery_date: deliveryDateInput.value,
             };
 
+            // creates a new order
             await fetch(`/api/orders/`, {
                 method: 'POST',
                 headers: {
@@ -147,6 +154,7 @@ document
                     if (response.status === 200) {
                       window.location.href = `/dashboard/overview`;
                     } else if(response.status === 500) {
+                        // adds red border, background and error message to email input
                         emailInput.classList.add("bg-red-50", "border-red-500");
                         document.querySelector("#email_p").innerHTML = "Wrong email-address!";
                     }
@@ -156,6 +164,9 @@ document
              to create order. Errormessage: ${error}`);
                 });
         } else {
+
+            // adds red border, background and error message to wrong inputs
+
             wrongInputs.forEach((input) => {
                 input.classList.add('bg-red-50', 'border-red-500');
                 document.getElementById(`${input.id}_p`).innerHTML =
@@ -171,8 +182,8 @@ document
         }
     });
 
+// check if a format is selected
 sizeFormatInput.addEventListener('change', () => {
-    // check if format is selected
     if (sizeFormatInput.value === '') {
         sizeFormatInput.classList.add('bg-red-50', 'border-red-500');
         wrongInputs.push(sizeFormatInput);
@@ -181,6 +192,7 @@ sizeFormatInput.addEventListener('change', () => {
     }
 });
 
+// checks if the postal code input is in dutch postal code format
 postalCodeInput.addEventListener(
     'keyup',
     delay((e) => {
@@ -209,11 +221,13 @@ postalCodeInput.addEventListener(
     }, 500),
 );
 
+// adds address suggestions under the input to choose from
 addressInput.addEventListener(
     'keyup',
     delay(async (e) => {
         if (addressInput.value === '') return;
 
+        // look up all addresses that match the address input query/value
         await fetch(`/api/ors/find/${addressInput.value}`, {
             method: "GET",
             headers: {
@@ -226,6 +240,7 @@ addressInput.addEventListener(
 
                 if(data.features.length > 0) {
 
+                    // adds all addresses under the input
                     data.features.forEach((address) => {
                         if(address.properties.housenumber && address.properties.postalcode) {
                             let tr = document.createElement("tr");

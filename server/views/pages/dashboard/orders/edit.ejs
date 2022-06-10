@@ -4,18 +4,26 @@
     <%- include("../../../partials/head", {js: "dashboard/orders/edit"}) %>
   </head>
   <body>
-    <div class="flex">
+    <div fulldiv class="flex">
+
       <%- include("../../../partials/dashboard/sidebar") %>
-      <div class="p-10 flex-1 overflow-hidden">
+
+      <div maindiv class="p-10 flex-1 overflow-hidden">
+
           <%- include("../../../partials/breadcrumb", { links: [{ name:
         "Overview", href: "/dashboard/overview" }, {
             name: "Orders",
             href: "/dashboard/orders"
         }, { name: `Edit order (${order.id})` }] }) %>
-        <div class="mt-10 bg-white rounded-xl border border-slate-200 p-8">
+
+        <div formdiv class="mt-10 bg-white rounded-xl border border-slate-200 p-8">
+
             <h1 class="block text-gray-800 text-2xl font-bold mb-6">Edit order #<%= order.id %></h1>
+
             <form name="name" id="editform" action="/api/orders/edit" method="POST">
+
                 <input type="hidden" name="id" value="<%= order.id %>">
+
                 <div class="flex flex-col mb-4 mx-2">
                   <label
                     class="mb-2 font-bold text-sm text-slate-900"
@@ -253,9 +261,14 @@
                     Save
                   </button>
                 </div>
+
               </form>
 
-        </div>
-    </div>
+          </div> <%# end of form div (formdiv) %>
+
+      </div> <%# end of main section div (maindiv) %>
+
+    </div> <%# end of full page flex div (fulldiv) %>
+
   </body>
 </html>
