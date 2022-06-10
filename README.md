@@ -14,6 +14,10 @@ Use the package manager [npm](https://docs.npmjs.com/downloading-and-installing-
 npx create-pad-team6-app
 ```
 
+## Documentation
+
+Documentation generated using the JSDoc tool can be found inside the 'docs' folder.
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
