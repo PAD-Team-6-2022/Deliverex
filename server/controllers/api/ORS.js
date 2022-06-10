@@ -89,7 +89,7 @@ const calculateOrsRoute = (jobs, shipments, vehicles) => {
  * Calculates the amount of orders that every active courier
  * is currently assigned to and returns it.
  *
- * @returns {Promise<*[]>} an object containing the amount
+ * @returns {Promise<?>} an object containing the amount
  * of orders per courier id.
  */
 const calculateCourierWorkLoads = async () => {
@@ -474,7 +474,7 @@ const transformOrderweights = (orders) => {
  *
  * @param routingData routingData object
  * @param orders list of orders
- * @returns {*[]} a list of checkpoints
+ * @returns {?} a list of checkpoints
  */
 const getCheckpointsFromRoute = (routingData, orders) => {
     const checkpoints = [];
@@ -724,7 +724,7 @@ router.post('/subscribe', auth(true), (req, res) => {
  * sent by the server. Depending on the message, the server will either
  * assign the order to this client/courier or continue the order request cycle.
  */
-router.put('/submitSpontaneousDeliveryResponse', (req, res) => {
+router.put('/deliveryRequestResponse', (req, res) => {
     const pushMessageData = req.body.data;
 
     if (req.body.answer === 'accepted') {

@@ -85,7 +85,16 @@ const getCompanyId = async (orderId) => {
     return company.userCreated.company.id;
 };
 
+/**
+ * Endpoint for creating an order
+ */
 router.post('/', (req, res) => {
+
+    /**
+     * Sends an email to the given emailaddress with a tracking link
+     * 
+     * @param {number} id order id
+     */
     const sendEmail = async (id) => {
         let emailTemplate = await ejs.renderFile(
             path.resolve(__dirname, '../../views/mail/template.ejs'),
@@ -152,8 +161,6 @@ router.post('/', (req, res) => {
             Math.floor(Math.random() * possibleCharacters.length),
         );
 
-    console.log(req.body.format_id);
-
     Order.create({
         status: 'SORTING',
         email: req.body.email,
@@ -179,8 +186,6 @@ router.post('/', (req, res) => {
         delivery_date: req.body.delivery_date,
     })
         .then(async (order) => {
-            console.log(req.user.id);
-            console.log(order.getDataValue('id'));
 
             //Handle the way this order should be treated based on whether the 'plannedMode'
             //option is currently being used.
@@ -232,10 +237,12 @@ router.post('/', (req, res) => {
         })
         .catch((err) => {
             res.status(500).json(err);
-            console.log(err);
         });
 });
 
+/**
+ * Endpoint for editing an order
+ */
 router.post('/edit', async (req, res) => {
     /**
      * Update the donation for the given order
@@ -267,6 +274,7 @@ router.post('/edit', async (req, res) => {
 
     let order;
 
+    // checks if coordinates are passed in the body
     if(req.body.coordinates.length > 2) {
         order = Order.update(
             {

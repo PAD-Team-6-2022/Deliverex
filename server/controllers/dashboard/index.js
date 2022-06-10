@@ -360,7 +360,7 @@ router.get('/signout', auth(true), (req, res) => {
 });
 
 /**
- * Render the package size page
+ * Route for rendering the settings page (shop owner / courier)
  */
 router.get('/settings', async (req, res) => {
     const formats = await Format.findAll();

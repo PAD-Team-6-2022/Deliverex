@@ -17,10 +17,13 @@ const statusInput = document.getElementById('status');
 
 let coordinates = [];
 
+// adds an eventlistener to validate the form before submitting
 document.getElementById('submitButton').addEventListener('click', async () => {
     let wrongInputs = [];
 
     const inputs = document.querySelectorAll('input');
+
+    // checks for wrong inputs
     inputs.forEach((input) => {
         input.classList.remove('bg-red-50', 'border-red-500');
         if (
@@ -60,6 +63,7 @@ document.getElementById('submitButton').addEventListener('click', async () => {
             coordinates: JSON.stringify(coordinates),
         };
 
+        // edits an existing order
         await fetch('/api/orders/edit', {
             method: 'POST',
             headers: {
@@ -77,6 +81,7 @@ document.getElementById('submitButton').addEventListener('click', async () => {
              to update order. Errormessage: ${error}`);
             });
     } else {
+        // adds a red border, background and error message to wrong inputs
         wrongInputs.forEach((input) => {
             input.classList.add('bg-red-50', 'border-red-500');
             document.getElementById(`${input.id}_p`).innerHTML =
@@ -84,9 +89,8 @@ document.getElementById('submitButton').addEventListener('click', async () => {
         });
     }
 });
-
+// check if a format is selected
 sizeFormatInput.addEventListener('change', () => {
-    // check if format is selected
     if (sizeFormatInput.value === '') {
         sizeFormatInput.classList.add('bg-red-50', 'border-red-500');
         wrongInputs.push(sizeFormatInput);
@@ -95,6 +99,7 @@ sizeFormatInput.addEventListener('change', () => {
     }
 });
 
+// checks if the postal code input is in dutch postal code format
 postalCodeInput.addEventListener(
     'keyup',
     delay((e) => {
@@ -125,11 +130,13 @@ postalCodeInput.addEventListener(
     }, 500),
 );
 
+// adds address suggestions under the input to choose from
 addressInput.addEventListener(
     'keyup',
     delay(async (e) => {
         if (addressInput.value === '') return;
 
+        // look up all addresses that match the address input query/value
         await fetch(`/api/ors/find/${addressInput.value}`, {
             method: "GET",
             headers: {
@@ -142,6 +149,7 @@ addressInput.addEventListener(
 
                 if(data.features.length > 0) {
 
+                    // adds all addresses under the input
                     data.features.forEach((address) => {
                         if(address.properties.housenumber && address.properties.postalcode) {
                             let tr = document.createElement("tr");

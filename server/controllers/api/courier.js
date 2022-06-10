@@ -1,6 +1,11 @@
 const router = require("express").Router()
 const { WeekSchedule, Location, User } = require("../../models/index")
 
+/**
+ * Endpoint for inserting / updating a week schedule
+ * 
+ * @param id schedule id
+ */
 router.post("/schedule/:id", async (req, res) => {
 
     const schedule = await WeekSchedule.findByPk(req.params.id);
@@ -34,11 +39,22 @@ router.post("/schedule/:id", async (req, res) => {
 
 });
 
+/**
+ * Endpoint for inserting / updating a location
+ * 
+ * @param id schedule id
+ * @param uid user id
+ * Because we had too much indexes in our database
+ * we couldn't create a foreign key for the location
+ * so therefore we use a user id
+ */
 router.post("/location/:uid/:id", async (req, res) => {
 
     if(req.params.id === "nan") {
 
         let loc;
+        
+        // checks if coordinates are passed in the body
         if(req.body.coordinates.length > 2) {
             loc = await Location.create({
                 postal_code: req.body.postalCode,
@@ -62,6 +78,7 @@ router.post("/location/:uid/:id", async (req, res) => {
             });
         }
 
+        // updates the 'foreign key' manually
         await User.update({
             locationId: loc.dataValues.location_id,
         },
@@ -75,7 +92,8 @@ router.post("/location/:uid/:id", async (req, res) => {
 
         let loc;
 
-        if(req.body.coordinates > 2) {
+        // checks if coordinates are passed in the body
+        if(req.body.coordinates.length > 2) {
             loc = await Location.update({
                     postal_code: req.body.postalCode,
                     city: req.body.city,

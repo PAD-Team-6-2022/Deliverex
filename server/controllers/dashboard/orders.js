@@ -62,6 +62,11 @@ router.get(
     },
 );
 
+/**
+ * Route for rendering the order create page
+ * 
+ * This route adds a title and formats to the page
+ */
 router.get('/create', auth(true), allowedTypes(['SHOP_OWNER', 'ADMIN']),
     async (req, res) => {
     const formats = await Format.findAll({
@@ -74,6 +79,11 @@ router.get('/create', auth(true), allowedTypes(['SHOP_OWNER', 'ADMIN']),
     });
 });
 
+/**
+ * Route for rendering the order edit page
+ * 
+ * @param id order id
+ */
 router.get('/:id/edit', auth(true), allowedTypes(['SHOP_OWNER', 'ADMIN']),
     async (req, res) => {
     const { id } = req.params;

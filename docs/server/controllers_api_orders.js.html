@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/api/orders.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/api/orders.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const router = require('express').Router();
+const {
+    Order,
+    Format,
+    User,
+    Location,
+    Company,
+    Goal,
+    Donation,
+    Organisation,
+    WeekSchedule,
+} = require('../../models');
+const auth = require('../../middleware/auth');
+const moment = require('moment');
+const fetch = require('node-fetch');
+const ejs = require('ejs');
+const path = require('path');
+const {
+    addOrderToDeliveryQueue,
+    notifyOrderStatusChange,
+} = require('../../util');
+
+router.delete('/:id', (req, res) => {
+    Order.destroy({ where: { id: req.params.id } })
+        .then(() => {
+            res.status(200).json({
+                message: 'Successfully deleted order',
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: `Something went wrong while trying to delete the order: ${err}`,
+            });
+        });
+});
+
+router.delete('/settings/:id', (req, res) => {
+    Format.destroy({ where: { id: req.params.id } })
+        .then(() => {
+            res.status(200).json({
+                message: 'Successfully deleted format',
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: `Something went wrong while trying to delete the format: ${err}`,
+            });
+        });
+});
+
+router.get('/', (req, res) => {
+    Order.findAll()
+        .then((orders) => {
+            res.status(200).json(orders);
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+});
+
+/**
+ * Get the id of the company the order belongs to
+ *
+ * @param {number} orderId the id of the order
+ * @returns The company id of to what the order belongs to
+ */
+const getCompanyId = async (orderId) => {
+    const company = await Order.findByPk(orderId, {
+        include: [
+            {
+                model: User,
+                as: 'userCreated',
+                include: [
+                    {
+                        model: Company,
+                        as: 'company',
+                    },
+                ],
+            },
+        ],
+    });
+
+    return company.userCreated.company.id;
+};
+
+/**
+ * Endpoint for creating an order
+ */
+router.post('/', (req, res) => {
+
+    /**
+     * Sends an email to the given emailaddress with a tracking link
+     * 
+     * @param {number} id order id
+     */
+    const sendEmail = async (id) => {
+        let emailTemplate = await ejs.renderFile(
+            path.resolve(__dirname, '../../views/mail/template.ejs'),
+            {
+                link: `http://${req.rawHeaders[1]}/track/${req.body.postal_code}/${id}`,
+            },
+        );
+
+        await fetch(`https://api.hbo-ict.cloud/mail`, {
+            method: 'POST',
+            headers: {
+                Authorization: 'Bearer pad_rit_6.o8ZLxKESVnaVSVQs',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                from: {
+                    name: 'Team 6',
+                    address: 'team6@hbo-ict.cloud',
+                },
+                to: [
+                    {
+                        name: '',
+                        address: req.body.email,
+                    },
+                ],
+                subject: 'Track &amp; Trace',
+                html: emailTemplate,
+            }),
+        });
+    };
+
+    /**
+     * donate the set comapany percentage of the order price to the current goal
+     *
+     * @param {Object} order donation of the order
+     */
+    const donateMoney = async (order) => {
+        // Get the current goal(the goal that's being collected for)
+        const currentGoal = await Goal.findOne({
+            where: {
+                status: 'CURRENT',
+            },
+        });
+
+        const company = await Company.findByPk(await getCompanyId(order.id));
+
+        await Donation.create({
+            amount: parseFloat(
+                ((order.price / 100) * company.percentageToGoal).toFixed(2),
+            ),
+            goalId: currentGoal.id,
+            orderId: order.id,
+        });
+    };
+
+    let pickup_status = req.body.is_pickup != null;
+
+    //Generate a unique QR code for this order
+    let qrCode = '';
+    const possibleCharacters =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i &lt; 30; i++)
+        qrCode += possibleCharacters.charAt(
+            Math.floor(Math.random() * possibleCharacters.length),
+        );
+
+    Order.create({
+        status: 'SORTING',
+        email: req.body.email,
+        weight: req.body.weight,
+        created_at: Date.now(),
+        street: req.body.street,
+        house_number: req.body.house_number,
+        postal_code: req.body.postal_code,
+        city: req.body.city,
+        country: req.body.country,
+        formatId: req.body.format_id,
+        is_pickup: pickup_status,
+        updated_at: Date.now(),
+        price: req.body.price,
+        created_by: req.user.id,
+        qr_code: qrCode,
+        coordinates: {
+            type: 'Point',
+            coordinates: Object.values(
+                JSON.parse(req.body.coordinates),
+            ).reverse(),
+        },
+        delivery_date: req.body.delivery_date,
+    })
+        .then(async (order) => {
+
+            //Handle the way this order should be treated based on whether the 'plannedMode'
+            //option is currently being used.
+            Organisation.findOne().then((organisation) => {
+                const plannedMode =
+                    organisation.getDataValue('plannedMode');
+                if (plannedMode)
+                    addOrderToDeliveryQueue(Number(order.getDataValue('id')));
+                else {
+                    //Planned mode
+                    if (
+                        order.getDataValue('delivery_date') !==
+                        moment().format('YYYY-MM-DD')
+                    )
+                        return;
+
+                    WeekSchedule.findOne({
+                        where: {
+                            id: organisation.getDataValue(
+                                'operating_schedule_id',
+                            ),
+                        },
+                    }).then((organisationSchedule) => {
+                        const currentDay = moment()
+                            .format('dddd')
+                            .toLowerCase();
+                        const todaySchedule =
+                            organisationSchedule.getDataValue(currentDay);
+
+                        //In case the morning cron-job has already fired, add it to the same-day-delivery queue
+                        if (
+                            moment().isAfter(
+                                moment(todaySchedule.start, 'HH:mm:ss'),
+                            )
+                        ) {
+                            addOrderToDeliveryQueue(order.getDataValue('id'));
+                        }
+                    });
+                }
+            });
+
+            await donateMoney(order);
+
+            sendEmail(order.id);
+            res.status(200).json({
+                order,
+                message: `order ${order.id} created`,
+            });
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+});
+
+/**
+ * Endpoint for editing an order
+ */
+router.post('/edit', async (req, res) => {
+    /**
+     * Update the donation for the given order
+     *
+     * @param {number} orderId The id of the number
+     * @param {number} orderPrice The price of the order
+     * @returns the donation that is made
+     */
+    const updateDonation = async (orderId, orderPrice) => {
+        const company = await Company.findByPk(await getCompanyId(orderId));
+
+        const donation = Donation.update(
+            {
+                amount: parseFloat(
+                    ((orderPrice / 100) * company.percentageToGoal).toFixed(2),
+                ),
+            },
+            {
+                where: {
+                    orderId,
+                },
+            },
+        );
+
+        return donation;
+    };
+
+    let pickup_status = req.body.is_pickup != null;
+
+    let order;
+
+    // checks if coordinates are passed in the body
+    if(req.body.coordinates.length > 2) {
+        order = Order.update(
+            {
+                weight: req.body.weight,
+                email: req.body.email,
+                street: req.body.street,
+                house_number: req.body.house_number,
+                postal_code: req.body.postal_code,
+                city: req.body.city,
+                formatId: req.body.format_id,
+                status: req.body.status,
+                is_pickup: pickup_status,
+                updated_at: Date.now(),
+                price: req.body.price,
+                coordinates: { type: 'Point', coordinates: Object.values(JSON.parse(req.body.coordinates)).reverse()}
+            },
+            { where: { id: req.body.id } },
+        )
+    } else {
+        order = Order.update(
+            {
+                weight: req.body.weight,
+                email: req.body.email,
+                street: req.body.street,
+                house_number: req.body.house_number,
+                postal_code: req.body.postal_code,
+                city: req.body.city,
+                formatId: req.body.format_id,
+                status: req.body.status,
+                is_pickup: pickup_status,
+                updated_at: Date.now(),
+                price: req.body.price,
+            },
+            { where: { id: req.body.id } },
+        )
+    }
+
+    order.then(async (affectedRows) => {
+        //Though the status might not actually have been changed, we
+        //still assume as such to be sure.
+        notifyOrderStatusChange(req.body.id, req.body.status);
+        console.log('ID in orders.js: ' + req.body.id);
+
+        await updateDonation(req.body.id, req.body.price);
+
+        res.status(200).json({
+            message: `${affectedRows} rows updated`,
+        });
+    })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+
+});
+
+/**
+ * Returns a list of available dates that an order could be delivered on
+ *
+ * @Author: Thomas Linssen
+ */
+router.get('/deliveryDates', (req, res) => {
+    Organisation.findOne().then((organisation) => {
+        const plannedMode = organisation.getDataValue('plannedMode');
+
+        WeekSchedule.findOne({
+            where: { id: organisation.getDataValue('operating_schedule_id') },
+        }).then((organisationSchedule) => {
+            const currentDay = moment().format('dddd').toLowerCase();
+            const todaySchedule = organisationSchedule.getDataValue(currentDay);
+
+            const sameDayDeliverable = moment().isBefore(
+                moment(todaySchedule.end, 'HH:mm:ss'),
+            );
+
+            const availableDays = {
+                monday: organisationSchedule.getDataValue('monday') !== null,
+                tuesday: organisationSchedule.getDataValue('tuesday') !== null,
+                wednesday:
+                    organisationSchedule.getDataValue('wednesday') !== null,
+                thursday:
+                    organisationSchedule.getDataValue('thursday') !== null,
+                friday: organisationSchedule.getDataValue('friday') !== null,
+                saturday:
+                    organisationSchedule.getDataValue('saturday') !== null,
+                sunday: organisationSchedule.getDataValue('sunday') !== null,
+            };
+
+            if (!plannedMode) {
+                let deliveryMessage;
+                if (sameDayDeliverable)
+                    deliveryMessage = `The order is expected to be delivered today.`;
+                else {
+                    //Bereken wat de eerstvolgende dag is waarop het kan worden afgeleverd, en informeer de
+                    //gebruiker daarvan.
+                    let availableDaysEntries = Object.entries(availableDays);
+                    const daysBefore = availableDaysEntries.slice(
+                        0,
+                        Object.keys(availableDays).indexOf(currentDay),
+                    );
+                    availableDaysEntries.splice(0,
+                        Object.keys(availableDays).indexOf(currentDay) + 1);
+                    availableDaysEntries = availableDaysEntries.concat(daysBefore);
+
+                    for (let i = 0; i &lt; availableDaysEntries.length; i++) {
+                        if (availableDaysEntries[i][1] !== false) {
+                            deliveryMessage = `The order is expected to be delivered on ${availableDaysEntries[i][0]}`;
+                            break;
+                        }
+                    }
+                }
+                res.status(200).json({ schedulable: false, deliveryMessage });
+            } else {
+                //Note: if the current day is marked 'true' in 'availabledays', it does not
+                //mean the same as a same day delivery being possible. You have to specifically
+                //use the 'sameDayDelivery' boolean to read out whether it's possible.
+                const schedulingData = {
+                    sameDayDelivery: sameDayDeliverable,
+                    availableDays,
+                };
+                res.status(200).json({ schedulable: true, schedulingData });
+            }
+        });
+    });
+});
+
+/**
+ * Retrieves the order associated with a given ID. Since it is assumed that
+ * request will come from the scanning page, the server will check whether
+ * this order is being scanned by the right courier for safety sake.
+ */
+router.get('/:qrCode/scan', auth(true), async (req, res) => {
+    const { qrCode } = req.params;
+
+    await Order.findOne({ where: { qr_code: qrCode } })
+        .then((order) => {
+            res.json({
+                order: order,
+                isNotAuthorized:
+                    order.getDataValue('courier_id') !== req.user.id,
+            });
+        })
+        .catch((error) => {
+            res.status(404).json(
+                `Could not find order with hash ${qrCode}. Error: ${error}`,
+            );
+        });
+});
+
+/**
+ * Updates the 'courier_id' attribute of an order to the given ID of the courier.
+ * In case the order could not be found or another error was caught, the server
+ * will respond with the appropriate error messages.
+ */
+router.put('/:id/scan', auth(true), (req, res) => {
+    Order.findByPk(req.body.id)
+        .then((order) => {
+            let newStatus;
+            if (order.status === 'SORTING') newStatus = 'READY';
+            else if (order.status === 'READY') newStatus = 'TRANSIT';
+            else if (order.status === 'TRANSIT') newStatus = 'DELIVERED';
+
+            Order.update({ status: newStatus }, { where: { id: req.body.id } })
+                .then((data) => {
+                    res.sendStatus(200);
+                })
+                .catch((error) => {
+                    console.error(
+                        `Could not assign order to courier. Error message: ${error}`,
+                    );
+                    res.sendStatus(500);
+                });
+        })
+        .catch((error) => {
+            res.status(404).json(
+                `Could not find order with ID ${req.body.id}. Error: ${error}`,
+            );
+        });
+});
+
+/**
+ * Updates the status of an order from 'TRANSIT' to 'DELIVERED' and
+ * reloads the page.
+ */
+router.post('/:id/scan', async (req, res) => {
+    Order.update(
+        { status: 'DELIVERED' },
+        { where: { id: req.body.selectedOrder } },
+    )
+        .then(() => {
+            res.redirect('/dashboard/overview');
+        })
+        .catch((error) => {
+            res.status(500).json(
+                `Caught error while updating delivery status: ${error}`,
+            );
+        });
+});
+
+module.exports = router;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#allowedTypes">allowedTypes</a></li><li><a href="global.html#calculateCourierWorkLoads">calculateCourierWorkLoads</a></li><li><a href="global.html#calculateOrsRoute">calculateOrsRoute</a></li><li><a href="global.html#calculateRoute">calculateRoute</a></li><li><a href="global.html#configureFailedDeliveries">configureFailedDeliveries</a></li><li><a href="global.html#configurePushNotifications">configurePushNotifications</a></li><li><a href="global.html#convertOrdersToShipments">convertOrdersToShipments</a></li><li><a href="global.html#convertToCronFormat">convertToCronFormat</a></li><li><a href="global.html#convertUsersToVehicles">convertUsersToVehicles</a></li><li><a href="global.html#getCheckpointsFromRoute">getCheckpointsFromRoute</a></li><li><a href="global.html#getCompanyId">getCompanyId</a></li><li><a href="global.html#getGoals">getGoals</a></li><li><a href="global.html#getTimestampInSeconds">getTimestampInSeconds</a></li><li><a href="global.html#initiateOrderRequestCycle">initiateOrderRequestCycle</a></li><li><a href="global.html#router">router</a></li><li><a href="global.html#sendRequestNotification">sendRequestNotification</a></li><li><a href="global.html#setHourlyDeliveryRequests">setHourlyDeliveryRequests</a></li><li><a href="global.html#setPlannedMode">setPlannedMode</a></li><li><a href="global.html#setTimingActions">setTimingActions</a></li><li><a href="global.html#transformOrderweights">transformOrderweights</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri Jun 10 2022 16:11:08 GMT+0200 (Midden-Europese zomertijd)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

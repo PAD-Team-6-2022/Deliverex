@@ -1,7 +1,7 @@
 /**
  * Adds check to see if user has the correct role
  *
- * @param {Array<String} allowedTypes Roles that are allowed to acces this page
+ * @param {Array<String>} allowedTypes Roles that are allowed to acces this page
  * @returns next or redirect to /dashboard
  */
 const allowedTypes = (allowedTypes) => (req, res, next) => {

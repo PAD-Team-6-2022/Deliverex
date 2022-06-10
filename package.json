@@ -6,7 +6,9 @@
     "dev:nodemon": "nodemon server/app.js",
     "watch:tailwind": "npx tailwindcss -i tailwind.css -o client/assets/css/tailwind.css --watch",
     "cypress_run": "cypress open",
-    "push-live":  "git push heroku main"
+    "push-live": "git push heroku main",
+    "generate-server-docs": "jsdoc ./server -r -d docs/server",
+    "generate-client-docs": "jsdoc ./client -r -d docs/client"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -17,6 +19,7 @@
     "ejs": "^3.1.6",
     "express": "^4.17.3",
     "express-session": "^1.17.2",
+    "jsdoc": "^3.6.10",
     "moment": "^2.29.1",
     "mysql2": "^2.3.3",
     "passport": "^0.5.2",

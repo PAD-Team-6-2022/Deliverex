@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/dashboard/orders/create.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/dashboard/orders/create.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {delay} from '../../../util.js';
+import '../../../tooltip.js';
+
+const emailInput = document.getElementById('email');
+const postalCodeInput = document.getElementById('postal_code');
+const streetInput = document.getElementById('street');
+const houseNumberInput = document.getElementById('house_number');
+const cityInput = document.getElementById('city');
+const addressInput = document.getElementById('address');
+const countryInput = document.getElementById('country');
+const weightInput = document.getElementById('weight');
+const sizeFormatInput = document.getElementById('sizeFormat');
+const priceInput = document.getElementById('price');
+const pickupInput = document.getElementById('is_pickup');
+const deliveryDateInput = document.getElementById('delivery_date');
+
+let coordinates = [];
+
+/**
+ * Checks if date is within organisation opening days
+ * 
+ * @param {string} dateStr string with date in it
+ * @returns if the date in dateStr is not in the past or at days that the organisation is closed
+ */
+async function checkDate(dateStr) {
+
+    if(dateStr === null || dateStr === "") return false;
+
+    const formattedDate = (() => {
+        const rawDate = new Date(dateStr);
+        return new Date(`${rawDate.getFullYear()}-${rawDate.getMonth()+1}-${rawDate.getDate()}`);
+    })();
+    
+    const today = new Date(
+        `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`);
+
+    if(today >= formattedDate) return false;
+
+    // fetch list with all days and if the organisation is open on that days
+    return await fetch(`/api/orders/deliveryDates`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }).then((res) => res.json())
+        .then((data) => {
+
+            const day = formattedDate.getDay();
+
+            const days = data.schedulingData.availableDays;
+
+            switch (day) {
+                case 1:
+                    return days.monday;
+                case 2:
+                    return days.tuesday;
+                case 3:
+                    return days.wednesday;
+                case 4:
+                    return days.thursday;
+                case 5:
+                    return days.friday;
+                case 6:
+                    return days.saturday;
+                case 0:
+                    return days.sunday;
+            }
+
+        }).catch((error) => {
+            console.error(`Fetch error: could not fulfill get request
+        to get addresses. Errormessage: ${error}`);
+            return false;
+        });
+
+}
+
+//Un-hides the 'delivery date' option depending on whether
+// 'planned mode' is enabled or not.
+await fetch(`/api/orders/deliveryDates`, {
+    method: "GET",
+    headers: {
+        "Content-Type": "application/json",
+    },
+}).then((res) => res.json())
+    .then((data) => {
+        if(data.schedulable)
+            document.querySelector("#deliveryDateContainer")
+                .classList.remove("hidden");
+    });
+
+// adds an eventlistener to validate the form before submitting
+document
+    .getElementById('submitButton')
+    .addEventListener('click', async (event) => {
+        event.preventDefault();
+
+        let wrongInputs = [];
+        let wrongDateInput = [];
+
+        const inputs = document.querySelectorAll('input');
+
+        // checks for wrong inputs
+        for (let i = 0; i &lt; inputs.length; i++) {
+            inputs[i].classList.remove('bg-red-50', 'border-red-500');
+            if (inputs[i].id !== 'address' &amp;&amp; inputs[i].type !== 'checkbox' &amp;&amp; inputs[i].type !== 'date') {
+                document.getElementById(`${inputs[i].id}_p`).innerHTML = '';
+                if (inputs[i].value === '') {
+                    wrongInputs.push(inputs[i]);
+                }
+            } else if(inputs[i].type === 'date') {
+                document.getElementById(`${inputs[i].id}_p`).innerHTML = '';
+                let isCorrectDate = await checkDate(inputs[i].value);
+                if(inputs[i].value === null || inputs[i].value === "" || !isCorrectDate) {
+                    console.log('adding input to wrongDateInputs')
+                    wrongDateInput.push(inputs[i]);
+                }
+
+            }
+        }
+
+        // check if format is selected
+        if (sizeFormatInput.value === '') {
+            sizeFormatInput.classList.add('bg-red-50', 'border-red-500');
+            wrongInputs.push(sizeFormatInput);
+        } else {
+            sizeFormatInput.classList.remove('bg-red-50', 'border-red-500');
+        }
+
+        if (wrongInputs.length === 0 &amp;&amp; wrongDateInput.length === 0) {
+            const values = {
+                email: emailInput.value,
+                weight: weightInput.value,
+                street: streetInput.value,
+                house_number: houseNumberInput.value,
+                postal_code: postalCodeInput.value,
+                city: cityInput.value,
+                country: countryInput.value,
+                format_id: sizeFormatInput.value,
+                is_pickup: pickupInput.checked,
+                price: priceInput.value,
+                coordinates: JSON.stringify(coordinates),
+                delivery_date: deliveryDateInput.value,
+            };
+
+            // creates a new order
+            await fetch(`/api/orders/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values),
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                      window.location.href = `/dashboard/overview`;
+                    } else if(response.status === 500) {
+                        // adds red border, background and error message to email input
+                        emailInput.classList.add("bg-red-50", "border-red-500");
+                        document.querySelector("#email_p").innerHTML = "Wrong email-address!";
+                    }
+                })
+                .catch((error) => {
+                    console.error(`Fetch error: could not fulfill post request
+             to create order. Errormessage: ${error}`);
+                });
+        } else {
+
+            // adds red border, background and error message to wrong inputs
+
+            wrongInputs.forEach((input) => {
+                input.classList.add('bg-red-50', 'border-red-500');
+                document.getElementById(`${input.id}_p`).innerHTML =
+                    "This field can't be empty!";
+            });
+
+            wrongDateInput.forEach(input => {
+                input.classList.add('bg-red-50', 'border-red-500');
+                document.getElementById(`${input.id}_p`).innerHTML =
+                    "Date is either in the past or outside of opening days!";
+            })
+
+        }
+    });
+
+// check if a format is selected
+sizeFormatInput.addEventListener('change', () => {
+    if (sizeFormatInput.value === '') {
+        sizeFormatInput.classList.add('bg-red-50', 'border-red-500');
+        wrongInputs.push(sizeFormatInput);
+    } else {
+        sizeFormatInput.classList.remove('bg-red-50', 'border-red-500');
+    }
+});
+
+// checks if the postal code input is in dutch postal code format
+postalCodeInput.addEventListener(
+    'keyup',
+    delay((e) => {
+        const postal_code_regex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
+        postalCodeInput.classList.remove(
+            'bg-red-50',
+            'focus:border-red-500',
+            'focus:ring-red-500',
+            'border-red-500',
+        );
+        document.getElementById('postal_code_p').innerHTML = '';
+
+        if (
+            !postal_code_regex.test(postalCodeInput.value) &amp;&amp;
+            postalCodeInput.value !== ''
+        ) {
+            postalCodeInput.classList.add(
+                'bg-red-50',
+                'focus:border-red-500',
+                'focus:ring-red-500',
+                'border-red-500',
+            );
+            document.getElementById('postal_code_p').innerHTML =
+                'Invalid postal code!';
+        }
+    }, 500),
+);
+
+// adds address suggestions under the input to choose from
+addressInput.addEventListener(
+    'keyup',
+    delay(async (e) => {
+        if (addressInput.value === '') return;
+
+        // look up all addresses that match the address input query/value
+        await fetch(`/api/ors/find/${addressInput.value}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then((res) => res.json())
+            .then((data) => {
+                const table = document.getElementById("addresses");
+                table.innerHTML = "";
+
+                if(data.features.length > 0) {
+
+                    // adds all addresses under the input
+                    data.features.forEach((address) => {
+                        if(address.properties.housenumber &amp;&amp; address.properties.postalcode) {
+                            let tr = document.createElement("tr");
+                            tr.classList.add("hover:bg-gray-200", "hover:cursor-pointer");
+                            tr.addEventListener("click", async () => {
+                                postalCodeInput.value = address.properties.postalcode;
+                                streetInput.value = address.properties.street;
+                                houseNumberInput.value = address.properties.housenumber;
+                                cityInput.value = address.properties.locality;
+                                countryInput.value = address.properties.country;
+                                table.innerHTML = "";
+                                coordinates = {long: address.geometry.coordinates[1], lat: address.geometry.coordinates[0]};
+                            });
+                            let newAddress = document.createElement("td");
+                            newAddress.innerHTML = address.properties.label;
+                            newAddress.classList.add("py-1", "px-3");
+                            tr.appendChild(newAddress);
+                            table.appendChild(tr);
+                        }
+                    });
+
+                }
+            }).catch((error) => {
+                console.error(`Fetch error: could not fulfill get request
+        to get addresses. Errormessage: ${error}`);
+            });
+    }, 500),
+);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#checkDate">checkDate</a></li><li><a href="global.html#compareOrganisationTime">compareOrganisationTime</a></li><li><a href="global.html#compareTime">compareTime</a></li><li><a href="global.html#loadCheckpoints">loadCheckpoints</a></li><li><a href="global.html#loadCompletedCheckpoints">loadCompletedCheckpoints</a></li><li><a href="global.html#loadFailedCheckpoints">loadFailedCheckpoints</a></li><li><a href="global.html#loadGoogleMapsRedirect">loadGoogleMapsRedirect</a></li><li><a href="global.html#loadUncompletedCheckpoints">loadUncompletedCheckpoints</a></li><li><a href="global.html#navToggle">navToggle</a></li><li><a href="global.html#postGoal">postGoal</a></li><li><a href="global.html#postVote">postVote</a></li><li><a href="global.html#setupPushNotifications">setupPushNotifications</a></li><li><a href="global.html#showError">showError</a></li><li><a href="global.html#votingModalToggle">votingModalToggle</a></li><li><a href="global.html#.onclick">.onclick</a></li><li><a href="global.html#submitAnswerToServer">submitAnswerToServer</a></li><li><a href="global.html#updateFailedOrderStatus">updateFailedOrderStatus</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri Jun 10 2022 16:11:15 GMT+0200 (Midden-Europese zomertijd)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

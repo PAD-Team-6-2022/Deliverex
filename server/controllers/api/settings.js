@@ -1,9 +1,7 @@
 const router = require('express').Router();
 const {Format, User, Company, Location} = require("../../models");
 const auth = require("../../middleware/auth");
-/**
- * hierin edit je de formaten op de database door de inputs
- */
+
 router.put('/editFormat/:id', (req, res) => {
     Format.update(
         {
@@ -24,8 +22,7 @@ router.put('/editFormat/:id', (req, res) => {
         });
 });
 /**
- * hierin maak je een nieuwe format, links is database rechts is html tags
- *
+ * Laad in de settings pagina met alle gegevens van de ingelogde account
  */
 router.post('/setting', auth(true), (req, res) => {
     Format.create({
@@ -46,6 +43,9 @@ router.post('/setting', auth(true), (req, res) => {
         });
 });
 
+/**
+ * Account gegevens worden geupdate
+ */
 router.put('/editAccount', (req, res) => {
     console.log(req);
     User.update(
@@ -65,6 +65,9 @@ router.put('/editAccount', (req, res) => {
         });
 });
 
+/**
+ * Precentage naar doel wordt hier aangepast
+ */
 router.put('/editDoelPercentage', (req, res) => {
     Company.update(
         {
@@ -82,6 +85,9 @@ router.put('/editDoelPercentage', (req, res) => {
         });
 });
 
+/**
+ * Winkel gegevens worden hier aangepast
+ */
 router.put('/editStore', async (req, res) => {
     Company.update(
         {
