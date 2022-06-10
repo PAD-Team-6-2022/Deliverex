@@ -12,6 +12,8 @@ const {User, Company, Location, WeekSchedule, Order, Organisation} = require('..
 const {Op} = require('sequelize');
 const sequelize = require('../../db/connection');
 
+// Redirect to the overview page if visitng the root page
+// because it doesn't exist.
 router.get('/', auth(true), (req, res) => {
     res.redirect('/dashboard/overview');
 });
@@ -232,6 +234,9 @@ router.get(
     },
 );
 
+// Rendering the sign in page and getting data from the flash
+// since this page handles a two step sign in process if no
+// password for a username hasn't been created yet.
 router.get('/signin', auth(false), (req, res) => {
     res.render('dashboard/signin', {
         title: 'Sign In - Dashboard',
@@ -253,6 +258,8 @@ router.post(
         // Continue if a password was provided
         if (password) return next();
 
+        // Check if the request has a setup password, that'd mean
+        // the user had no password set yet.
         if (setup_password) {
             const validated = [];
 
@@ -261,6 +268,7 @@ router.post(
             if (setup_password !== setup_confirm_password)
                 validated.push({id: 'password-match', message: 'Passwords do not match'});
 
+            // If the validation failed, redirect to the sign in page with validation errors in the flash
             if (validated.length > 0) {
                 req.flash('validated', validated);
 
@@ -272,6 +280,7 @@ router.post(
             }
 
             try {
+                // Create a new user with the provided password
                 await User.update(
                     {
                         password: setup_password,
@@ -308,6 +317,8 @@ router.post(
             return;
         }
 
+        // Find a user with the provided username and include the password to know whether
+        // it is null or actually set by the user, it would then be a hashed password.
         const user = await User.findOne({where: {username}, attributes: ['password']});
 
         if (!user) {
@@ -324,6 +335,8 @@ router.post(
         }
 
         if (!user.password) {
+            // User has no password set, flash necessary data to the next
+            // request and redirect to the sign in page
             req.flash('complete', 'false');
             req.flash('setup', 'true');
             req.flash('username', username);
@@ -332,6 +345,9 @@ router.post(
                 res.redirect('/dashboard/signin');
             });
         } else {
+            // User has a password and may now sign in, pass on the username
+            // to the next request because the username input is readonly,
+            // and so that the user doens't have to type it again.
             req.flash('complete', 'true');
             req.flash('username', username);
 
@@ -340,6 +356,8 @@ router.post(
             });
         }
     },
+    // User password to authenticate the user with the provided
+    // username and password inside the body.
     passport.authenticate('local', {
         failureRedirect: '/dashboard/signin',
     }),
@@ -354,6 +372,7 @@ router.post(
     },
 );
 
+// Sign out the user and redirect the user to the root homepage.
 router.get('/signout', auth(true), (req, res) => {
     req.logout();
     res.redirect('/');

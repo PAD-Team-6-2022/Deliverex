@@ -18,11 +18,7 @@ export namespace Client {
 export class Client {
     public order: OrderDAO;
 
-    public constructor(private readonly options: Client.Options) {
+    public constructor(public readonly options: Client.Options) {
         this.order = new OrderDAO();
-    }
-
-    getOptions(): Client.Options {
-        return this.options;
     }
 }
