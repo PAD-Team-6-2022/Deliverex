@@ -1,3 +1,10 @@
+/**
+ * Middleware for ordering model results.
+ * 
+ * @param {*} defaultSort asc, or desc.
+ * @param {*} defaultOrder default order
+ * @param {*} allowedSorts columns allowed for sorting
+ */
 const ordering =
     (defaultSort, defaultOrder, allowedSorts = [defaultSort]) =>
     (req, res, next) => {
