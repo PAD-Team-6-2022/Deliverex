@@ -1,7 +1,5 @@
 import { delay } from "../../util.js";
 
-const scheduleId = document.querySelector("[data-schedule-id]").getAttribute("data-schedule-id");
-
 const postalCodeInput = document.getElementById("postal_code");
 const streetInput = document.getElementById("street");
 const houseNumberInput = document.getElementById("house_number");
@@ -18,12 +16,14 @@ const addressInputs = document.querySelectorAll("[data-input-address]");
 
 let coordinates = [];
 
+// adds an eventlistener to validate start location form before submitting
 addressButton.addEventListener("click", async (event) => {
 
    event.preventDefault();
 
    let wrongInputs = [];
 
+   // checks for wrong inputs
    addressInputs.forEach(input => {
 
        input.classList.remove(
@@ -47,6 +47,7 @@ addressButton.addEventListener("click", async (event) => {
            coordinates: JSON.stringify(coordinates),
        }
 
+       // creates or updates a week schedule
        await fetch(`/api/courier/location/${userId}/${locationId ? locationId : "nan"}`, {
            method: "POST",
            headers: {
@@ -63,6 +64,7 @@ addressButton.addEventListener("click", async (event) => {
        });
 
    } else {
+       // adds red border, background and error message to each wrong input
        wrongInputs.forEach((input) => {
            input.classList.add(
                "bg-red-50",
@@ -132,6 +134,8 @@ function compareOrganisationTime(t1, t2) {
 
 }
 
+const scheduleId = document.querySelector("[data-schedule-id]").getAttribute("data-schedule-id");
+
 const scheduleButton = document.getElementById("saveTimetable");
 
 const scheduleInputs = document.querySelectorAll("[data-timetable-input]");
@@ -149,8 +153,7 @@ scheduleInputs.forEach(input => {
     })
 })
 
-// add eventlistener to save button of schedule
-// and validate all inputs
+// adds an eventlistener to validate working times form before submitting
 scheduleButton.addEventListener("click", async (event) => {
 
     event.preventDefault();
@@ -159,6 +162,7 @@ scheduleButton.addEventListener("click", async (event) => {
     let wrongTimeInputs = [];
     let wrongOrganisationTimeInputs = [];
 
+    // checks for wrong inputs
     scheduleInputs.forEach((input) => {
         input.classList.remove(
             "bg-red-50",
@@ -244,6 +248,7 @@ scheduleButton.addEventListener("click", async (event) => {
         if(!saturdayStart || !saturdayEnd || document.getElementById("saturday_span").innerHTML === "Closed") values.saturday = null;
         if(!sundayStart || !sundayEnd || document.getElementById("sunday_span").innerHTML === "Closed") values.sunday = null;
 
+        // creates or updates a week schedule
         await fetch(`/api/courier/schedule/${scheduleId}`, {
             method: "POST",
             headers: {
@@ -260,6 +265,9 @@ scheduleButton.addEventListener("click", async (event) => {
         });
 
     } else {
+
+        // adds red border, background and error message to each wrong input
+        
         wrongInputs.forEach((input) => {
             input.classList.add(
                 "bg-red-50",
@@ -287,6 +295,7 @@ scheduleButton.addEventListener("click", async (event) => {
 
 })
 
+// checks if the postal code input is in dutch postal code format
 postalCodeInput.addEventListener("keyup", delay((e) => {
     const postal_code_regex = /^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i;
     postalCodeInput.classList.remove(
@@ -308,10 +317,12 @@ postalCodeInput.addEventListener("keyup", delay((e) => {
     }
 }, 500));
 
+// adds address suggestions under the input to choose from
 addressInput.addEventListener("keyup", delay(async (e) => {
 
     if(addressInput.value === "") return;
 
+    // look up all addresses that match the address input query/value
     await fetch(`/api/ors/find/${addressInput.value}`, {
         method: "GET",
         headers: {
@@ -324,6 +335,7 @@ addressInput.addEventListener("keyup", delay(async (e) => {
 
             if(data.features.length > 0) {
 
+                // adds all addresses under the input
                 data.features.forEach((address) => {
                     if(address.properties.housenumber && address.properties.postalcode) {
                         let tr = document.createElement("tr");
