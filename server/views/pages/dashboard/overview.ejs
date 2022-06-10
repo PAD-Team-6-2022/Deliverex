@@ -48,6 +48,10 @@
         </div>
     </div>
 <script>
+    /**
+     * hier wordt er een chart gemaakt en de informatie die wij van database krijgen wordt in chart gezet
+     * @return chart met gesorteerd per maand deliveries
+     */
     const ctx = document.getElementById('myChart').getContext('2d');
     const myChart = new Chart(ctx, {
         type: 'line',
@@ -89,6 +93,10 @@
             },
         },
     });
+    /**
+     * hier wordt er een chart gemaakt en de informatie die wij van database krijgen wordt in chart gezet
+     * @return chart met gesorteerd per maand omzet
+     */
     const ctx2 = document.getElementById('myChart2').getContext('2d');
     const myChart2 = new Chart(ctx2, {
         type: 'line',

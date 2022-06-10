@@ -104,6 +104,7 @@ document
 
 /**
  * Handle the format submit button and try to save the inputs
+ *
  */
 document
     .getElementById('saveFormat')
@@ -165,7 +166,7 @@ document
          to update order assignment. Errormessage: ${error}`);
             });
     });
-
+//hier verwijdert hij formaten, met foreach pak je alle knopjes.
 document.querySelectorAll('[data-format-code]').forEach((format) => {
     const id = format.getAttribute('data-format-code');
 

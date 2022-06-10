@@ -33,7 +33,9 @@ router.delete('/:id', (req, res) => {
             });
         });
 });
-
+/**
+ * 
+ */
 router.delete('/settings/:id', (req, res) => {
     Format.destroy({ where: { id: req.params.id } })
         .then(() => {
