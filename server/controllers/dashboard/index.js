@@ -129,6 +129,10 @@ router.get(
                     break;
             }
         } else {
+            /**
+             * Sorteer aantal deliveries op maand
+             * @return deliverred per maand
+             */
             delivered = await Order.findAll(
                 {
                     where: {status: 'DELIVERED'},
@@ -153,7 +157,10 @@ router.get(
 
                 chart.push(month ? month.getDataValue('orders') : 0);
             }
-
+            /**
+             * Sorteer aantal omzet op maand
+             * @return omzet per maand
+             */
             totaalOmzet = await Order.findAll(
                 {
                     attributes: [

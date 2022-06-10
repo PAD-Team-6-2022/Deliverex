@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const {Format, User, Company, Location} = require("../../models");
 const auth = require("../../middleware/auth");
-
+/**
+ * hierin edit je de formaten op de database door de inputs
+ */
 router.put('/editFormat/:id', (req, res) => {
     Format.update(
         {
@@ -21,7 +23,10 @@ router.put('/editFormat/:id', (req, res) => {
             res.status(500).json(err);
         });
 });
-
+/**
+ * hierin maak je een nieuwe format, links is database rechts is html tags
+ *
+ */
 router.post('/setting', auth(true), (req, res) => {
     Format.create({
         length: req.body.length,

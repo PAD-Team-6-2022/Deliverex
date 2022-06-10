@@ -2,7 +2,7 @@ import order from '../fixtures/order.json';
 
 // check if track form shows all errors and finally submits correctly and shows tracking page
 describe('Hij logt in en dan gaat die naar settings', () => {
-    it('Shows all form errors', () => {
+    it('Logs into the website and tests the formats page', () => {
         cy.visit('http://localhost:3000/dashboard/signin')
         //bij de sign page pakt hij de inloggegevens en daar vult hij de inloggegevens
         cy.get('#username-input').type("Ondernemer");
