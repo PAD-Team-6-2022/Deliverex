@@ -90,10 +90,12 @@ self.addEventListener('push', async (event) => {
 
 /**
  * Listens for if the user clicks on a certain notification that was
- * shown by this serviceworker. The event is trigged specifically if
- * the user presses on 'accept' or on the notification message itself.
+ * shown by this serviceworker. The event is triggered if the user
+ * presses on a specific button or on the notification message itself.
  */
 self.addEventListener('notificationclick', async (event) => {
+
+    console.log('notificationClick event triggered')
 
     //First, extract the notification
     const notification = event.notification;
@@ -112,17 +114,18 @@ self.addEventListener('notificationclick', async (event) => {
     //Obtain the notification action (defined in the 'push' eventhandler)
     let action = event.action;
 
-    //The request is also considered 'accepted' in case the user
-    // didn't click on any specific action (but still clicked)
+    //Did the user not specifically tap 'Accept'? Then press the
+    //set the notification to 'accepted'. This is necessary because
+    //pressing the 'deny' button will also trigger this event.
     if (action.length === 0)
         action = 'accepted';
 
-    //Submit the answer to the server
+    //Submit the answer to the server. 'waitUntil()' is called to make
+    //sure the data is updated before opening the window to the dashboard
     event.waitUntil(submitAnswerToServer(action, notification.data.eventData)
         .catch((err) => console.error(`Error: could not submit request
          answer to server. Errormessage: ${err}`)));
 
-    //TODO: Change this to the live-deployed domain link
     //If no 'denied' message was interpreted, open the 'dashboard' window
     if (action !== 'denied')
         clients.openWindow('http://deliverex.herokuapp.com/dashboard/overview')
@@ -137,6 +140,8 @@ self.addEventListener('notificationclick', async (event) => {
  * swipes it away.
  */
 self.addEventListener('notificationclose', (event) => {
+
+    console.log('notificationClose event triggered')
 
     //First, extract the notification
     const notification = event.notification;
