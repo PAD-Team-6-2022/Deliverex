@@ -29,13 +29,4 @@ describe('Login and checks if settings page works', () => {
         cy.get('#saveAccount').click()
 
     });
-
-
-    // it('Logs into the website', () => {
-    //     cy.visit('/')
-    //     cy.visit('/dashboard/signin')
-    //     cy.get('#username-input').type("Ondernemer");
-    //     cy.get('#password-input').type("test");
-    //     cy.get('.gap-2').click();
-    // });
 });

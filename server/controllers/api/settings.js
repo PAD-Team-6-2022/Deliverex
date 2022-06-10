@@ -21,7 +21,9 @@ router.put('/editFormat/:id', (req, res) => {
             res.status(500).json(err);
         });
 });
-
+/**
+ * Laad in de settings pagina met alle gegevens van de ingelogde account
+ */
 router.post('/setting', auth(true), (req, res) => {
     Format.create({
         length: req.body.length,
@@ -41,6 +43,9 @@ router.post('/setting', auth(true), (req, res) => {
         });
 });
 
+/**
+ * Account gegevens worden geupdate
+ */
 router.put('/editAccount', (req, res) => {
     console.log(req);
     User.update(
@@ -60,6 +65,9 @@ router.put('/editAccount', (req, res) => {
         });
 });
 
+/**
+ * Precentage naar doel wordt hier aangepast
+ */
 router.put('/editDoelPercentage', (req, res) => {
     Company.update(
         {
@@ -77,6 +85,9 @@ router.put('/editDoelPercentage', (req, res) => {
         });
 });
 
+/**
+ * Winkel gegevens worden hier aangepast
+ */
 router.put('/editStore', async (req, res) => {
     Company.update(
         {
