@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/api/ors.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/api/ors.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * ors.js does the heavy lifting behind the functionality of the
  * courier dashboard. In summary, it is mainly responsible for
  * the following tasks:
@@ -89,7 +117,7 @@ const calculateOrsRoute = (jobs, shipments, vehicles) => {
  * Calculates the amount of orders that every active courier
  * is currently assigned to and returns it.
  *
- * @returns {Promise<?>} an object containing the amount
+ * @returns {Promise&lt;?>} an object containing the amount
  * of orders per courier id.
  */
 const calculateCourierWorkLoads = async () => {
@@ -225,7 +253,7 @@ const initiateOrderRequestCycle = async (orderId) => {
     //Extract the (ordered) courier ID's and put them in a separate array
     //representing a queue
     const courierQueue = [];
-    for (let i = 0; i < courierOrderAmounts.length; i++) {
+    for (let i = 0; i &lt; courierOrderAmounts.length; i++) {
         courierQueue.push(courierOrderAmounts[i].courier_id);
     }
 
@@ -328,7 +356,7 @@ const setPlannedMode = (cronTime, dayOfTheWeek) => {
 
             //Loop through every order of every route to assign the right orders to the right couriers
             routingData.routes.forEach((route) => {
-                for (let i = 0; i < route.steps.length; i++) {
+                for (let i = 0; i &lt; route.steps.length; i++) {
                     //To prevent updating the same order twice, we ignore steps of type 'start' and 'delivery'
                     if (route.steps[i].type === 'pickup')
                         Order.update(
@@ -395,7 +423,7 @@ const setHourlyDeliveryRequests = (timeWindow, dayOfTheWeek) => {
     //Constructs an hourly schedule for the
     // currently looped-day in cron-format
     let hourlyRequestSchedule = convertToCronFormat(timeWindow.start);
-    for (let i = 0; i < workHoursAmount; i++) {
+    for (let i = 0; i &lt; workHoursAmount; i++) {
         hourlyRequestSchedule += `,${moment(timeWindow.start, 'HH:mm:ss')
             .add(i + 1, 'h')
             .format('H')}`;
@@ -441,7 +469,7 @@ const configurePushNotifications = () => {
         'l3gak50_jM9AhpWMwmn3sOkd8Ga-xhnzhq-zYpVqueOnI';
     const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 
-    //Sets the public & private vapid keys. The mail adres below can be seen as redundant.
+    //Sets the public &amp; private vapid keys. The mail adres below can be seen as redundant.
     web_push.setVapidDetails('mailto:test@test.com', publicVapidKey, privateVapidKey);
 }
 
@@ -482,7 +510,7 @@ const getCheckpointsFromRoute = (routingData, orders) => {
         //Loop through each step (checkpoint) of the route
         routingData.routes[0].steps.forEach((step) => {
             orders.forEach((order) => {
-                if (order.id === step.id && step.type !== 'start') {
+                if (order.id === step.id &amp;&amp; step.type !== 'start') {
 
                     //In case the type equals 'job', override that as a 'delivery'
                     step.type = step.type === 'pickup' ? 'pickup' : 'delivery';
@@ -534,7 +562,7 @@ const getCheckpointsFromRoute = (routingData, orders) => {
  *
  * @param orders a list of orders
  * @param courierLocation the location of the courier
- * @returns {Promise<{length}|*>} the data of the route
+ * @returns {Promise&lt;{length}|*>} the data of the route
  */
 const calculateRoute = async (orders, courierLocation) => {
 
@@ -570,13 +598,13 @@ const calculateRoute = async (orders, courierLocation) => {
                     courierWeekSchedule.dataValues)[index];
         })
 
-    //Extract the start & end times of the workday
+    //Extract the start &amp; end times of the workday
     const beginWorkDay = getTimestampInSeconds(courierDaySchedule.start);
     const endWorkDay = getTimestampInSeconds(courierDaySchedule.end);
 
     //Calculate the timewindow from now till the end of the workday.
     // For this, we take the current timestamp and clamp it between
-    // the start & end time.
+    // the start &amp; end time.
     const currentTimeInSeconds = moment()
         .diff(moment().startOf('day'), 'seconds');
     const working_hours = [
@@ -632,7 +660,7 @@ const setTimingActions = () => {
 
             //Loop over each day of the week and set the appropriate timing
             // events (cronjobs) based on the timewindow associated with each day
-            for (let i = 0; i < 7; i++) {
+            for (let i = 0; i &lt; 7; i++) {
 
                 //Retrieve the name of the week and its correlating start- and end times
                 const dayOfTheWeek = Object.keys(weekSchedule)[i];
@@ -674,7 +702,7 @@ onSameDayDelivery((orderId) => {
  * specific order in case the orders status has been changed to 'READY'.
  */
 onOrderStatusChange((id, status) => {
-    if (pendingOrderQueue.includes(Number(id)) && status === 'READY')
+    if (pendingOrderQueue.includes(Number(id)) &amp;&amp; status === 'READY')
         initiateOrderRequestCycle(id);
 });
 
@@ -687,7 +715,7 @@ router.post('/subscribe', auth(true), (req, res) => {
 
     //If there is already a subscription active of this user, remove the old
     //subscription before it can be replaced with this new one.
-    for (let i = 0; i < activeCouriers.length; i++) {
+    for (let i = 0; i &lt; activeCouriers.length; i++) {
         if (activeCouriers[i].id === req.user.id)
             activeCouriers.splice(i, 1);
     }
@@ -841,7 +869,7 @@ router.get('/coords/:longitude/:latitude', (req, res) => {
  */
 router.get("/find/:query", (req, res) => {
     fetch(`https://api.openrouteservice.org/geocode/search?api_key=${
-            ORS_API_KEY}&text=${req.params.query}&boundary.country=NL`)
+            ORS_API_KEY}&amp;text=${req.params.query}&amp;boundary.country=NL`)
         .then((res) => res.json())
         .then((data) => {
             res.status(200).json({
@@ -886,4 +914,26 @@ cron.schedule(
     {scheduled: true},
 );
 
-module.exports = router;
+module.exports = router;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#allowedTypes">allowedTypes</a></li><li><a href="global.html#calculateCourierWorkLoads">calculateCourierWorkLoads</a></li><li><a href="global.html#calculateOrsRoute">calculateOrsRoute</a></li><li><a href="global.html#calculateRoute">calculateRoute</a></li><li><a href="global.html#configureFailedDeliveries">configureFailedDeliveries</a></li><li><a href="global.html#configurePushNotifications">configurePushNotifications</a></li><li><a href="global.html#convertOrdersToShipments">convertOrdersToShipments</a></li><li><a href="global.html#convertToCronFormat">convertToCronFormat</a></li><li><a href="global.html#convertUsersToVehicles">convertUsersToVehicles</a></li><li><a href="global.html#getCheckpointsFromRoute">getCheckpointsFromRoute</a></li><li><a href="global.html#getCompanyId">getCompanyId</a></li><li><a href="global.html#getGoals">getGoals</a></li><li><a href="global.html#getTimestampInSeconds">getTimestampInSeconds</a></li><li><a href="global.html#initiateOrderRequestCycle">initiateOrderRequestCycle</a></li><li><a href="global.html#router">router</a></li><li><a href="global.html#sendRequestNotification">sendRequestNotification</a></li><li><a href="global.html#setHourlyDeliveryRequests">setHourlyDeliveryRequests</a></li><li><a href="global.html#setPlannedMode">setPlannedMode</a></li><li><a href="global.html#setTimingActions">setTimingActions</a></li><li><a href="global.html#transformOrderweights">transformOrderweights</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri Jun 10 2022 16:04:58 GMT+0200 (Midden-Europese zomertijd)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

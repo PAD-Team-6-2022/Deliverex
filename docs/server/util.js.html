@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: util.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: util.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const { Op } = require("sequelize");
+const EventEmitter = require('events');
+const moment = require("moment");
+
+const searchQueryToWhereClause = (query, fields) => {
+  return {
+    [Op.or]: fields.map((field) => ({
+      [field]: {
+        [Op.like]: `%${query}%`,
+      },
+    })),
+  };
+};
+
+/**
+ * Takes a list of orders and uses it to produce
+ * a list of orders in shipment-format. To be fed to
+ * the ORS route optimization endpoint.
+ *
+ * @param orders array of orders
+ * @returns shipments array of shipments
+ */
+const convertOrdersToShipments = (orders) => {
+
+  const shipments = [];
+  orders.forEach((order) => {
+
+    //TODO:
+    // -change the way pickup coordinates should be retrieved (retrieve it from the company)
+    // -check &amp; account for the time period the order is planned for (morning, afternoon, evening)
+    // -calculate the 'amount' either based on the order's weight and format, or the actual amount of packages
+
+    const id = order.getDataValue("id");
+
+    const pickUpCoordinates = order.userCreated.company.location.coordinates.coordinates;
+    const deliveryCoordinates = order.coordinates.coordinates;
+
+    shipments.push({
+      amount: [1],
+      skills: [1],
+      pickup: {
+        id,
+        service: 60,
+        location: pickUpCoordinates
+      },
+      delivery: {
+        id,
+        service: 60,
+        location: deliveryCoordinates
+      }
+    });
+  });
+  return shipments;
+}
+
+const convertOrdersToJobs = (orders) => {
+  const jobs = [];
+
+  orders.forEach((order) => {
+    //TODO:
+    // -change the way pickup coordinates should be retrieved (retrieve it from the company)
+    // -check &amp; account for the time period the order is planned for (morning, afternoon, evening)
+    // -calculate the 'amount' either based on the order's weight and format, or the actual amount of packages
+
+    const id = order.getDataValue("id");
+
+    const deliveryCoordinates = order.coordinates.coordinates;
+
+    jobs.push({
+      id,
+      amount: [1],
+      skills: [1],
+      service: 60,
+      location: deliveryCoordinates,
+      delivery: [1]
+    });
+  });
+  return jobs;
+}
+
+/**
+ * Returns the timestamp of a specific moment in seconds
+ *
+ * @param timestamp
+ * @returns {number}
+ */
+const getTimestampInSeconds = (timestamp) => {
+  return moment(timestamp, "HH:mm:ss").diff(moment().startOf('day'), 's');
+}
+
+/**
+ * Takes a list of users and uses it to produce
+ * a list of users in vehicle-format. To be fed to
+ * the ORS route optimization endpoint.
+ *
+ * @param users array of orders
+ * @returns shipments array of shipments
+ */
+const convertUsersToVehicles = (users) => {
+  const vehicles = [];
+
+  users.forEach((user) => {
+
+    //TODO:
+    // -retrieve &amp; utilize working hours of this user
+    // -retrieve &amp; utilize the users starting coordinates
+    // -retrieve &amp; utilize the vehicle profile of the user from database
+    // -calculate the users capacity (based on his vehicle profile or some other factor(s))
+
+    //Coordinates representing Buikslotermeerplein shopping center. Hardcoded placeholder value.
+    const USER_START_COORDINATES = [4.9377803248666865, 52.39922180769369];
+
+    const id = user.getDataValue("id");
+
+    const rawWorkingHours = user.getDataValue('todaySchedule');
+
+    //Convert the working hour timestamps from 'HH:mm:ss' format to seconds since
+    //the day started. This is the format required by ORS.
+    const startingTime = getTimestampInSeconds(rawWorkingHours.start);
+    const endingTime = getTimestampInSeconds(rawWorkingHours.end);
+
+    vehicles.push({
+      id,
+      profile: "cycling-regular",
+      start: USER_START_COORDINATES,
+      capacity: [4],
+      skills: [1],
+      time_window: [startingTime, endingTime]
+    });
+  });
+  return vehicles;
+}
+
+const orderRequestEvents = new EventEmitter();
+
+const addOrderToDeliveryQueue = (id) => {
+  orderRequestEvents.emit('sameDayDelivery', id);
+}
+const onSameDayDelivery = (handlerCallBack) => {
+  orderRequestEvents.on('sameDayDelivery', handlerCallBack);
+}
+const notifyOrderStatusChange = (id, status) => {
+  orderRequestEvents.emit('orderStatusChange', id, status);
+}
+const onOrderStatusChange = (handlerCallBack) => {
+  orderRequestEvents.on('orderStatusChange', handlerCallBack);
+}
+
+module.exports = {
+  searchQueryToWhereClause,
+  convertOrdersToShipments,
+  convertUsersToVehicles,
+  convertOrdersToJobs,
+  addOrderToDeliveryQueue,
+  onSameDayDelivery,
+  notifyOrderStatusChange,
+  onOrderStatusChange,
+  getTimestampInSeconds
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#allowedTypes">allowedTypes</a></li><li><a href="global.html#calculateCourierWorkLoads">calculateCourierWorkLoads</a></li><li><a href="global.html#calculateOrsRoute">calculateOrsRoute</a></li><li><a href="global.html#calculateRoute">calculateRoute</a></li><li><a href="global.html#configureFailedDeliveries">configureFailedDeliveries</a></li><li><a href="global.html#configurePushNotifications">configurePushNotifications</a></li><li><a href="global.html#convertOrdersToShipments">convertOrdersToShipments</a></li><li><a href="global.html#convertToCronFormat">convertToCronFormat</a></li><li><a href="global.html#convertUsersToVehicles">convertUsersToVehicles</a></li><li><a href="global.html#getCheckpointsFromRoute">getCheckpointsFromRoute</a></li><li><a href="global.html#getCompanyId">getCompanyId</a></li><li><a href="global.html#getGoals">getGoals</a></li><li><a href="global.html#getTimestampInSeconds">getTimestampInSeconds</a></li><li><a href="global.html#initiateOrderRequestCycle">initiateOrderRequestCycle</a></li><li><a href="global.html#router">router</a></li><li><a href="global.html#sendRequestNotification">sendRequestNotification</a></li><li><a href="global.html#setHourlyDeliveryRequests">setHourlyDeliveryRequests</a></li><li><a href="global.html#setPlannedMode">setPlannedMode</a></li><li><a href="global.html#setTimingActions">setTimingActions</a></li><li><a href="global.html#transformOrderweights">transformOrderweights</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri Jun 10 2022 16:04:58 GMT+0200 (Midden-Europese zomertijd)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
