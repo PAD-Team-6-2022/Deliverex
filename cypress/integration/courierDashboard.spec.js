@@ -18,12 +18,14 @@ describe('Test of the courier dashboard', () => {
         cy.visit("http://localhost:3000/dashboard");
 
         //Enters the username 'bokko'
-        cy.get('#username-input').type("bokko")
-            .should('have.value', 'bokko');
+        cy.get('#username-input').type("bob")
+            .should('have.value', 'bob');
+
+        cy.get('#submitSign').click();
 
         //Enters the password 'Abracadabra123!'
-        cy.get('#password-input').type("Abracadabra123!")
-            .should('have.value', 'Abracadabra123!');
+        cy.get('#password-input').type("test")
+            .should('have.value', 'test');
 
         //Pressed login
         cy.get('.gap-2').click();
@@ -44,6 +46,18 @@ describe('Test of the courier dashboard', () => {
         cy.wait(1500);
         cy.get('#checkpointsTableContainer')
             .scrollTo('left', {duration: 1000});
+
+        //List of names of the columns of the checkpoint table
+        const checkpointColumns = ['indexContainer',
+            'typeContainer', 'addressContainer', 'postalCodeContainer',
+            'cityContainer', 'countryContainer', 'orderIdContainer',
+            'timeContainer'];
+
+        //Loop through the values of the first row of the checkpoints table
+        //to check whether the values of all columns have been loaded
+        for (let i = 0; i < checkpointColumns.length; i++) {
+            cy.get(`:nth-child(1) > :nth-child(1) > .flex > .${checkpointColumns[i]}`).should('not.be.empty');
+        }
 
         //Scroll below to the orders table
         cy.scrollTo('bottom', {duration: 1000});
