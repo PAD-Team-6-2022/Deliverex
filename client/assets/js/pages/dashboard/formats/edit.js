@@ -3,6 +3,7 @@ import '../../../tooltip.js';
 const id = document
     .querySelector('[data-format-id]')
     .getAttribute('data-format-id');
+//hier pak je de values van html en stuur je naar de database
 document
     .querySelector('#saveFormat')
     .addEventListener('click', async (event) => {
@@ -37,6 +38,7 @@ document
             length: document.querySelector('#length2').value,
             nameformat: document.querySelector('#nameformat2').value,
         };
+        //hier fetch je existing data from the database
         await fetch(`/api/settings/editFormat/${id}`, {
             method: 'PUT',
             headers: {
