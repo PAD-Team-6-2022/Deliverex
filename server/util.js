@@ -2,6 +2,15 @@ const { Op } = require("sequelize");
 const EventEmitter = require('events');
 const moment = require("moment");
 
+/**
+ * This is a utility function that takes a search query and transforms
+ * it into a usuable sequelize query using the sequelize/sql operators
+ * as LIKE.
+ * 
+ * @param {string} query the keywords to search for
+ * @param {string[]} fields the fields to search in
+ * @returns a sequelize 'where' query object
+ */
 const searchQueryToWhereClause = (query, fields) => {
   return {
     [Op.or]: fields.map((field) => ({

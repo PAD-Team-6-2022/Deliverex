@@ -8,6 +8,15 @@ const { searchQueryToWhereClause } = require('../../util');
 
 const router = require('express').Router();
 
+/**
+ * Used for the users table in the dashboard.
+ * It implements a few middlewares including:
+ * pagination, ordering, searching, and allowedTypes.
+ * 
+ * This will make it possible to have multiple pages,
+ * order and sort by column, search for columns, and
+ * restrict the page for certain user roles.
+ */
 router.get(
     '/',
     auth(true),
@@ -37,6 +46,10 @@ router.get(
     },
 );
 
+/**
+ * Used for editing users. The url takes a username instead
+ * of an id for the users experience
+ */
 router.get(
     '/:username/edit',
     auth(true),
@@ -63,6 +76,10 @@ router.get(
     },
 );
 
+/**
+ * Used for editing the actual user with a post request. This includes
+ * validation and error handling.
+ */
 router.post(
     '/:username/edit',
     auth(true),
@@ -140,6 +157,9 @@ router.post(
     },
 );
 
+/**
+ * Render the user add page
+ */
 router.get('/add', auth(true), allowedTypes(['ADMIN', 'SHOP_OWNER']), async (req, res) => {
     res.render('dashboard/users/add', {
         title: 'Add User - Dashboard',
@@ -149,6 +169,9 @@ router.get('/add', auth(true), allowedTypes(['ADMIN', 'SHOP_OWNER']), async (req
     });
 });
 
+/**
+ * Handles the user add post request with validation and error handling.
+ */
 router.post('/add', auth(true), async (req, res) => {
     const { type, role, username, email, password, confirm_password, notify } = req.body;
     const validated = [];

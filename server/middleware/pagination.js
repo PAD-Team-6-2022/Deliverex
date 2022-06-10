@@ -1,3 +1,8 @@
+/**
+ * Used for pagination
+ * 
+ * @param {*} limits increments
+ */
 const pagination = (limits) => (req, res, next) => {
   if (!limits || limits.length === 0)
     throw new Error("Pagination limits not set");

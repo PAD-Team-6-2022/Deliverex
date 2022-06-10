@@ -3,6 +3,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("../models/user");
 
+// Configure Passport to use the LocalStrategy
 passport.use(
   new LocalStrategy((username, password, cb) => {
     const errMessage = "Incorrect username or password";
@@ -25,10 +26,12 @@ passport.use(
   })
 );
 
+// Configure Passport to serialize the user
 passport.serializeUser((user, callback) => {
   callback(null, user.id);
 });
 
+// Configure Passport to deserialize the user
 passport.deserializeUser((id, callback) => {
   User.findByPk(id)
     .then((user) => callback(null, user))

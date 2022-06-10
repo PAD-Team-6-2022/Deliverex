@@ -1,5 +1,8 @@
 import { username, password } from '../fixtures/ondernemer.json';
 
+/**
+ * @author Milan de Kruijf
+ */
 describe("Log in to 'ondernemer', make a new user and log in to that user", () => {
     it("Logs in to 'ondernemer'", () => {
       cy.visit("/dashboard/signin")
