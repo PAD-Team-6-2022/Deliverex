@@ -53,10 +53,10 @@ describe('Test of the courier dashboard', () => {
             'cityContainer', 'countryContainer', 'orderIdContainer',
             'timeContainer'];
 
-        //Loop through the values of the first row of the checkpoints table
-        //to check whether the values of all columns have been loaded
+        //Loop through the values of the checkpoints table to check whether
+        // the values of all columns have been loaded
         for (let i = 0; i < checkpointColumns.length; i++) {
-            cy.get(`:nth-child(1) > :nth-child(1) > .flex > .${checkpointColumns[i]}`).should('not.be.empty');
+            cy.get(`.${checkpointColumns[i]}`).should('not.be.empty');
         }
 
         //Scroll below to the orders table
