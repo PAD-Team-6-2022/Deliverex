@@ -11,8 +11,14 @@ describe('Test of the courier dashboard', () => {
     //Defines what the test actually does
     it('Logs in and plays around with the options', () => {
 
+        //Guessed estimate of an avery phone's viewport
+        const MOBILE_VIEWPORT = {
+            horizontal: 440,
+            vertical: 851
+        }
+
         //Sets the resolution to a normal phone resolution
-        cy.viewport(440,851);
+        cy.viewport(MOBILE_VIEWPORT.horizontal,MOBILE_VIEWPORT.vertical);
 
         //Navigates to the dashboard of the site
         cy.visit("http://localhost:3000/dashboard");
