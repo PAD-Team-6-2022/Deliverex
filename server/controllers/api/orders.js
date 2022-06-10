@@ -34,7 +34,8 @@ router.delete('/:id', (req, res) => {
         });
 });
 /**
- * 
+ * Endpoint for deleting order
+ * hier in delete hij de order
  */
 router.delete('/settings/:id', (req, res) => {
     Format.destroy({ where: { id: req.params.id } })

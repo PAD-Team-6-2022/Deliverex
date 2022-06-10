@@ -11,7 +11,7 @@ document
         const height = document.getElementById('height2').value;
         const width = document.getElementById('width2').value;
         const length = document.getElementById('length2').value;
-
+        //hierin kijkt hij of er lege inputvelden zijn.
         if (formatname2 === '') {
             document.getElementById('error6').innerHTML =
                 'Format name cant be empty';
