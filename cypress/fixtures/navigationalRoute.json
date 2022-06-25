@@ -1,0 +1,85 @@
+{
+  "checkpoints": [
+    {
+      "location": {
+        "address": "Buikslotermeerplein 74",
+        "city": "Amsterdam",
+        "postal_code": "1025EQ",
+        "country": "The Netherlands"
+      },
+      "type": "pickup",
+      "order_id": 100159,
+      "time": "09:44:46"
+    },
+    {
+      "location": {
+        "address": "Buikslotermeerplein 74",
+        "city": "Amsterdam",
+        "postal_code": "1025EQ",
+        "country": "The Netherlands"
+      },
+      "type": "pickup",
+      "order_id": 100192,
+      "time": "09:45:46"
+    },
+    {
+      "location": {
+        "address": "Buikslotermeerplein 74",
+        "city": "Amsterdam",
+        "postal_code": "1025EQ",
+        "country": "The Netherlands"
+      },
+      "type": "pickup",
+      "order_id": 100145,
+      "time": "09:46:46"
+    },
+    {
+      "location": {
+        "address": "Vogelkade 20",
+        "city": "Amsterdam",
+        "postal_code": "1022XB",
+        "country": "Netherlands"
+      },
+      "type": "delivery",
+      "order_id": 100145,
+      "time": "09:56:56"
+    },
+    {
+      "location": {
+        "address": "Oterleekstraat 5",
+        "city": "Amsterdam",
+        "postal_code": "1023ED",
+        "country": "Netherlands"
+      },
+      "type": "delivery",
+      "order_id": 100192,
+      "time": "10:08:02"
+    },
+    {
+      "location": {
+        "address": "Ginnekenstraat 90",
+        "city": "Breda",
+        "postal_code": "4811JK",
+        "country": "Netherlands"
+      },
+      "type": "delivery",
+      "order_id": 100159,
+      "time": "17:06:18"
+    }
+  ],
+  "user": {
+    "id": 3,
+    "email": "bob@test.nl",
+    "username": "bob",
+    "role": "COURIER",
+    "scheduleId": 3,
+    "companyId": null,
+    "locationId": 4,
+    "createdAt": "2022-04-19T00:00:00.000Z",
+    "updatedAt": "2022-06-08T14:13:37.000Z",
+    "deletedAt": null,
+    "weekScheduleId": null,
+    "schedule_id": 3,
+    "company_id": null
+  }
+}

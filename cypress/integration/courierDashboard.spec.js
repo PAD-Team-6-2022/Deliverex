@@ -39,6 +39,32 @@ describe('Test of the courier dashboard', () => {
         //Checks whether we are now on the courier page
         cy.url().should('include', '/dashboard/overview');
 
+        //Intercept the API call to get the navigational route and returns a mock response instead
+        cy.intercept('GET', '/api/ors/coords/*/*',{fixture: 'navigationalRoute.json'}).as('getNavigationalRoute');
+
+        //Check whether any API call has actually been fired by checking whether a mock response has been returned
+        cy.wait('@getNavigationalRoute').then((interception) => {
+            assert.isNotNull(interception.response.body, 'Received mock response for the navigational route.');
+        });
+
+        //List of names of the columns of the checkpoint table
+        const checkpointColumns = ['indexContainer',
+            'typeContainer', 'addressContainer', 'postalCodeContainer',
+            'cityContainer', 'countryContainer', 'orderIdContainer',
+            'timeContainer'];
+
+        //Loop through the values of the checkpoints table to check whether
+        // the values of all rows and columns are properly displayed
+        for (let i = 0; i < 6; i++) {
+            for (let j = 0; j < 8; j++) {
+                cy.get(`:nth-child(${i+1}) > :nth-child(${j+1}) > .flex > .${checkpointColumns[j]}`)
+                    .should(($dataCell) => {
+                    const text = $dataCell.text();
+                    expect(text).to.match(/[0-9a-z-A-Z]/);
+                });
+            }
+        }
+
         //Scroll around on the page
         cy.scrollTo('top', {duration: 1000});
         cy.wait(1500);
@@ -52,18 +78,6 @@ describe('Test of the courier dashboard', () => {
         cy.wait(1500);
         cy.get('#checkpointsTableContainer')
             .scrollTo('left', {duration: 1000});
-
-        //List of names of the columns of the checkpoint table
-        const checkpointColumns = ['indexContainer',
-            'typeContainer', 'addressContainer', 'postalCodeContainer',
-            'cityContainer', 'countryContainer', 'orderIdContainer',
-            'timeContainer'];
-
-        //Loop through the values of the checkpoints table to check whether
-        // the values of all columns have been loaded
-        for (let i = 0; i < checkpointColumns.length; i++) {
-            cy.get(`.${checkpointColumns[i]}`).should('not.be.empty');
-        }
 
         //Scroll below to the orders table
         cy.scrollTo('bottom', {duration: 1000});

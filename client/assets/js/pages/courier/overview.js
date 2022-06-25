@@ -446,8 +446,7 @@ const setupPushNotifications = async () => {
                     //Pass the subscription object to the server so that
                     // it can send notifications to this client
                     passSubscriptionToServer(subscriptionObject)
-                        .then((data) => {
-                            console.log('Response data: ' + data);
+                        .then(() => {
                             subscribeButtonContainer.classList.add("hidden");
                         }).catch((err) => console.error(`Fetch error: ${err}`));
 
