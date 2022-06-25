@@ -140,10 +140,13 @@ const updateFailedOrderStatus = () => {
                 idCount++;
         }
 
+        //Orders should be visible below this value if they are 'failed'
+        const idVisibleThreshold = 2;
+
         //If the ID was visible for anything less than 2, it is clear that
         // this order's status should be set to false as we now know that
         // the order cannot be delivered anymore.
-        if (idCount < 2) {
+        if (idCount < idVisibleThreshold) {
 
             //List if styling properties that should be removed
             // from the 'status' datacell

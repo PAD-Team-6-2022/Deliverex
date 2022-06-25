@@ -584,12 +584,18 @@ const calculateRoute = async (orders, courierLocation) => {
         endWorkDay,
     ];
 
+    //Retrieve the ID of the courier from the first order
     const courierId = orders[0].courier.id;
+
+    //Define the 'skill' as 1
+    const skillsIdentifier = require("../../util").skillsIdentifier;
+    const vehicleCapacity = require("../../util").vehicleCapacity;
+
     //Create a vehicle object to represent this courier in the ORS calculation
     const vehicle = {
         id: courierId, profile: 'cycling-regular',
-        start: courierLocation, capacity: [4],
-        skills: [1], time_window: working_hours //[0,80000]
+        start: courierLocation, capacity: [vehicleCapacity],
+        skills: [skillsIdentifier], time_window: working_hours//[0,100000]
     };
 
     //Pass the constructed jobs, shipments and vehicle data to the

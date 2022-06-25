@@ -21,6 +21,18 @@ const searchQueryToWhereClause = (query, fields) => {
   };
 };
 
+//Define the 'skill' as 1
+const skillsIdentifier = 1;
+
+//The amount of orders
+const amount = 1;
+
+//The time between every travel period in seconds
+const serviceTime = 60;
+
+//Set the capacity (the max amount of orders that can be carried) to 4
+const vehicleCapacity = 4;
+
 /**
  * Takes a list of orders and uses it to produce
  * a list of orders in shipment-format. To be fed to
@@ -39,22 +51,24 @@ const convertOrdersToShipments = (orders) => {
     // -check & account for the time period the order is planned for (morning, afternoon, evening)
     // -calculate the 'amount' either based on the order's weight and format, or the actual amount of packages
 
+    //Get the order ID
     const id = order.getDataValue("id");
 
+    //Obtain the pickup and delivery coordinates
     const pickUpCoordinates = order.userCreated.company.location.coordinates.coordinates;
     const deliveryCoordinates = order.coordinates.coordinates;
 
     shipments.push({
-      amount: [1],
-      skills: [1],
+      amount: [amount],
+      skills: [skillsIdentifier],
       pickup: {
         id,
-        service: 60,
+        service: serviceTime,
         location: pickUpCoordinates
       },
       delivery: {
         id,
-        service: 60,
+        service: serviceTime,
         location: deliveryCoordinates
       }
     });
@@ -71,17 +85,19 @@ const convertOrdersToJobs = (orders) => {
     // -check & account for the time period the order is planned for (morning, afternoon, evening)
     // -calculate the 'amount' either based on the order's weight and format, or the actual amount of packages
 
+    //Get the order ID
     const id = order.getDataValue("id");
 
+    //Obtain the delivery coordinates
     const deliveryCoordinates = order.coordinates.coordinates;
 
     jobs.push({
       id,
-      amount: [1],
-      skills: [1],
-      service: 60,
+      amount: [amount],
+      skills: [skillsIdentifier],
+      service: serviceTime,
       location: deliveryCoordinates,
-      delivery: [1]
+      delivery: [amount]
     });
   });
   return jobs;
@@ -132,8 +148,8 @@ const convertUsersToVehicles = (users) => {
       id,
       profile: "cycling-regular",
       start: USER_START_COORDINATES,
-      capacity: [4],
-      skills: [1],
+      capacity: [vehicleCapacity],
+      skills: [skillsIdentifier],
       time_window: [startingTime, endingTime]
     });
   });
@@ -164,5 +180,7 @@ module.exports = {
   onSameDayDelivery,
   notifyOrderStatusChange,
   onOrderStatusChange,
-  getTimestampInSeconds
+  getTimestampInSeconds,
+  vehicleCapacity,
+  skillsIdentifier
 };
