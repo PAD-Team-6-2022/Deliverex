@@ -58,6 +58,12 @@
             </a>
         </div>
 
+        <!-- error message in case the server could not return the routing data -->
+        <div id="routingErrorMessage" class="bg-red-300 border border-red-400 border-2 rounded-md p-2 max-w-xl" hidden>
+            <p class="mb-2">An error occurred while trying to retrieve the routing data.</p>
+            <p>Error message: <span id="errorCodeContainer"></span></p>
+        </div>
+
         <!-- Visual header of the checkpoints table -->
         <h2 class="font-medium text-2xl text-slate-800 my-4 flex">
             <%- include("../../../partials/svg/package_icon") %>

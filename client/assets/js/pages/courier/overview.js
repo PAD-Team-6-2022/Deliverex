@@ -332,7 +332,13 @@ const loadCheckpoints = () => {
             headers: {
                 "Content-Type": "application/json"
             }
-        }).then(response => response.json())
+        }).then((response) => {
+
+            if(response.status !== 200)
+                throw Error(`The server responded with error code '${response.status}'.`);
+
+            return response.json()
+        })
             .then((routeData) => {
 
                 //Array of all the columns within a checkpoint row.
@@ -356,6 +362,13 @@ const loadCheckpoints = () => {
             }).catch((err) => {
             console.error(`Fetch error: could not retrieve routing
              data from the server. Errormessage: ${err}`);
+
+            //Retrieve the error message for the routing error
+            const routingErrorMessage = document.querySelector("#routingErrorMessage");
+
+            //Enable hier de error message in de UI!
+            routingErrorMessage.querySelector("span").textContent = err.message;
+            routingErrorMessage.removeAttribute("hidden");
         });
 
     }, (error) => {

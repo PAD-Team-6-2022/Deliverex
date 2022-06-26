@@ -833,9 +833,8 @@ router.get('/coords/:longitude/:latitude', (req, res) => {
             total_duration: routingData.duration,
         });
     }).catch((err) => {
-        console.error(
-            `Failed to retrieve orders from database. Errormessage: ${err}`,
-        );
+        console.error(`Failed to retrieve orders from database. Errormessage: ${err}`);
+        res.sendStatus(500);
     });
 });
 
