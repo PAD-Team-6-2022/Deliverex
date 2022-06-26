@@ -8,8 +8,9 @@
 //Description of what is being tested
 describe('Test of the courier dashboard', () => {
 
-    //First, change the viewport to that of a mobile phone
-    before(() => {
+    //Before each test, go to the home page and log in
+    beforeEach(() => {
+
         //Guessed estimate of an avery phone's viewport
         const MOBILE_VIEWPORT = {
             horizontal: 440,
@@ -18,10 +19,6 @@ describe('Test of the courier dashboard', () => {
 
         //Sets the resolution to a normal phone resolution
         cy.viewport(MOBILE_VIEWPORT.horizontal,MOBILE_VIEWPORT.vertical);
-    })
-
-    //Before each test, go to the home page and log in
-    beforeEach(() => {
 
         //Navigates to the dashboard of the site
         cy.visit("http://localhost:3000/dashboard");
