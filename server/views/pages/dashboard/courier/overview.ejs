@@ -13,14 +13,14 @@
     <!-- Shows a header based on the context such as whether the courier is
      working today and/or whether or not he has any packages to deliver. -->
     <div class="max-w-7xl mx-auto px-4 mt-16 flex-1 overflow-hidden">
-        <div class="text-center sm:text-left">
+        <div class="text-center flex flex-col sm:text-left">
             <h1 class="font-bold text-3xl sm:text-4xl text-slate-800">Shipments overview</h1>
             <p class="text-lg sm:text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block">
                 <%= orders.length > 0 ?
                         "View today's travel route, or update an order's status using the QR code scanner." :
                         "You currently have no shipments to be delivered."%></p>
             <%if(daySchedule !== null){%>
-                <p class="text-sm sm:text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block">
+                <p class="text-sm sm:text-lg font-medium text-slate-500 mt-3 max-w-sm inline-block">
                 You are scheduled to work today <br>from <b><%= daySchedule.start %></b> to <b><%= daySchedule.end %></b>.</p>
             <%}else{%>
                 <p class="text-sm sm:text-xl font-medium text-slate-500 mt-3 max-w-sm inline-block">
